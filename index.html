@@ -247,7 +247,8 @@
       display: block;
       width: 1px;
       height: 40px;
-      background: linear-gradient(to bottom, var(--muted), transparent);
+      background: var(--muted);
+      opacity: 0.5;
       animation: scrollLine 1.8s ease-in-out infinite;
     }
 
@@ -697,6 +698,7 @@
 
       .hero-sub { font-size: 16px; }
       .pitch-stat-row { grid-template-columns: 1fr 1fr; }
+      .scroll-hint { display: none; }
     }
 
     @media (max-width: 480px) {
