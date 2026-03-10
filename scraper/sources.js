@@ -14,45 +14,61 @@ export const RSS_FEEDS = [
     topics: ["CFB", "GENERAL"]
   },
   {
-    name: "On3 NIL",
-    url: "https://www.on3.com/nil/feed/",
-    topics: ["NIL", "TRANSFER_PORTAL"]
+    name: "On3 College Sports",
+    url: "https://www.on3.com/feed/",
+    topics: ["NIL", "TRANSFER_PORTAL", "RECRUITING"]
   },
   {
-    name: "247Sports Transfer Portal",
-    url: "https://247sports.com/Article/rss/?tag=Transfer-Portal",
-    topics: ["TRANSFER_PORTAL"]
+    name: "247Sports College Sports",
+    url: "https://247sports.com/Page/College-Sports-News-and-Recruiting-100021/Feeds/",
+    topics: ["TRANSFER_PORTAL", "RECRUITING", "CFB"]
   },
   {
-    name: "Sports Illustrated CFB",
-    url: "https://www.si.com/rss/si_cfb.rss",
+    name: "Yahoo CFB",
+    url: "https://sports.yahoo.com/college-football/rss.xml",
     topics: ["CFB", "NIL", "REALIGNMENT"]
   },
-
-  // --- SCHOOL SPECIFIC ---
   {
-    name: "OU Athletics",
-    url: "https://soonersports.com/rss.aspx?path=football",
+    name: "The Spun CFB",
+    url: "https://thespun.com/.rss/full/college-football/",
+    topics: ["CFB", "GENERAL"]
+  },
+  {
+    name: "AP News CFB",
+    url: "https://apnews.com/hub/college-football.rss",
+    topics: ["CFB", "NIL", "REALIGNMENT", "LEGAL"]
+  },
+
+  // --- SCHOOL SPECIFIC (via AP News + USA Today wire feeds) ---
+  {
+    name: "AP News Oklahoma Sooners",
+    url: "https://apnews.com/hub/oklahoma-sooners.rss",
     school: "OU",
     topics: ["CFB", "OU"]
   },
   {
-    name: "OSU Athletics",
-    url: "https://okstate.com/rss.aspx?path=football",
-    school: "OSU",
-    topics: ["CFB", "OSU"]
+    name: "Sooners Wire",
+    url: "https://soonerswire.usatoday.com/feed/",
+    school: "OU",
+    topics: ["CFB", "OU", "NIL"]
   },
   {
-    name: "Texas Athletics",
-    url: "https://texassports.com/rss.aspx?path=football",
+    name: "Cowboys Wire",
+    url: "https://cowboyswire.usatoday.com/feed/",
+    school: "OSU",
+    topics: ["CFB", "OSU", "NIL"]
+  },
+  {
+    name: "Longhorns Wire",
+    url: "https://longhornswire.usatoday.com/feed/",
+    school: "TEXAS",
+    topics: ["CFB", "TEXAS", "NIL"]
+  },
+  {
+    name: "AP News Texas Longhorns",
+    url: "https://apnews.com/hub/texas-longhorns.rss",
     school: "TEXAS",
     topics: ["CFB", "TEXAS"]
-  },
-  {
-    name: "Texas Tech Athletics",
-    url: "https://texastech.com/rss.aspx?path=football",
-    school: "TEXAS_TECH",
-    topics: ["CFB", "TEXAS_TECH", "NIL"]
   }
 ];
 
