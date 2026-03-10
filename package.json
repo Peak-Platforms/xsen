@@ -1,16 +1,23 @@
 {
-  "name": "xsen",
+  "name": "xsen-scraper",
   "version": "1.0.0",
-  "description": "XSEN Sports Entertainment Network",
-  "main": "server.js",
+  "description": "XSEN FanCast News Aggregator - Phase 1",
+  "main": "scraper.js",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node scraper.js",
+    "dev": "node --watch scraper.js"
   },
+  "keywords": [],
+  "author": "Peak Platforms",
+  "license": "ISC",
   "dependencies": {
-    "@supabase/supabase-js": "^2.97.0",
-    "express": "^4.18.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "@anthropic-ai/sdk": "^0.36.3",
+    "@supabase/supabase-js": "^2.39.0",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.0",
+    "node-cron": "^3.0.3",
+    "rss-parser": "^3.13.0"
   }
 }
