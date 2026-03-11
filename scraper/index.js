@@ -1,4 +1,4 @@
-// index.js - XSEN Scraper + Script Generator Coordinator
+// index.js - XSEN Scraper + Script Generator + Voicer Coordinator
 
 import http from "http";
 import * as dotenv from "dotenv";
@@ -10,7 +10,7 @@ http.createServer((req, res) => res.end("XSEN FanCast Pipeline running")).listen
   () => console.log(`✅ Health check server running on port ${process.env.PORT || 3001}`)
 );
 
-// ─── Start Both Services ──────────────────────────────────────────────────────
+// ─── Start All Services ───────────────────────────────────────────────────────
 console.log("🚀 Starting XSEN FanCast Pipeline...");
 
 import("./scraper.js")
@@ -20,3 +20,7 @@ import("./scraper.js")
 import("./scriptgen.js")
   .then(() => console.log("✍️  Script generator started"))
   .catch(err => console.error("Script generator failed to start:", err));
+
+import("./voicer.js")
+  .then(() => console.log("🎙️  Voicer started"))
+  .catch(err => console.error("Voicer failed to start:", err));
