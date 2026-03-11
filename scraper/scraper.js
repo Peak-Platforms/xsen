@@ -6,9 +6,15 @@ import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import cron from "node-cron";
 import * as dotenv from "dotenv";
+import http from "http";
 import { RSS_FEEDS, GOOGLE_NEWS_SEARCHES, HIGH_VALUE_KEYWORDS } from "./sources.js";
 
 dotenv.config();
+
+// ─── Health Check Server (keeps Railway happy) ────────────────────────────────
+http.createServer((req, res) => res.end("XSEN Scraper running")).listen(
+  process.env.PORT || 3001
+);
 
 // ─── Clients ─────────────────────────────────────────────────────────────────
 
