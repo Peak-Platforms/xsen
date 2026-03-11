@@ -34,7 +34,6 @@
       overflow-x: hidden;
     }
 
-    /* ── GRAIN OVERLAY ── */
     body::before {
       content: '';
       position: fixed;
@@ -65,7 +64,6 @@
       color: var(--white);
       text-decoration: none;
     }
-
     .nav-logo span { color: var(--gold); }
 
     .nav-back {
@@ -78,7 +76,6 @@
       gap: 8px;
       transition: color 0.2s;
     }
-
     .nav-back:hover { color: var(--white); }
 
     /* ── HERO ── */
@@ -115,7 +112,6 @@
       color: var(--gold);
       border: 1px solid rgba(201,168,76,0.3);
       padding: 8px 20px;
-      border-radius: 2px;
       margin-bottom: 48px;
       position: relative;
       z-index: 1;
@@ -156,7 +152,7 @@
       font-style: italic;
       font-size: clamp(18px, 2.5vw, 26px);
       color: var(--muted);
-      max-width: 680px;
+      max-width: 620px;
       line-height: 1.6;
       margin-bottom: 60px;
       position: relative;
@@ -202,121 +198,136 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── MANIFESTO BODY ── */
+    /* ── BODY ── */
     .manifesto-body {
       max-width: 780px;
       margin: 0 auto;
       padding: 0 40px 120px;
     }
 
-    /* ── OPENING STATEMENT ── */
-    .opening {
-      padding: 80px 0 60px;
+    .section-block {
+      padding: 72px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .opening-quote {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: clamp(24px, 3.5vw, 36px);
-      line-height: 1.5;
-      color: var(--white);
-      margin-bottom: 32px;
-      padding-left: 32px;
-      border-left: 3px solid var(--gold);
-    }
-
-    .opening-quote em {
-      color: var(--gold);
-      font-style: normal;
-    }
-
-    .opening p {
-      font-size: 17px;
-      color: var(--muted);
-      line-height: 1.9;
-      margin-bottom: 20px;
-    }
-
-    .opening p strong {
-      color: var(--white);
-      font-weight: 600;
-    }
-
-    /* ── PILLARS ── */
-    .pillars {
-      padding: 80px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .pillar-label {
+    .section-label {
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 48px;
+      margin-bottom: 32px;
     }
 
-    .pillar-block {
-      margin-bottom: 64px;
+    /* ── FOUNDER NOTE ── */
+    .founder-quote {
+      margin: 0 0 32px;
+      padding: 0 0 0 24px;
+      border-left: 3px solid var(--gold);
     }
 
-    .pillar-block:last-child { margin-bottom: 0; }
-
-    .pillar-number {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 80px;
-      line-height: 0.85;
-      color: rgba(201,168,76,0.12);
-      margin-bottom: -12px;
-      display: block;
-    }
-
-    .pillar-heading {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px, 3vw, 36px);
+    .founder-quote p {
+      font-size: 17px;
+      line-height: 1.85;
+      color: rgba(245,245,240,0.82);
       margin-bottom: 20px;
+    }
+
+    .founder-quote p:last-child { margin-bottom: 0; }
+
+    .founder-sig { padding-left: 24px; margin-top: 28px; }
+    .founder-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      color: var(--white);
+    }
+    .founder-title { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .founder-title a { color: var(--gold); text-decoration: none; }
+
+    /* ── DAVID VS GOLIATH ── */
+    .dvg-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 8px;
+    }
+
+    .dvg-side {
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+    }
+
+    .dvg-side.goliath { background: rgba(132,22,23,0.06); border-color: rgba(132,22,23,0.2); }
+    .dvg-side.david   { background: rgba(201,168,76,0.04); border-color: rgba(201,168,76,0.2); }
+
+    .dvg-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+
+    .dvg-side.goliath .dvg-heading { color: var(--red); }
+    .dvg-side.david   .dvg-heading { color: var(--gold); }
+
+    .dvg-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dvg-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .dvg-side.goliath .dvg-list li::before { content: '✕'; color: var(--red); flex-shrink: 0; }
+    .dvg-side.david   .dvg-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; }
+
+    /* ── FALLBACK ── */
+    .fallback-statement {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 3vw, 32px);
+      line-height: 1.5;
+      color: var(--white);
+      margin-bottom: 24px;
+      padding-left: 24px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .fallback-statement em { color: var(--gold); font-style: italic; }
+
+    .fallback-sub {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 560px;
+    }
+
+    /* ── DECLARATION ── */
+    .declaration-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      line-height: 1.7;
       color: var(--white);
     }
 
-    .pillar-heading em {
-      color: var(--gold);
-      font-style: italic;
-    }
+    .declaration-text em { color: var(--gold); font-style: italic; }
+    .declaration-text p { margin-bottom: 24px; }
+    .declaration-text p:last-child { margin-bottom: 0; }
 
-    .pillar-block p {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.9;
-      margin-bottom: 16px;
-    }
-
-    .pillar-block p strong {
-      color: var(--white);
-      font-weight: 600;
-    }
-
-    /* ── THE SCHOOLS ── */
-    .schools-section {
-      padding: 80px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .schools-intro {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.9;
-      margin-bottom: 40px;
-    }
-
-    .schools-intro strong { color: var(--white); }
-
+    /* ── SCHOOLS ── */
     .school-ticker {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 32px;
+      margin-top: 24px;
     }
 
     .school-tag {
@@ -325,16 +336,12 @@
       letter-spacing: 0.5px;
       padding: 6px 14px;
       border: 1px solid var(--border);
-      border-radius: 2px;
       color: var(--muted);
       background: var(--mid);
       transition: all 0.2s;
     }
 
-    .school-tag:hover {
-      border-color: rgba(201,168,76,0.4);
-      color: var(--white);
-    }
+    .school-tag:hover { border-color: rgba(201,168,76,0.4); color: var(--white); }
 
     .school-tag.live {
       border-color: rgba(132,22,23,0.5);
@@ -342,34 +349,8 @@
       background: rgba(132,22,23,0.15);
     }
 
-    /* ── DECLARATION ── */
-    .declaration {
-      padding: 80px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .declaration-text {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(20px, 2.5vw, 28px);
-      line-height: 1.7;
-      color: var(--white);
-    }
-
-    .declaration-text em {
-      color: var(--gold);
-      font-style: italic;
-    }
-
-    .declaration-text p {
-      margin-bottom: 28px;
-    }
-
-    .declaration-text p:last-child { margin-bottom: 0; }
-
     /* ── SIGNUP ── */
-    .signup-section {
-      padding: 80px 0 0;
-    }
+    .signup-section { padding: 72px 0 0; }
 
     .signup-eyebrow {
       font-size: 11px;
@@ -377,59 +358,38 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .signup-heading {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(36px, 5vw, 56px);
       letter-spacing: 1px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       line-height: 1;
     }
 
     .signup-sub {
-      font-size: 16px;
+      font-size: 15px;
       color: var(--muted);
       line-height: 1.7;
-      margin-bottom: 40px;
-      max-width: 520px;
+      margin-bottom: 32px;
+      max-width: 480px;
     }
 
     .signup-form {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
-    .signup-form input[type="email"] {
-      flex: 1;
-      min-width: 240px;
-      background: var(--mid);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 16px 20px;
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .signup-form input[type="email"]::placeholder { color: var(--muted); }
-
-    .signup-form input[type="email"]:focus {
-      border-color: rgba(201,168,76,0.5);
-    }
-
-    .signup-form input[type="text"] {
+    .signup-form input {
       flex: 1;
       min-width: 200px;
       background: var(--mid);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 16px 20px;
+      padding: 14px 18px;
       color: var(--white);
       font-family: 'DM Sans', sans-serif;
       font-size: 15px;
@@ -437,19 +397,17 @@
       transition: border-color 0.2s;
     }
 
-    .signup-form input[type="text"]::placeholder { color: var(--muted); }
-    .signup-form input[type="text"]:focus { border-color: rgba(201,168,76,0.5); }
+    .signup-form input::placeholder { color: var(--muted); }
+    .signup-form input:focus { border-color: rgba(201,168,76,0.5); }
 
     .signup-btn {
       background: var(--red);
       color: var(--white);
       border: none;
-      padding: 16px 32px;
-      border-radius: 4px;
+      padding: 14px 28px;
       font-family: 'DM Sans', sans-serif;
       font-weight: 700;
       font-size: 15px;
-      letter-spacing: 0.5px;
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
@@ -461,17 +419,12 @@
       box-shadow: 0 8px 24px var(--red-glow);
     }
 
-    .signup-note {
-      font-size: 12px;
-      color: rgba(245,245,240,0.3);
-      letter-spacing: 0.3px;
-    }
+    .signup-note { font-size: 12px; color: rgba(245,245,240,0.3); }
 
     .signup-success {
       display: none;
       background: rgba(201,168,76,0.1);
       border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 4px;
       padding: 20px 24px;
       font-size: 15px;
       color: var(--gold);
@@ -497,63 +450,17 @@
       letter-spacing: 2px;
       color: var(--muted);
     }
-
     .footer-logo span { color: var(--gold); }
+    .footer-copy { font-size: 12px; color: rgba(245,245,240,0.25); }
 
-    .footer-copy {
-      font-size: 12px;
-      color: rgba(245,245,240,0.25);
-    }
-
-    /* ── DIVIDER ── */
-    .gold-rule {
-      width: 48px;
-      height: 2px;
-      background: var(--gold);
-      margin: 40px 0;
-    }
-
-    /* ── FOUNDER NOTE ── */
-    .founder-section {
-      padding: 64px 0 48px;
-      border-top: 1px solid rgba(245,245,240,0.08);
-    }
-    .founder-inner { max-width: 640px; }
-    .founder-label {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: var(--gold);
-      margin-bottom: 28px;
-      opacity: 0.85;
-    }
-    .founder-quote {
-      margin: 0 0 32px;
-      padding: 0 0 0 24px;
-      border-left: 2px solid var(--gold);
-    }
-    .founder-quote p {
-      font-size: 17px;
-      line-height: 1.75;
-      color: rgba(245,245,240,0.82);
-      margin-bottom: 18px;
-    }
-    .founder-quote p:last-child { margin-bottom: 0; }
-    .founder-sig { padding-left: 24px; }
-    .founder-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 1px;
-      color: var(--light);
-    }
-    .founder-title { font-size: 13px; color: var(--muted); margin-top: 4px; }
-    .founder-title a { color: var(--gold); text-decoration: none; }
+    .gold-rule { width: 48px; height: 2px; background: var(--gold); margin: 40px 0; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
       nav { padding: 16px 20px; }
       .manifesto-hero { padding: 100px 20px 60px; }
       .manifesto-body { padding: 0 20px 80px; }
+      .dvg-grid { grid-template-columns: 1fr; }
       .signup-form { flex-direction: column; }
       .signup-btn { width: 100%; }
       footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; }
@@ -562,164 +469,138 @@
 </head>
 <body>
 
-  <!-- ── NAV ── -->
+  <!-- NAV -->
   <nav>
     <a href="https://xsen.fun" class="nav-logo"><span>X</span>SEN</a>
     <a href="https://xsen.fun" class="nav-back">← Back to XSEN</a>
   </nav>
 
-  <!-- ── HERO ── -->
+  <!-- HERO -->
   <section class="manifesto-hero">
     <div class="hero-flag">The Fan's Network™ — Our Mission</div>
     <h1>College sports<br>belongs to <em>the fans.</em></h1>
     <p class="hero-decree">
-      It always has. The fans filled the stadiums, learned the fight songs,
-      passed the traditions to their children, and built something
-      <strong>no boardroom ever could.</strong>
+      The fans filled the stadiums, learned the fight songs, and passed the traditions
+      to their children. <strong>No boardroom ever did that.</strong>
     </p>
     <div class="scroll-cue">Read the mission</div>
   </section>
 
-  <!-- ── MANIFESTO BODY ── */
   <div class="manifesto-body">
 
-    <!-- OPENING -->
-    <div class="opening">
-      <div class="opening-quote">
-        "The Fan's Network was built on a simple belief: <em>the people who love the game should have a voice in its future.</em>"
-      </div>
-      <p>
-        For over a century, college sports has been unlike anything else in American life.
-        It is not just entertainment. It is identity. It is community. It is the thread
-        that connects generations of families to a place, a team, a tradition that means
-        something beyond wins and losses.
-      </p>
-      <p>
-        <strong>That thread belongs to the fans.</strong> Not to television networks.
-        Not to conference offices. Not to the financial models of private equity firms
-        looking for the next asset to optimize. The fans built this. Town by town,
-        stadium by stadium, generation by generation.
-      </p>
-      <p>
-        The Fan's Network — XSEN — exists to serve those fans. To give every fan base
-        in America a home, a voice, and a direct connection to the athletes they support.
-        Starting with the schools that need it most.
-      </p>
-    </div>
-
-    <!-- WHAT'S AT STAKE -->
-    <div class="opening" style="padding-top:60px;">
-      <div class="pillar-label">What's At Stake</div>
-      <div class="opening-quote">
-        "Outside investors are circling college sports with billion-dollar proposals.
-        <em>Fans have no seat at that table. Nobody asked them.</em>"
-      </div>
-      <p>
-        Right now, in boardrooms in Los Angeles and New York, private equity firms
-        are actively pitching plans to restructure college football around financial
-        returns. The proposals are sophisticated. The money is real. And the model
-        is straightforward: consolidate the sport's most valuable programs into a
-        closed league, centralize media rights, and extract returns for investors.
-      </p>
-      <p>
-        <strong>Seventy schools in. Sixty schools out.</strong> The programs left
-        behind — and the fan bases who have supported them for generations — are
-        simply not part of the calculation. They don't fit the financial model.
-        Their loyalty, their decades of support, their communities — none of it
-        shows up on a term sheet.
-      </p>
-      <p>
-        Meanwhile the schools inside the proposed structure face a different problem.
-        Athletic departments are carrying hundreds of millions in debt. The House v.
-        NCAA settlement requires them to share revenue directly with athletes —
-        a welcome development for players, but a financial pressure that is pushing
-        programs toward outside capital with strings attached.
-      </p>
-      <p>
-        <strong>Private equity doesn't invest without expecting control.</strong>
-        And control of college sports — of scheduling, of media rights, of which
-        programs survive and which are left behind — has never belonged to investors.
-        It has belonged to the communities that built it.
-      </p>
-      <p>
-        The fans who drove eight hours to a bowl game. The alumni who named their
-        children after legendary coaches. The towns whose entire identity is wrapped
-        up in a Saturday afternoon in October. <strong>These are the real
-        stakeholders of college sports.</strong> And right now they have no
-        organized voice, no platform, and no seat at the table where the
-        sport's future is being decided.
-      </p>
-      <p>
-        That is what The Fan's Network exists to change.
-      </p>
-    </div>
-
-    <!-- PILLARS -->
-    <div class="pillars">
-      <div class="pillar-label">What We Believe</div>
-
-      <div class="pillar-block">
-        <span class="pillar-number">01</span>
-        <h2 class="pillar-heading">Every fan base deserves <em>a network.</em></h2>
+    <!-- FOUNDER NOTE — comes first -->
+    <div class="section-block">
+      <div class="section-label">A Word from the Founder</div>
+      <blockquote class="founder-quote">
         <p>
-          College sports in America spans over 130 programs — from the storied powerhouses
-          of the Power Four to the passionate communities surrounding mid-major programs
-          that have been part of their regions for generations.
+          I've been a Sooner fan since 1978. I lived in Lincoln Hall as a student at OU —
+          a dorm sitting directly across the street from the south end zone, literally in the shadow
+          of Memorial Stadium. The roar on game days didn't come from a broadcast.
+          It came through the walls. I haven't missed much since.
         </p>
         <p>
-          <strong>Every one of those fan bases deserves infrastructure.</strong> A place
-          to gather. An AI companion that knows their team's history. A live radio stream
-          on game day. A real-time connection to the athletes they support. Not just the
-          schools with billion-dollar TV deals — every school. Every fan.
-        </p>
-      </div>
-
-      <div class="gold-rule"></div>
-
-      <div class="pillar-block">
-        <span class="pillar-number">02</span>
-        <h2 class="pillar-heading">Fan dollars should reach <em>the athletes.</em></h2>
-        <p>
-          For the first time in history, fans have the ability to support college athletes
-          directly — through NIL, through micro-donations, through subscriptions that
-          flow real dollars to real people who pour everything into their sport.
+          I built XSEN for my family. Plain and simple. I'd been learning AI technology
+          and saw an opportunity to build something around the teams we already loved —
+          starting with a single Boomer Bot for OU fans. Once it worked, replicating it
+          to other schools was obvious. The plan was straightforward: recurring income,
+          AI-powered, built around college sports. A business for my family's future.
+          Then I started reading about private equity firms circling college football.
+          About PE-backed super leagues that would decide — from a boardroom — which
+          70 programs matter and which 60 don't. About NIL money flowing toward investors
+          instead of athletes. It didn't sit right. Honestly, it pissed me off.
+          What started as a family business has become something I didn't plan for —
+          a mission. A grassroots effort to get the word out, to make sure fan voices
+          are heard before the decisions get made without us.
         </p>
         <p>
-          <strong>The Fan's Network is built to make that happen.</strong> When a fan
-          subscribes to their school's XSEN channel, a portion of that subscription
-          supports NIL opportunities for that school's athletes. Not a corporation's
-          shareholders. Not a media company's quarterly earnings. The athletes.
-        </p>
-      </div>
-
-      <div class="gold-rule"></div>
-
-      <div class="pillar-block">
-        <span class="pillar-number">03</span>
-        <h2 class="pillar-heading">The network belongs <em>to the fans who build it.</em></h2>
-        <p>
-          XSEN is not built for fans. It is built <strong>by fans, with fans,
-          for fans.</strong> Every channel that launches is a community that takes shape
-          around the people who show up — who share, who engage, who bring their
-          decades of passion to a platform that finally gives it a home.
+          At 62, semi-retired and apparently a glutton for punishment, I sat down and passed
+          the Series 6, 63, and 65 federal licensing exams — first try, each one. The Series 6
+          qualifies you to sell investment products. The 63 to do it across state lines.
+          The 65 to act as a registered investment adviser. I recently relinquished the licenses —
+          the compliance obligations weren't what I wanted. I took the 65 because I wanted to
+          talk honestly to people about money, not manage it for them — specifically the people
+          the financial industry tends to ignore. I've always rooted for the underdog.
+          I've swum upstream most of my life. I'm an outsider to most systems I've ever
+          encountered, and I've never lost much sleep over it.
+          That's exactly the right instinct for what XSEN has become.
+          I understand what private equity does with assets it acquires.
+          I understand the difference between a fiduciary obligation to investors
+          and a genuine obligation to a community.
+          <strong>What I see coming concerns me — and it should concern every fan.</strong>
         </p>
         <p>
-          The Fan's Network grows because fans grow it. That is the only kind of
-          network worth building.
+          That's when the financial licenses started making sense in a new way.
         </p>
+      </blockquote>
+      <div class="founder-sig">
+        <div class="founder-name">— Kevin Whitaker</div>
+        <div class="founder-title">Founder, <a href="https://peak-platforms.com" target="_blank">Peak Platforms</a></div>
       </div>
     </div>
 
-    <!-- THE SCHOOLS -->
-    <div class="schools-section">
-      <div class="pillar-label">The Schools We're Building For</div>
-      <p class="schools-intro">
-        The Fan's Network starts where the need is greatest —
-        <strong>the programs whose fan bases are just as passionate,
-        just as loyal, and just as deserving</strong> as any program in the country.
-        Three channels are live today. Dozens more are coming.
-      </p>
+    <!-- DAVID VS GOLIATH -->
+    <div class="section-block">
+      <div class="section-label">David vs. Goliath</div>
+      <div class="dvg-grid">
+        <div class="dvg-side goliath">
+          <div class="dvg-heading">Goliath</div>
+          <ul class="dvg-list">
+            <li>Private equity bidding billions for broadcast rights</li>
+            <li>Super leagues that cut 60 schools from the map</li>
+            <li>Boardrooms deciding which fan bases matter</li>
+            <li>Media companies that follow the money, not the fans</li>
+            <li>Investors with no loyalty to any community</li>
+          </ul>
+        </div>
+        <div class="dvg-side david">
+          <div class="dvg-heading">David</div>
+          <ul class="dvg-list">
+            <li>The fan who's watched their school for 40 years</li>
+            <li>The wrestler who loses his scholarship in a budget cut</li>
+            <li>The small school community whose program disappears</li>
+            <li>The walk-on who never makes the highlight reel</li>
+            <li>Every fan private equity forgot to account for</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
+    <!-- FALLBACK MISSION -->
+    <div class="section-block">
+      <div class="section-label">If Goliath Wins</div>
+      <div class="fallback-statement">
+        XSEN becomes the home for every fan and every athlete
+        <em>that got left behind.</em>
+      </div>
+      <p class="fallback-sub">
+        Wrestling. Swimming. Track. Division II programs. Small school communities
+        whose teams disappeared from the national conversation.
+        The sports private equity ignores — XSEN covers them when nobody else will.
+        Win or lose, Power 4 or Division II, football or gymnastics, ranked or forgotten.
+      </p>
+    </div>
+
+    <!-- DECLARATION -->
+    <div class="section-block">
+      <div class="section-label">We the Fans</div>
+      <div class="declaration-text">
+        <p><em>We the fans</em> — the ones who painted our faces and drove eight hours
+        to bowl games — declare that college sports is ours.</p>
+        <p>We are not a demographic to be targeted.
+        We are not a revenue stream to be optimized.</p>
+        <p><em>We are the sport.</em> And The Fan's Network is our platform.</p>
+        <p>If Goliath wins — <em>we're still here.</em><br>
+        If David wins — <em>we helped.</em></p>
+      </div>
+    </div>
+
+    <!-- SCHOOLS -->
+    <div class="section-block">
+      <div class="section-label">The Schools We're Building For</div>
+      <p style="font-size:16px;color:var(--muted);line-height:1.8;">
+        Three channels live today. 127 more coming.
+        Every fan base deserves a home — not just the ones with billion-dollar TV deals.
+      </p>
       <div class="school-ticker">
         <span class="school-tag live">🏈 Oklahoma Sooners — Live</span>
         <span class="school-tag live">🤠 Oklahoma State Cowboys — Live</span>
@@ -730,93 +611,8 @@
         <span class="school-tag">Coastal Carolina</span>
         <span class="school-tag">UTSA Roadrunners</span>
         <span class="school-tag">UCF Knights</span>
-        <span class="school-tag">Houston Cougars</span>
         <span class="school-tag">New Mexico Highlands</span>
         <span class="school-tag">+ 120 more coming</span>
-      </div>
-
-      <p class="schools-intro" style="margin-bottom:0;">
-        Every school on this list represents a community that deserves a network.
-        <strong>We're building theirs next.</strong>
-      </p>
-    </div>
-
-    <!-- DECLARATION -->
-    <div class="declaration">
-      <div class="pillar-label">We the Fans</div>
-      <div class="declaration-text">
-        <p>
-          <em>We the fans</em> — the ones who painted our faces, drove eight hours
-          to bowl games, and named our children after legendary coaches —
-          declare that college sports is ours.
-        </p>
-        <p>
-          We are not a demographic to be targeted. We are not a revenue stream
-          to be optimized. We are not passive consumers waiting to be told
-          what our sport will look like in ten years.
-        </p>
-        <p>
-          <em>We are the sport.</em> And The Fan's Network is our platform.
-        </p>
-        <p>
-          One school at a time. One fan at a time. One channel at a time —
-          until every program in America has a home, every athlete has
-          a direct connection to the people who cheer for them, and
-          <em>every fan has a seat at the table.</em>
-        </p>
-      </div>
-    </div>
-
-    <!-- FOUNDER NOTE -->
-    <div class="founder-section">
-      <div class="founder-inner">
-        <div class="founder-label">A Note from the Founder</div>
-        <blockquote class="founder-quote">
-          <p>
-            I've been a Sooner fan since I was a kid. I started attending games as a student at OU in 1978 —
-            the year Billy Sims won the Heisman. I lived in Lincoln Hall first, a dorm sitting directly
-            across the street from the south end zone, literally in the shadow of Memorial Stadium.
-            Then Walker Tower. Then Adams Hall. I didn't miss a single home game the entire time
-            I was a student. On game days, the roar didn't come from a broadcast — it came through the walls.
-            I've followed this program through every era since. I was in the stands for bowl games
-            across three decades, and I was there in person for the last time Oklahoma won
-            a national championship. That was 2000. I'm still waiting on the next one.
-          </p>
-          <p>
-            I built XSEN for a simple reason: for the first time in history, the average fan
-            could put real money directly into the hands of college athletes through NIL —
-            and nobody had built the infrastructure to make that easy, personal, and connected
-            to the school you actually love. That was the business. That was the mission.
-          </p>
-          <p>
-            Then I started reading about Project Rudy. About private equity firms circling
-            college football. About schools taking on hundreds of millions in debt and looking
-            to Wall Street for the exit ramp. About a proposed super league that would decide
-            — from a boardroom — which 70 programs matter and which 60 don't.
-          </p>
-          <p>
-            Later in life — semi-retired and apparently a glutton for punishment — I sat down
-            and passed the Series 6, 63, and 65 financial exams — the federal licensing tests that qualify you to sell securities and act as a registered investment adviser. First try, each one.
-            I also hold active life and health insurance licenses in New Mexico, Oklahoma, and Texas.
-            First try on those too. Not bad for a C student at OU.
-            I understand how capital markets work. I understand what private equity firms do
-            with assets they acquire. I understand the difference between a fiduciary obligation
-            to investors and a genuine obligation to a community.
-          </p>
-          <p>
-            That's when XSEN became something bigger than a NIL platform. If fans were already
-            the reason any of this exists — the ticket sales, the TV deals, the jerseys, all of it —
-            then fans deserved a voice in what comes next. Not just a seat in the stadium.
-            A seat at the table.
-          </p>
-          <p>
-            The Fan's Network is how we take it.
-          </p>
-        </blockquote>
-        <div class="founder-sig">
-          <div class="founder-name">— Kevin Whitaker</div>
-          <div class="founder-title">Founder, <a href="https://peak-platforms.com" target="_blank">Peak Platforms</a></div>
-        </div>
       </div>
     </div>
 
@@ -825,8 +621,7 @@
       <div class="signup-eyebrow">Join The Fan's Network</div>
       <h2 class="signup-heading">Your school's channel<br>is coming.</h2>
       <p class="signup-sub">
-        Be the first to know when your school launches on The Fan's Network —
-        and be the first to stand up for it.
+        Be the first to know when your school launches — and be the first to stand up for it.
       </p>
 
       <div class="signup-form" id="signupForm">
@@ -834,17 +629,16 @@
         <input type="text" id="schoolInput" placeholder="Your school (e.g. Boise State)" />
         <button class="signup-btn" onclick="handleSignup()">Count Me In →</button>
       </div>
-      <p class="signup-note">No spam. Just your school's launch notification and network updates.</p>
+      <p class="signup-note">No spam. Just your school's launch notification.</p>
 
       <div class="signup-success" id="signupSuccess">
         ✓ &nbsp;You're in. We'll notify you the moment your school's channel goes live.
-        Boomer Sooner — and whatever your school's battle cry is.
       </div>
     </div>
 
-  </div><!-- /manifesto-body -->
+  </div>
 
-  <!-- ── FOOTER ── -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-logo"><span>X</span>SEN — The Fans' Network&#8482;</div>
     <div class="footer-copy">© 2025 XSEN · <a href="https://peak-platforms.com" target="_blank" style="color:rgba(245,245,240,0.25);text-decoration:none;">Peak Platforms</a> · xsen.fun</div>
@@ -868,35 +662,25 @@
         return;
       }
 
-      // Reset border, disable button
       document.getElementById('emailInput').style.borderColor = '';
       btn.textContent = 'Saving...';
       btn.disabled = true;
 
-      const { error } = await supabase
-        .from('fan_signups')
-        .insert({ email, school });
+      const { error } = await supabase.from('fan_signups').insert({ email, school });
 
       if (error) {
-        console.error('Signup error:', error);
         btn.textContent = 'Try Again';
         btn.disabled = false;
         document.getElementById('emailInput').style.borderColor = 'rgba(132,22,23,0.8)';
         return;
       }
 
-      // Success — hide form, show confirmation
       document.getElementById('signupForm').style.display = 'none';
       document.getElementById('signupSuccess').style.display = 'block';
     }
 
-    // Allow Enter key to submit
-    document.getElementById('emailInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') handleSignup();
-    });
-    document.getElementById('schoolInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') handleSignup();
-    });
+    document.getElementById('emailInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+    document.getElementById('schoolInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
 
     // Scroll animations
     const observer = new IntersectionObserver((entries) => {
@@ -908,7 +692,7 @@
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.pillar-block, .opening-quote, .declaration-text').forEach(el => {
+    document.querySelectorAll('.section-block, .dvg-grid, .declaration-text, .fallback-statement').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
