@@ -749,11 +749,11 @@
     </div>
 
     <div class="sidebar-section">Filter by School</div>
-    <button class="filter-btn" onclick="setSchool('ALL')" id="school-ALL">All Schools</button>
-    <button class="filter-btn" onclick="setSchool('MASTER')" id="school-MASTER">Master</button>
-    <button class="filter-btn" onclick="setSchool('OU')" id="school-OU">OU Sooners</button>
-    <button class="filter-btn" onclick="setSchool('OSU')" id="school-OSU">OSU Cowboys</button>
-    <button class="filter-btn" onclick="setSchool('TEXAS')" id="school-TEXAS">Texas Longhorns</button>
+    <button class="filter-btn" onclick="setSchool('ALL')" id="school-ALL">All Schools <span class="count-badge" id="school-count-ALL">0</span></button>
+    <button class="filter-btn" onclick="setSchool('MASTER')" id="school-MASTER">Master <span class="count-badge" id="school-count-MASTER">0</span></button>
+    <button class="filter-btn" onclick="setSchool('OU')" id="school-OU">OU Sooners <span class="count-badge" id="school-count-OU">0</span></button>
+    <button class="filter-btn" onclick="setSchool('OSU')" id="school-OSU">OSU Cowboys <span class="count-badge" id="school-count-OSU">0</span></button>
+    <button class="filter-btn" onclick="setSchool('TEXAS')" id="school-TEXAS">Texas Longhorns <span class="count-badge" id="school-count-TEXAS">0</span></button>
   </div>
 
   <div class="content">
@@ -927,6 +927,19 @@
     document.getElementById('stat-approved').textContent = counts['approved'] || 0;
     document.getElementById('stat-runtime').textContent = `${Math.round(approvedRuntime / 60)}m`;
     document.getElementById('stat-voiced').textContent = voicedCount;
+
+    // School counts — based on current status filter
+    const schoolFilter = currentFilter === 'all' ? null : currentFilter;
+    const schoolEps = schoolFilter ? allEpisodes.filter(e => e.status === schoolFilter) : allEpisodes;
+    const schoolCounts = {};
+    schoolEps.forEach(e => {
+      schoolCounts[e.school] = (schoolCounts[e.school] || 0) + 1;
+    });
+    const totalFiltered = schoolEps.length;
+    ['ALL', 'MASTER', 'OU', 'OSU', 'TEXAS'].forEach(s => {
+      const el = document.getElementById(`school-count-${s}`);
+      if (el) el.textContent = s === 'ALL' ? totalFiltered : (schoolCounts[s] || 0);
+    });
   }
 
   // ─── Render ───────────────────────────────────────────────────────────────
