@@ -448,6 +448,84 @@
     opacity: 0.3;
   }
 
+
+  /* Bulk / Purge controls */
+  .sidebar-actions {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+  }
+
+  .action-box-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .action-select {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .action-select:focus { border-color: var(--accent); }
+
+  .btn-bulk-reject {
+    background: transparent;
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+    padding: 5px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .btn-bulk-reject:hover { background: var(--accent2); color: white; }
+
+  .btn-purge {
+    background: transparent;
+    border: 1px solid #ff6b00;
+    color: #ff6b00;
+    padding: 5px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    white-space: nowrap;
+    width: 100%;
+    margin-top: 6px;
+  }
+  .btn-purge:hover { background: #ff6b00; color: white; }
+
+  .status-aired { color: #00e5a0; border: 1px solid #00e5a0; }
+
   /* Search / Sort bar */
   .search-sort-bar {
     display: flex;
@@ -626,9 +704,49 @@
     <button class="filter-btn" onclick="setFilter('voiced')" id="filter-voiced">
       Voiced <span class="count-badge" id="count-voiced">0</span>
     </button>
+    <button class="filter-btn" onclick="setFilter('aired')" id="filter-aired">
+      Aired <span class="count-badge" id="count-aired">0</span>
+    </button>
+    <button class="filter-btn" onclick="setFilter('rejected')" id="filter-rejected-2" style="display:none">
+    </button>
     <button class="filter-btn" onclick="setFilter('all')" id="filter-all">
       All Episodes <span class="count-badge" id="count-all">0</span>
     </button>
+
+    <div class="sidebar-section">Housekeeping</div>
+    <div class="sidebar-actions">
+      <div class="action-box">
+        <div class="action-box-label">Bulk Reject Old Scripts</div>
+        <div class="action-row">
+          <select id="bulk-days" class="action-select">
+            <option value="1">1 day old</option>
+            <option value="2" selected>2 days old</option>
+            <option value="3">3 days old</option>
+            <option value="7">7 days old</option>
+            <option value="14">14 days old</option>
+          </select>
+          <button class="btn-bulk-reject" onclick="bulkReject()">✗ REJECT</button>
+        </div>
+      </div>
+      <div class="action-box">
+        <div class="action-box-label">Purge Completed Episodes</div>
+        <div class="action-row">
+          <select id="purge-aired-days" class="action-select">
+            <option value="7">Aired 7+ days</option>
+            <option value="14" selected>Aired 14+ days</option>
+            <option value="30">Aired 30+ days</option>
+          </select>
+        </div>
+        <div class="action-row" style="margin-top:6px">
+          <select id="purge-rejected-days" class="action-select">
+            <option value="3">Rejected 3+ days</option>
+            <option value="7" selected>Rejected 7+ days</option>
+            <option value="14">Rejected 14+ days</option>
+          </select>
+        </div>
+        <button class="btn-purge" onclick="purgeEpisodes()">🗑 PURGE NOW</button>
+      </div>
+    </div>
 
     <div class="sidebar-section">Filter by School</div>
     <button class="filter-btn" onclick="setSchool('ALL')" id="school-ALL">All Schools</button>
@@ -802,6 +920,7 @@
     document.getElementById('count-approved').textContent = counts['approved'] || 0;
     document.getElementById('count-rejected').textContent = counts['rejected'] || 0;
     document.getElementById('count-voiced').textContent = counts['voiced'] || 0;
+    document.getElementById('count-aired').textContent = counts['aired'] || 0;
     document.getElementById('count-all').textContent = allEpisodes.length;
 
     document.getElementById('stat-ready').textContent = counts['script_ready'] || 0;
@@ -864,7 +983,7 @@
             `}
           </div>
         </div>
-        ${ep.status === 'voiced' && ep.audio_url ? `
+        ${(ep.status === 'voiced' || ep.status === 'aired') && ep.audio_url ? `
         <div class="audio-panel ${openAudio.has(ep.id) ? 'open' : ''}" id="audio-${ep.id}">
           <audio controls src="${ep.audio_url}" preload="none"></audio>
           <div class="audio-meta">
@@ -923,6 +1042,80 @@
       updateStats();
       renderEpisodes();
     }
+  }
+
+  // ─── Bulk Reject ────────────────────────────────────────────────────────────
+  async function bulkReject() {
+    const days = parseInt(document.getElementById('bulk-days').value);
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    const targets = allEpisodes.filter(e => e.status === 'script_ready' && e.created_at < cutoff);
+
+    if (targets.length === 0) {
+      showToast('No old scripts to reject');
+      return;
+    }
+
+    if (!confirm(`Reject ${targets.length} scripts older than ${days} day(s)?`)) return;
+
+    let count = 0;
+    for (const ep of targets) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/xsen_episodes?id=eq.${ep.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ status: 'rejected' })
+      });
+      if (res.ok) { ep.status = 'rejected'; count++; }
+    }
+
+    showToast(`✗ ${count} scripts bulk rejected`);
+    updateStats();
+    renderEpisodes();
+  }
+
+  // ─── Purge ──────────────────────────────────────────────────────────────────
+  async function purgeEpisodes() {
+    const airedDays = parseInt(document.getElementById('purge-aired-days').value);
+    const rejectedDays = parseInt(document.getElementById('purge-rejected-days').value);
+    const airedCutoff = new Date(Date.now() - airedDays * 24 * 60 * 60 * 1000).toISOString();
+    const rejectedCutoff = new Date(Date.now() - rejectedDays * 24 * 60 * 60 * 1000).toISOString();
+
+    const targets = allEpisodes.filter(e =>
+      (e.status === 'aired' && e.created_at < airedCutoff) ||
+      (e.status === 'rejected' && e.created_at < rejectedCutoff)
+    );
+
+    if (targets.length === 0) {
+      showToast('Nothing to purge');
+      return;
+    }
+
+    if (!confirm(`Permanently delete ${targets.length} aired/rejected episodes from database?`)) return;
+
+    let count = 0;
+    for (const ep of targets) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/xsen_episodes?id=eq.${ep.id}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
+        }
+      });
+      if (res.ok) count++;
+    }
+
+    // Remove from local array
+    const purgedIds = new Set(targets.map(e => e.id));
+    allEpisodes = allEpisodes.filter(e => !purgedIds.has(e.id));
+
+    showToast(`🗑 ${count} episodes purged`);
+    updateStats();
+    renderEpisodes();
   }
 
   // ─── Toast ────────────────────────────────────────────────────────────────
