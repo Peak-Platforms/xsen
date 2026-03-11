@@ -129,7 +129,7 @@ async function getQueuedStories(limit = 5) {
   return data || [];
 }
 
-async function saveEpisode(storyId, school, title, script, episodeType) {
+async function saveEpisode(storyId, school, title, script, episodeType, score) {
   const duration = estimateDuration(script);
 
   const { data, error } = await supabase
@@ -141,7 +141,8 @@ async function saveEpisode(storyId, school, title, script, episodeType) {
       script,
       episode_type: episodeType,
       duration_estimate: duration,
-      status: "script_ready"
+      status: "script_ready",
+      score: score || null
     })
     .select()
     .single();
@@ -177,7 +178,8 @@ async function generateEpisodesForStory(story) {
     "MASTER",
     story.title,
     masterScript,
-    story.episode_type
+    story.episode_type,
+    story.relevance_score
   );
 
   if (masterEpisode) {
@@ -208,7 +210,8 @@ async function generateEpisodesForStory(story) {
         school,
         `${story.title} — ${SCHOOL_CONFIG[school].name}`,
         fullScript,
-        story.episode_type
+        story.episode_type,
+        story.relevance_score
       );
 
       if (schoolEpisode) {
