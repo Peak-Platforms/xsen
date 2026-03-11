@@ -448,6 +448,71 @@
     opacity: 0.3;
   }
 
+  /* Search / Sort bar */
+  .search-sort-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+  .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .sort-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-right: 4px;
+  }
+  .sort-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .sort-btn:hover { border-color: var(--muted); color: var(--text); }
+  .sort-btn.active { border-color: var(--accent); color: var(--accent); }
+
+  /* Score badge on cards */
+  .score-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    min-width: 48px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .score-10, .score-9 { color: var(--accent2); }
+  .score-8, .score-7 { color: var(--accent); }
+  .score-6, .score-5 { color: var(--accent3); }
+  .score-4, .score-3, .score-2, .score-1 { color: var(--muted); }
+
   /* Loading */
   .loading {
     text-align: center;
@@ -601,6 +666,15 @@
       <div class="content-title" id="section-title">SCRIPT REVIEW QUEUE</div>
       <button class="refresh-btn" onclick="loadEpisodes()">↻ REFRESH</button>
     </div>
+    <div class="search-sort-bar">
+      <input type="text" id="search-input" class="search-input" placeholder="Search by title or topic..." oninput="renderEpisodes()">
+      <div class="sort-controls">
+        <span class="sort-label">SORT</span>
+        <button class="sort-btn active" id="sort-score" onclick="setSort('score')">Score ↓</button>
+        <button class="sort-btn" id="sort-date" onclick="setSort('date')">Newest</button>
+        <button class="sort-btn" id="sort-duration" onclick="setSort('duration')">Duration</button>
+      </div>
+    </div>
 
     <div id="episode-list" class="episode-list">
       <div class="loading">LOADING EPISODES</div>
@@ -612,14 +686,17 @@
 
 <script>
   // ─── Config ───────────────────────────────────────────────────────────────
-  const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co';
+  const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co
+';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+
   // ─── State ────────────────────────────────────────────────────────────────
   let allEpisodes = [];
   let currentFilter = 'script_ready';
   let currentSchool = 'ALL';
   let openCards = new Set();
   let openAudio = new Set();
+  let currentSort = 'score';
 
   // ─── Clock ────────────────────────────────────────────────────────────────
   function updateClock() {
@@ -676,11 +753,28 @@
   }
 
   function getFiltered() {
-    return allEpisodes.filter(ep => {
+    const query = document.getElementById('search-input')?.value?.toLowerCase() || '';
+    let results = allEpisodes.filter(ep => {
       const statusMatch = currentFilter === 'all' || ep.status === currentFilter;
       const schoolMatch = currentSchool === 'ALL' || ep.school === currentSchool;
-      return statusMatch && schoolMatch;
+      const searchMatch = !query || ep.title?.toLowerCase().includes(query);
+      return statusMatch && schoolMatch && searchMatch;
     });
+    // Sort
+    results.sort((a, b) => {
+      if (currentSort === 'score') return (b.relevance_score || 0) - (a.relevance_score || 0);
+      if (currentSort === 'date') return new Date(b.created_at) - new Date(a.created_at);
+      if (currentSort === 'duration') return (b.duration_estimate || 0) - (a.duration_estimate || 0);
+      return 0;
+    });
+    return results;
+  }
+
+  function setSort(sort) {
+    currentSort = sort;
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('sort-' + sort)?.classList.add('active');
+    renderEpisodes();
   }
 
   // ─── Stats ────────────────────────────────────────────────────────────────
@@ -736,6 +830,7 @@
     list.innerHTML = filtered.map((ep, i) => `
       <div class="episode-card" id="card-${ep.id}" style="animation-delay:${i * 0.05}s">
         <div class="card-header" onclick="toggleScript('${ep.id}')">
+          <div class="score-badge score-${ep.relevance_score || 0}">${ep.relevance_score || '?'}</div>
           <div class="school-tag school-${ep.school}">${ep.school}</div>
           <div class="card-meta">
             <div class="card-title">${ep.title}</div>
