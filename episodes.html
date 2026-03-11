@@ -756,12 +756,22 @@
     let results = allEpisodes.filter(ep => {
       const statusMatch = currentFilter === 'all' || ep.status === currentFilter;
       const schoolMatch = currentSchool === 'ALL' || ep.school === currentSchool;
-      const searchMatch = !query || ep.title?.toLowerCase().includes(query);
+      const searchMatch = !query || (() => {
+        const q = query.toLowerCase();
+        const titleMatch = ep.title?.toLowerCase().includes(q);
+        const scriptMatch = ep.script?.toLowerCase().includes(q);
+        // For short queries (<=3 chars) require word boundary to avoid false matches
+        if (q.length <= 3) {
+          const wordRe = new RegExp('\\b' + q + '\\b', 'i');
+          return wordRe.test(ep.title || '') || wordRe.test(ep.script || '');
+        }
+        return titleMatch || scriptMatch;
+      })();
       return statusMatch && schoolMatch && searchMatch;
     });
     // Sort
     results.sort((a, b) => {
-      if (currentSort === 'score') return (b.relevance_score || 0) - (a.relevance_score || 0);
+      if (currentSort === 'score') return (b.relevance_score || b.score || 0) - (a.relevance_score || a.score || 0);
       if (currentSort === 'date') return new Date(b.created_at) - new Date(a.created_at);
       if (currentSort === 'duration') return (b.duration_estimate || 0) - (a.duration_estimate || 0);
       return 0;
@@ -829,7 +839,7 @@
     list.innerHTML = filtered.map((ep, i) => `
       <div class="episode-card" id="card-${ep.id}" style="animation-delay:${i * 0.05}s">
         <div class="card-header" onclick="toggleScript('${ep.id}')">
-          <div class="score-badge score-${ep.relevance_score || 0}">${ep.relevance_score || '?'}</div>
+          <div class="score-badge score-${ep.relevance_score || ep.score || 0}">${ep.relevance_score || ep.score || '?'}</div>
           <div class="school-tag school-${ep.school}">${ep.school}</div>
           <div class="card-meta">
             <div class="card-title">${ep.title}</div>
