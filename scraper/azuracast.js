@@ -7,18 +7,17 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const AZURACAST_URL   = process.env.AZURACAST_URL   || 'http://157.245.208.49';
-const AZURACAST_KEY   = process.env.AZURACAST_KEY;
-const STATION         = process.env.AZURACAST_STATION || 'xsen_the_fans_network';
-const PLAYLIST_ID     = process.env.AZURACAST_PLAYLIST_ID || '1';
+const AZURACAST_URL  = process.env.AZURACAST_URL  || 'http://157.245.208.49';
+const AZURACAST_KEY  = process.env.AZURACAST_KEY;
+const STATION        = process.env.AZURACAST_STATION || 'xsen_the_fans_network';
+const PLAYLIST_ID    = process.env.AZURACAST_PLAYLIST_ID || '1';
 
-const CHECK_INTERVAL  = 60 * 60 * 1000; // every hour
+const CHECK_INTERVAL = 60 * 60 * 1000; // every hour
 
 // ─── Main upload loop ──────────────────────────────────────────────────────────
 export async function runAzuraCast() {
   console.log('[AzuraCast] Checking for voiced episodes to upload...');
 
-  // Pull all voiced episodes that have an audio_url
   const { data: episodes, error } = await supabase
     .from('xsen_episodes')
     .select('id, title, school, audio_url')
@@ -48,14 +47,12 @@ async function uploadEpisode(ep) {
   console.log(`[AzuraCast] Uploading: "${ep.title}" (${ep.school})`);
 
   try {
-    // 1. Download the MP3 from Supabase Storage
     const mp3Buffer = await downloadMp3(ep.audio_url);
     if (!mp3Buffer) {
       console.error(`[AzuraCast] Failed to download MP3 for episode ${ep.id}`);
       return;
     }
 
-    // 2. Build a clean filename
     const safeTitle = ep.title
       .replace(/[^a-z0-9]/gi, '_')
       .replace(/_+/g, '_')
@@ -63,27 +60,21 @@ async function uploadEpisode(ep) {
       .substring(0, 60);
     const filename = `xsen_${ep.school}_${safeTitle}.mp3`;
 
-    // 3. Upload to AzuraCast media library
     const mediaId = await uploadToAzuraCast(mp3Buffer, filename);
     if (!mediaId) {
       console.error(`[AzuraCast] Upload failed for episode ${ep.id}`);
       return;
     }
 
-    // 4. Add to playlist
     const added = await addToPlaylist(mediaId);
     if (!added) {
       console.error(`[AzuraCast] Failed to add episode ${ep.id} to playlist`);
       return;
     }
 
-    // 5. Mark as aired in Supabase
     const { error } = await supabase
       .from('xsen_episodes')
-      .update({
-        status: 'aired',
-        approved_at: new Date().toISOString()
-      })
+      .update({ status: 'aired', approved_at: new Date().toISOString() })
       .eq('id', ep.id);
 
     if (error) {
@@ -98,15 +89,32 @@ async function uploadEpisode(ep) {
   }
 }
 
-// ─── Download MP3 from Supabase Storage URL ────────────────────────────────────
-async function downloadMp3(url) {
+// ─── Download MP3 — handles both full URLs and Supabase storage paths ──────────
+async function downloadMp3(audioUrl) {
   try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.error(`[AzuraCast] MP3 download failed: ${res.status} ${res.statusText}`);
+    // Full URL — fetch directly
+    if (audioUrl.startsWith('http://') || audioUrl.startsWith('https://')) {
+      const res = await fetch(audioUrl);
+      if (!res.ok) {
+        console.error(`[AzuraCast] MP3 fetch failed: ${res.status} ${res.statusText}`);
+        return null;
+      }
+      return Buffer.from(await res.arrayBuffer());
+    }
+
+    // Relative path — use Supabase storage client
+    const storagePath = audioUrl.replace(/^\//, '').replace(/^xsen-audio\//, '');
+    console.log(`[AzuraCast] Downloading from Supabase storage: ${storagePath}`);
+    const { data, error } = await supabase.storage
+      .from('xsen-audio')
+      .download(storagePath);
+
+    if (error) {
+      console.error('[AzuraCast] Supabase storage download error:', error.message);
       return null;
     }
-    return Buffer.from(await res.arrayBuffer());
+
+    return Buffer.from(await data.arrayBuffer());
   } catch (err) {
     console.error('[AzuraCast] MP3 download error:', err.message);
     return null;
@@ -184,6 +192,6 @@ async function addToPlaylist(mediaId) {
 // ─── Scheduler ────────────────────────────────────────────────────────────────
 export function startAzuraCast() {
   console.log('[AzuraCast] Uploader started — checking every hour for voiced episodes.');
-  runAzuraCast(); // run immediately on start
+  runAzuraCast();
   setInterval(runAzuraCast, CHECK_INTERVAL);
 }
