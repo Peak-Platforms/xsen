@@ -333,6 +333,65 @@
     color: var(--text);
   }
 
+  .btn-play {
+    background: transparent;
+    border-color: #b47fff;
+    color: #b47fff;
+  }
+  .btn-play:hover {
+    background: #b47fff;
+    color: var(--bg);
+  }
+
+  .btn-download {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .btn-download:hover {
+    border-color: var(--muted);
+    color: var(--text);
+  }
+
+  .audio-panel {
+    display: none;
+    border-top: 1px solid rgba(180,127,255,0.2);
+    padding: 20px 24px;
+    background: rgba(180,127,255,0.04);
+  }
+  .audio-panel.open { display: block; }
+  .audio-panel audio {
+    width: 100%;
+    height: 36px;
+  }
+  .audio-meta {
+    margin-top: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .audio-meta a {
+    color: #b47fff;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  .audio-meta a:hover { text-decoration: underline; }
+
   /* Script viewer */
   .script-panel {
     display: none;
@@ -553,7 +612,8 @@
 
 <script>
   // ─── Config ───────────────────────────────────────────────────────────────
-  const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co';
+  const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co
+';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
 
   // ─── State ────────────────────────────────────────────────────────────────
@@ -561,6 +621,7 @@
   let currentFilter = 'script_ready';
   let currentSchool = 'ALL';
   let openCards = new Set();
+  let openAudio = new Set();
 
   // ─── Clock ────────────────────────────────────────────────────────────────
   function updateClock() {
@@ -693,11 +754,23 @@
               <button class="btn btn-reject" onclick="reject('${ep.id}')">✗ REJECT</button>
             ` : ep.status === 'rejected' ? `
               <button class="btn btn-approve" onclick="approve('${ep.id}')">↺ RESTORE</button>
+            ` : ep.status === 'voiced' && ep.audio_url ? `
+              <button class="btn btn-play" onclick="toggleAudio('${ep.id}')">▶ PLAY</button>
+              <a class="btn-download" href="${ep.audio_url}" target="_blank" download>↓ MP3</a>
             ` : `
               <span class="status-badge status-${ep.status}">${ep.status?.toUpperCase()}</span>
             `}
           </div>
         </div>
+        ${ep.status === 'voiced' && ep.audio_url ? `
+        <div class="audio-panel ${openAudio.has(ep.id) ? 'open' : ''}" id="audio-${ep.id}">
+          <audio controls src="${ep.audio_url}" preload="none"></audio>
+          <div class="audio-meta">
+            <span>${ep.audio_url.split('/').pop()}</span>
+            <a href="${ep.audio_url}" target="_blank">↗ OPEN IN NEW TAB</a>
+          </div>
+        </div>
+        ` : ''}
         <div class="script-panel ${openCards.has(ep.id) ? 'open' : ''}" id="script-${ep.id}">
           <div class="script-text">${highlightPauses(ep.script || 'No script available.')}</div>
         </div>
@@ -712,6 +785,16 @@
       openCards.add(id);
     }
     const panel = document.getElementById(`script-${id}`);
+    if (panel) panel.classList.toggle('open');
+  }
+
+  function toggleAudio(id) {
+    if (openAudio.has(id)) {
+      openAudio.delete(id);
+    } else {
+      openAudio.add(id);
+    }
+    const panel = document.getElementById(`audio-${id}`);
     if (panel) panel.classList.toggle('open');
   }
 
