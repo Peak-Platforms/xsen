@@ -21,7 +21,7 @@ export async function runAzuraCast() {
   // Pull all voiced episodes that have an audio_url
   const { data: episodes, error } = await supabase
     .from('xsen_episodes')
-    .select('id, title, school, audio_url, audio_path')
+    .select('id, title, school, audio_url')
     .eq('status', 'voiced')
     .not('audio_url', 'is', null)
     .order('created_at', { ascending: true });
