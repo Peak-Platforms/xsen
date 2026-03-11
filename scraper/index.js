@@ -1,4 +1,4 @@
-// index.js - XSEN Scraper + Script Generator + Voicer Coordinator
+// index.js - XSEN Scraper + Script Generator + Voicer + AzuraCast Coordinator
 
 import http from "http";
 import * as dotenv from "dotenv";
@@ -46,3 +46,10 @@ import("./scriptgen.js")
 import("./voicer.js")
   .then(() => console.log("🎙️  Voicer started"))
   .catch(err => console.error("Voicer failed to start:", err));
+
+import("./azuracast.js")
+  .then(({ startAzuraCast }) => {
+    startAzuraCast();
+    console.log("📻 AzuraCast uploader started");
+  })
+  .catch(err => console.error("AzuraCast uploader failed to start:", err));
