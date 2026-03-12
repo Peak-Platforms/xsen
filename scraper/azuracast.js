@@ -7,10 +7,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const AZURACAST_URL  = (process.env.AZURACAST_URL  || "http://157.245.208.49").replace(/^=+/, "");
-const AZURACAST_KEY  = (process.env.AZURACAST_KEY || "").replace(/^=+/, "");
-const STATION        = (process.env.AZURACAST_STATION || "xsen_the_fans_network").replace(/^=+/, "");
-const PLAYLIST_ID    = (process.env.AZURACAST_PLAYLIST_ID || "1").replace(/^=+/, "");
+const AZURACAST_URL  = "http://157.245.208.49";
+const AZURACAST_KEY  = "7b1a1ffdb9291bb1:912efae9b008fb4db4a20e26c9169d9a";
+const STATION        = "xsen_the_fans_network";
+const PLAYLIST_ID    = "1";
 
 const CHECK_INTERVAL = 60 * 60 * 1000; // every hour
 
