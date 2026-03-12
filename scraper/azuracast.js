@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const AZURACAST_URL  = "http://157.245.208.49";
+const AZURACAST_URL  = "https://radio.xsen.fun";
 const AZURACAST_KEY  = "7b1a1ffdb9291bb1:912efae9b008fb4db4a20e26c9169d9a";
 const STATION        = "xsen_the_fans_network";
 const PLAYLIST_ID    = "1";
@@ -125,7 +125,6 @@ async function uploadToAzuraCast(buffer, filename) {
     const uploadUrl = `${AZURACAST_URL}/api/station/${STATION}/files`;
     console.log(`[AzuraCast] POST ${uploadUrl}`);
 
-    // AzuraCast API requires base64 encoded file with path
     const base64 = buffer.toString('base64');
     const payload = {
       path: filename,
