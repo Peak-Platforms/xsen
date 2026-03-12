@@ -107,9 +107,8 @@ async function generateSchoolOutro(story, school) {
 }
 
 function estimateDuration(script) {
-  // Average speaking pace: ~150 words per minute
   const wordCount = script.split(/\s+/).length;
-  return Math.round((wordCount / 150) * 60); // returns seconds
+  return Math.round((wordCount / 150) * 60);
 }
 
 // ─── Supabase Operations ──────────────────────────────────────────────────────
@@ -188,13 +187,13 @@ async function generateEpisodesForStory(story) {
     console.log(`   ✅ Master script: ~${Math.round(duration / 60)} min (${masterScript.split(/\s+/).length} words)`);
   }
 
-  // 2. Generate school-specific outros
-  const schools = story.affected_schools?.filter(s => SCHOOL_CONFIG[s]) || [];
+  // 2. Generate school-specific outros for ACTIVE schools only
+  // ─── KEY: filter by active:true — inactive schools wait for paying clients ───
+  const activeSchools = Object.keys(SCHOOL_CONFIG).filter(s => SCHOOL_CONFIG[s].active);
 
-  // If ALL_CFB, generate for all three main schools
   const targetSchools = story.affected_schools?.includes("ALL_CFB")
-    ? Object.keys(SCHOOL_CONFIG)
-    : schools;
+    ? activeSchools
+    : (story.affected_schools || []).filter(s => SCHOOL_CONFIG[s]?.active);
 
   for (const school of targetSchools) {
     await new Promise(r => setTimeout(r, 800)); // rate limit
@@ -203,7 +202,6 @@ async function generateEpisodesForStory(story) {
     const outro = await generateSchoolOutro(story, school);
 
     if (outro) {
-      // Full episode = master + school outro combined
       const fullScript = `${masterScript}\n\n[SCHOOL SEGMENT - ${school}]\n\n${outro}`;
       const schoolEpisode = await saveEpisode(
         story.id,
@@ -233,7 +231,7 @@ async function runScriptGenerator() {
   console.log(`✍️  XSEN Script Generator — ${new Date().toLocaleString()}`);
   console.log("=".repeat(60));
 
-  const stories = await getQueuedStories(3); // Process 3 at a time
+  const stories = await getQueuedStories(3);
 
   if (!stories.length) {
     console.log("No queued stories to process.");
@@ -276,10 +274,8 @@ async function runScriptGenerator() {
 
 // ─── Scheduler ────────────────────────────────────────────────────────────────
 
-// Run immediately
 runScriptGenerator();
 
-// Then every 2 hours (offset from scraper by 30 min)
 cron.schedule("30 */2 * * *", () => {
   runScriptGenerator();
 });
