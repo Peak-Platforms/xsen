@@ -1021,7 +1021,7 @@
             if (!audioEl.src || audioEl.src === window.location.href) {
                 audioEl.src = LIVE_STREAM_URL + '?ts=' + Date.now();
                 audioEl.play()
-                    .then(() => { audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Radio playlist'; })
+                    .then(() => { audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Sooners Radio playlist'; })
                     .catch(() => { audioStatus.textContent = 'Tap ▶ to listen'; });
             }
         }
