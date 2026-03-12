@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import cron from "node-cron";
 import * as dotenv from "dotenv";
-import { RSS_FEEDS, GOOGLE_NEWS_SEARCHES, HIGH_VALUE_KEYWORDS } from "./sources.js";
+import { RSS_FEEDS, GOOGLE_NEWS_QUERIES, HIGH_VALUE_KEYWORDS } from "./sources.js";
 
 dotenv.config();
 
@@ -25,6 +25,11 @@ const parser = new Parser({
   timeout: 10000,
   headers: { "User-Agent": "XSEN-FanCast-Aggregator/1.0" }
 });
+
+// ─── Active sources only ──────────────────────────────────────────────────────
+
+const activeFeeds   = RSS_FEEDS.filter(s => s.active !== false);
+const activeQueries = GOOGLE_NEWS_QUERIES.filter(s => s.active !== false);
 
 // ─── Scraper Functions ────────────────────────────────────────────────────────
 
@@ -52,7 +57,6 @@ async function scrapeRSSFeed(feed) {
 }
 
 async function scrapeGoogleNews(search) {
-  // Google News RSS - no API key needed
   const encodedQuery = encodeURIComponent(search.query);
   const url = `https://news.google.com/rss/search?q=${encodedQuery}&hl=en-US&gl=US&ceid=US:en`;
 
@@ -66,7 +70,7 @@ async function scrapeGoogleNews(search) {
       source_type: "google_news",
       published_at: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
       topics: search.topics || [],
-      affected_schools: [],
+      affected_schools: search.school ? [search.school] : [],
       status: "pending"
     }));
 
@@ -83,7 +87,6 @@ async function scrapeGoogleNews(search) {
 async function saveStories(stories) {
   if (!stories.length) return 0;
 
-  // Upsert - skip duplicates by URL
   const { data, error } = await supabase
     .from("xsen_stories")
     .upsert(stories, {
@@ -143,13 +146,13 @@ STORY TITLE: ${story.title}
 SUMMARY: ${story.summary || "No summary available"}
 SOURCE: ${story.source}
 
-HIGH VALUE KEYWORDS TO WATCH FOR: ${HIGH_VALUE_KEYWORDS.join(", ")}
+HIGH VALUE KEYWORDS TO WATCH FOR: ${HIGH_VALUE_KEYWORDS ? HIGH_VALUE_KEYWORDS.join(", ") : "NIL, transfer portal, private equity, Smash Capital, realignment"}
 
 Respond ONLY with a JSON object, no other text:
 {
   "score": <1-10 integer>,
   "reason": "<one sentence explaining the score>",
-  "schools": <array of affected schools from ["OU", "OSU", "TEXAS", "TEXAS_TECH", "ALL_CFB"]>,
+  "schools": <array of affected schools using codes like "OU", "OSU", "TEXAS", "ALABAMA", "GEORGIA", "OHIO_STATE" etc, or ["ALL_CFB"] if national>,
   "topics": <array from ["NIL", "SMASH_CAPITAL", "PE_INVESTMENT", "TRANSFER_PORTAL", "REALIGNMENT", "FAN_RIGHTS", "LEGAL", "GENERAL_CFB"]>,
   "episode_type": <"full_episode" if score >= 8, "news_drop" if score 5-7, null if score < 5>
 }
@@ -193,7 +196,6 @@ async function scoreAllPendingStories() {
     const emoji = scoring.score >= 8 ? "🔴" : scoring.score >= 5 ? "🟡" : "⚪";
     console.log(`  ${emoji} [${scoring.score}/10] ${story.title.substring(0, 70)}...`);
 
-    // Rate limit protection
     await new Promise(r => setTimeout(r, 500));
   }
 }
@@ -227,16 +229,16 @@ async function runScraper() {
 
   let allStories = [];
 
-  // 1. Scrape RSS feeds
-  console.log("\n📡 Scraping RSS feeds...");
-  for (const feed of RSS_FEEDS) {
+  // 1. Scrape active RSS feeds
+  console.log(`\n📡 Scraping ${activeFeeds.length} RSS feeds...`);
+  for (const feed of activeFeeds) {
     const stories = await scrapeRSSFeed(feed);
     allStories = allStories.concat(stories);
   }
 
-  // 2. Scrape Google News
-  console.log("\n🔍 Scraping Google News...");
-  for (const search of GOOGLE_NEWS_SEARCHES) {
+  // 2. Scrape active Google News queries
+  console.log(`\n🔍 Scraping ${activeQueries.length} Google News queries...`);
+  for (const search of activeQueries) {
     const stories = await scrapeGoogleNews(search);
     allStories = allStories.concat(stories);
   }
@@ -266,10 +268,8 @@ async function runScraper() {
 
 // ─── Scheduler ───────────────────────────────────────────────────────────────
 
-// Run immediately on start
 runScraper();
 
-// Then every 2 hours
 cron.schedule("0 */2 * * *", () => {
   runScraper();
 });
