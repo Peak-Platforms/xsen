@@ -150,7 +150,7 @@ async function getApprovedEpisodes(limit = 5) {
     .from('xsen_episodes')
     .select('*')
     .eq('status', 'approved')
-    .eq('school', 'MASTER')  // Voice MASTER only — school episodes wait for paying clients
+    .eq('school', 'OU')  // Voice MASTER only — school episodes wait for paying clients
     .order('approved_at', { ascending: true })
     .limit(limit);
 
