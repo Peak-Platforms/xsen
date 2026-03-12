@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const AZURACAST_URL  = "https://stream.xsen.fun";
+const AZURACAST_URL  = "https://radio.xsen.fun";
 const AZURACAST_KEY  = "7b1a1ffdb9291bb1:912efae9b008fb4db4a20e26c9169d9a";
 const STATION        = "xsen_the_fans_network";
 const PLAYLIST_ID    = "1";
@@ -61,7 +61,7 @@ async function uploadEpisode(ep) {
       .replace(/_+/g, '_')
       .toLowerCase()
       .substring(0, 60);
-    const filename = `xsen_${ep.school}_${safeTitle}.mp3`;
+    const filename = `episodes/xsen_${ep.school}_${safeTitle}.mp3`;
 
     const mediaId = await uploadToAzuraCast(mp3Buffer, filename);
     if (!mediaId) {
