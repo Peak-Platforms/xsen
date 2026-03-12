@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const AZURACAST_URL  = "const AZURACAST_URL  = "https://stream.xsen.fun";";
+const AZURACAST_URL  = "https://stream.xsen.fun";
 const AZURACAST_KEY  = "7b1a1ffdb9291bb1:912efae9b008fb4db4a20e26c9169d9a";
 const STATION        = "xsen_the_fans_network";
 const PLAYLIST_ID    = "1";
