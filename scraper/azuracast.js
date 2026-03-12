@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
-import FormData from 'form-data';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -126,16 +125,17 @@ async function uploadToAzuraCast(buffer, filename) {
     const uploadUrl = `${AZURACAST_URL}/api/station/${STATION}/files`;
     console.log(`[AzuraCast] POST ${uploadUrl}`);
 
-    const form = new FormData();
-    form.append('file', buffer, {
-      filename,
-      contentType: 'audio/mpeg'
-    });
+    // AzuraCast API requires base64 encoded file with path
+    const base64 = buffer.toString('base64');
+    const payload = {
+      path: filename,
+      file: `data:audio/mpeg;base64,${base64}`
+    };
 
-    const res = await axios.post(uploadUrl, form, {
+    const res = await axios.post(uploadUrl, payload, {
       headers: {
         'X-API-Key': AZURACAST_KEY,
-        ...form.getHeaders()
+        'Content-Type': 'application/json'
       },
       maxContentLength: Infinity,
       maxBodyLength: Infinity
