@@ -19,25 +19,24 @@ const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 const ELEVENLABS_API_URL = `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`;
 
 // ─── Voice Settings ───────────────────────────────────────────────────────────
-// Tune these after first test to adjust delivery
 
 const VOICE_SETTINGS = {
-  stability: 0.45,          // Lower = more expressive/emotional. Higher = more consistent
-  similarity_boost: 0.85,   // How closely to match your cloned voice
-  style: 0.35,              // Style exaggeration — adds energy to delivery
-  use_speaker_boost: true   // Enhances clarity
+  stability: 0.45,
+  similarity_boost: 0.85,
+  style: 0.35,
+  use_speaker_boost: true
 };
 
-const MODEL_ID = "eleven_multilingual_v2"; // Best quality model
+const MODEL_ID = "eleven_turbo_v2_5"; // Half cost, high quality — saves 50% credits
 
 // ─── Clean Script for TTS ─────────────────────────────────────────────────────
 
 function cleanScriptForTTS(script) {
   return script
-    .replace(/\[PAUSE\]/g, '... ')                    // Convert [PAUSE] to natural pauses
-    .replace(/\[SCHOOL SEGMENT - \w+\]\n\n/g, '... ') // Remove school segment markers
-    .replace(/\n\n+/g, '\n')                           // Collapse multiple newlines
-    .replace(/\*\*/g, '')                              // Remove any bold markers
+    .replace(/\[PAUSE\]/g, '... ')
+    .replace(/\[SCHOOL SEGMENT - \w+\]\n\n/g, '... ')
+    .replace(/\n\n+/g, '\n')
+    .replace(/\*\*/g, '')
     .trim();
 }
 
@@ -45,27 +44,22 @@ function cleanScriptForTTS(script) {
 
 async function generateAudio(script) {
   const cleanedScript = cleanScriptForTTS(script);
-
-  // ElevenLabs has a 5000 char limit per request — chunk if needed
   const chunks = chunkScript(cleanedScript, 4500);
 
   if (chunks.length === 1) {
     return await callElevenLabs(chunks[0]);
   }
 
-  // Multiple chunks — generate and combine
   console.log(`   📄 Script chunked into ${chunks.length} parts`);
   const audioBuffers = [];
   for (const chunk of chunks) {
     const buffer = await callElevenLabs(chunk);
     audioBuffers.push(buffer);
-    await new Promise(r => setTimeout(r, 500)); // Rate limit between chunks
+    await new Promise(r => setTimeout(r, 500));
   }
 
-  // Combine all audio buffers
   const totalLength = audioBuffers.reduce((sum, buf) => sum + buf.length, 0);
-  const combined = Buffer.concat(audioBuffers, totalLength);
-  return combined;
+  return Buffer.concat(audioBuffers, totalLength);
 }
 
 function chunkScript(text, maxChars) {
@@ -125,7 +119,6 @@ async function uploadAudioToSupabase(episodeId, school, audioBuffer) {
 
   if (error) throw new Error(`Storage upload error: ${error.message}`);
 
-  // Get public URL
   const { data: urlData } = supabase.storage
     .from('xsen-audio')
     .getPublicUrl(filename);
@@ -136,10 +129,7 @@ async function uploadAudioToSupabase(episodeId, school, audioBuffer) {
 async function updateEpisodeVoiced(id, audioUrl) {
   const { error } = await supabase
     .from('xsen_episodes')
-    .update({
-      status: 'voiced',
-      audio_url: audioUrl
-    })
+    .update({ status: 'voiced', audio_url: audioUrl })
     .eq('id', id);
 
   if (error) throw new Error(`Update error: ${error.message}`);
@@ -153,13 +143,14 @@ async function markEpisodeFailed(id, reason) {
   console.error(`   ✗ Episode ${id} failed: ${reason}`);
 }
 
-// ─── Get Approved Episodes ────────────────────────────────────────────────────
+// ─── Get Approved Episodes — MASTER only until school clients onboarded ───────
 
 async function getApprovedEpisodes(limit = 5) {
   const { data, error } = await supabase
     .from('xsen_episodes')
     .select('*')
     .eq('status', 'approved')
+    .eq('school', 'MASTER')  // Voice MASTER only — school episodes wait for paying clients
     .order('approved_at', { ascending: true })
     .limit(limit);
 
@@ -185,33 +176,29 @@ async function runVoicer() {
   const episodes = await getApprovedEpisodes(5);
 
   if (!episodes.length) {
-    console.log('No approved episodes to voice.');
+    console.log('No approved MASTER episodes to voice.');
     return;
   }
 
-  console.log(`\n🎤 Voicing ${episodes.length} approved episodes...`);
+  console.log(`\n🎤 Voicing ${episodes.length} approved MASTER episodes...`);
 
   for (const episode of episodes) {
     console.log(`\n📼 [${episode.school}] ${episode.title.substring(0, 60)}...`);
     console.log(`   Duration estimate: ~${Math.round(episode.duration_estimate / 60)} min`);
 
     try {
-      // 1. Generate audio
-      console.log(`   🔊 Calling ElevenLabs...`);
+      console.log(`   🔊 Calling ElevenLabs (${MODEL_ID})...`);
       const audioBuffer = await generateAudio(episode.script);
       const actualSizeKB = Math.round(audioBuffer.length / 1024);
       console.log(`   ✓ Audio generated: ${actualSizeKB}KB`);
 
-      // 2. Upload to Supabase Storage
       console.log(`   ☁️  Uploading to storage...`);
       const audioUrl = await uploadAudioToSupabase(episode.id, episode.school, audioBuffer);
       console.log(`   ✓ Stored: ${audioUrl}`);
 
-      // 3. Update episode status
       await updateEpisodeVoiced(episode.id, audioUrl);
       console.log(`   ✅ Episode voiced and ready for AzuraCast`);
 
-      // Rate limit between episodes — ElevenLabs free tier is sensitive
       await new Promise(r => setTimeout(r, 2000));
 
     } catch (err) {
@@ -219,7 +206,6 @@ async function runVoicer() {
     }
   }
 
-  // Print voiced queue
   const { data: voiced } = await supabase
     .from('xsen_episodes')
     .select('title, school, audio_url, duration_estimate')
@@ -242,10 +228,8 @@ async function runVoicer() {
 
 // ─── Scheduler ────────────────────────────────────────────────────────────────
 
-// Run immediately on start
 runVoicer();
 
-// Then every hour — checks for newly approved episodes
 cron.schedule("0 * * * *", () => {
   runVoicer();
 });
