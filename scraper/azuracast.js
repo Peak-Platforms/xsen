@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import FormData from 'form-data';
 
 const supabase = createClient(
@@ -17,6 +17,7 @@ const CHECK_INTERVAL = 60 * 60 * 1000; // every hour
 // ─── Main upload loop ──────────────────────────────────────────────────────────
 export async function runAzuraCast() {
   console.log('[AzuraCast] Checking for voiced episodes to upload...');
+  console.log(`[AzuraCast] URL: ${AZURACAST_URL} | Station: ${STATION} | Playlist: ${PLAYLIST_ID}`);
 
   const { data: episodes, error } = await supabase
     .from('xsen_episodes')
@@ -45,6 +46,7 @@ export async function runAzuraCast() {
 // ─── Upload single episode ─────────────────────────────────────────────────────
 async function uploadEpisode(ep) {
   console.log(`[AzuraCast] Uploading: "${ep.title}" (${ep.school})`);
+  console.log(`[AzuraCast] Audio URL: ${ep.audio_url}`);
 
   try {
     const mp3Buffer = await downloadMp3(ep.audio_url);
@@ -52,6 +54,8 @@ async function uploadEpisode(ep) {
       console.error(`[AzuraCast] Failed to download MP3 for episode ${ep.id}`);
       return;
     }
+
+    console.log(`[AzuraCast] Downloaded ${Math.round(mp3Buffer.length / 1024)}KB`);
 
     const safeTitle = ep.title
       .replace(/[^a-z0-9]/gi, '_')
@@ -62,7 +66,7 @@ async function uploadEpisode(ep) {
 
     const mediaId = await uploadToAzuraCast(mp3Buffer, filename);
     if (!mediaId) {
-      console.error(`[AzuraCast] Upload failed for episode ${ep.id}`);
+      console.error(`[AzuraCast] Upload to AzuraCast failed for episode ${ep.id}`);
       return;
     }
 
@@ -78,7 +82,7 @@ async function uploadEpisode(ep) {
       .eq('id', ep.id);
 
     if (error) {
-      console.error(`[AzuraCast] Failed to update status for episode ${ep.id}:`, error.message);
+      console.error(`[AzuraCast] Failed to update status:`, error.message);
       return;
     }
 
@@ -89,20 +93,15 @@ async function uploadEpisode(ep) {
   }
 }
 
-// ─── Download MP3 — handles both full URLs and Supabase storage paths ──────────
+// ─── Download MP3 ─────────────────────────────────────────────────────────────
 async function downloadMp3(audioUrl) {
   try {
-    // Full URL — fetch directly
     if (audioUrl.startsWith('http://') || audioUrl.startsWith('https://')) {
-      const res = await fetch(audioUrl);
-      if (!res.ok) {
-        console.error(`[AzuraCast] MP3 fetch failed: ${res.status} ${res.statusText}`);
-        return null;
-      }
-      return Buffer.from(await res.arrayBuffer());
+      const res = await axios.get(audioUrl, { responseType: 'arraybuffer' });
+      return Buffer.from(res.data);
     }
 
-    // Relative path — use Supabase storage client
+    // Supabase storage path
     const storagePath = audioUrl.replace(/^\//, '').replace(/^xsen-audio\//, '');
     console.log(`[AzuraCast] Downloading from Supabase storage: ${storagePath}`);
     const { data, error } = await supabase.storage
@@ -110,81 +109,66 @@ async function downloadMp3(audioUrl) {
       .download(storagePath);
 
     if (error) {
-      console.error('[AzuraCast] Supabase storage download error:', error.message);
+      console.error('[AzuraCast] Supabase storage error:', error.message);
       return null;
     }
 
     return Buffer.from(await data.arrayBuffer());
   } catch (err) {
-    console.error('[AzuraCast] MP3 download error:', err.message);
+    console.error('[AzuraCast] Download error:', err.message);
     return null;
   }
 }
 
-// ─── Upload MP3 buffer to AzuraCast media library ──────────────────────────────
+// ─── Upload to AzuraCast ───────────────────────────────────────────────────────
 async function uploadToAzuraCast(buffer, filename) {
   try {
+    const uploadUrl = `${AZURACAST_URL}/api/station/${STATION}/files`;
+    console.log(`[AzuraCast] POST ${uploadUrl}`);
+
     const form = new FormData();
     form.append('file', buffer, {
       filename,
       contentType: 'audio/mpeg'
     });
 
-    const res = await fetch(
-      `${AZURACAST_URL}/api/station/${STATION}/files`,
-      {
-        method: 'POST',
-        headers: {
-          'X-API-Key': AZURACAST_KEY,
-          ...form.getHeaders()
-        },
-        body: form
-      }
-    );
+    const res = await axios.post(uploadUrl, form, {
+      headers: {
+        'X-API-Key': AZURACAST_KEY,
+        ...form.getHeaders()
+      },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity
+    });
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error(`[AzuraCast] File upload failed (${res.status}):`, text);
-      return null;
-    }
-
-    const data = await res.json();
-    const mediaId = data.id || data.unique_id;
+    const mediaId = res.data?.id || res.data?.unique_id;
     console.log(`[AzuraCast] File uploaded, media ID: ${mediaId}`);
     return mediaId;
 
   } catch (err) {
-    console.error('[AzuraCast] Upload error:', err.message);
+    console.error('[AzuraCast] Upload error:', err.response?.data || err.message);
     return null;
   }
 }
 
-// ─── Add media file to playlist ────────────────────────────────────────────────
+// ─── Add to playlist ──────────────────────────────────────────────────────────
 async function addToPlaylist(mediaId) {
   try {
-    const res = await fetch(
-      `${AZURACAST_URL}/api/station/${STATION}/playlist/${PLAYLIST_ID}/apply-to`,
-      {
-        method: 'PUT',
-        headers: {
-          'X-API-Key': AZURACAST_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ media_ids: [mediaId] })
-      }
-    );
+    const playlistUrl = `${AZURACAST_URL}/api/station/${STATION}/playlist/${PLAYLIST_ID}/apply-to`;
+    console.log(`[AzuraCast] Adding to playlist: ${playlistUrl}`);
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error(`[AzuraCast] Add to playlist failed (${res.status}):`, text);
-      return false;
-    }
+    await axios.put(playlistUrl, { media_ids: [mediaId] }, {
+      headers: {
+        'X-API-Key': AZURACAST_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
 
     console.log(`[AzuraCast] Added to playlist ${PLAYLIST_ID}`);
     return true;
 
   } catch (err) {
-    console.error('[AzuraCast] Playlist error:', err.message);
+    console.error('[AzuraCast] Playlist error:', err.response?.data || err.message);
     return false;
   }
 }
