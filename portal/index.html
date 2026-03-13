@@ -702,6 +702,8 @@ async function postAnnouncement() {
 
   // Only MASTER can post to ALL — school operators can only post to their school
   const targetSchool = currentStation.school === 'MASTER' ? school : currentStation.school;
+  // Deactivate current announcements for this school before posting new one
+  await sb.from('xsen_announcements').update({ active: false }).eq('school', targetSchool);
 
   const { error } = await sb.from('xsen_announcements').insert({
     message, type, school: targetSchool,
