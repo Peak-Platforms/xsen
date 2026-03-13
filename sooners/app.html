@@ -48,7 +48,6 @@
     .nav-bar { display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #eee; background: #fafafa; border-radius: 0 0 10px 10px; }
     .nav-bar a { font-size: 12px; color: #841617; opacity: 0.7; transition: opacity 0.2s; }
     .nav-bar a:hover { opacity: 1; }
-    /* ── PAYWALL ── */
     #paywallCard { display: none; margin: 12px; padding: 20px; background: #fff8e1; border: 2px solid #841617; border-radius: 14px; text-align: center; }
     #paywallCard h3 { color: #841617; font-size: 17px; margin-bottom: 8px; }
     #paywallCard p { font-size: 13px; color: #555; margin-bottom: 14px; }
@@ -66,170 +65,31 @@
       .chat-input button { border-radius: 0; }
       .nav-bar { border-radius: 0; }
     }
-
-    /* ── NIL NOTIFICATION CSS ── */
-    #nil-prompt-container {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 999;
-      padding: 0 16px 16px;
-      pointer-events: none;
-    }
-
-    .nil-prompt {
-      pointer-events: all;
-      background: #111111;
-      border: 1px solid rgba(201,168,76,0.6);
-      border-radius: 10px;
-      overflow: hidden;
-      max-width: 480px;
-      margin: 0 auto;
-      box-shadow:
-        0 0 0 1px rgba(201,168,76,0.15),
-        0 30px 80px rgba(0,0,0,0.8),
-        0 0 60px rgba(132,22,23,0.3);
-      animation: nilSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .nil-prompt-exit {
-      animation: nilSlideDown 0.4s ease forwards !important;
-    }
-
-    @keyframes nilSlideUp {
-      from { opacity: 0; transform: translateY(100%); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes nilSlideDown {
-      from { opacity: 1; transform: translateY(0); }
-      to   { opacity: 0; transform: translateY(100%); }
-    }
-
-    .nil-prompt-accent {
-      height: 4px;
-      background: linear-gradient(90deg, #841617, #c9a84c, #841617);
-      background-size: 200% 100%;
-      animation: accentShimmer 2s linear infinite;
-    }
-
-    @keyframes accentShimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .nil-prompt-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 22px 24px;
-      flex-wrap: wrap;
-    }
-
-    .nil-prompt-tag {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: #c9a84c;
-      margin-bottom: 8px;
-    }
-
-    .nil-dot {
-      width: 8px;
-      height: 8px;
-      background: #ff4444;
-      border-radius: 50%;
-      animation: nilPulse 1s infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes nilPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(1.4); }
-    }
-
-    .nil-prompt-message {
-      font-size: 22px;
-      font-weight: 700;
-      color: #f5f5f0;
-      margin-bottom: 6px;
-      line-height: 1.2;
-    }
-
-    .nil-prompt-sub {
-      font-size: 11px;
-      color: rgba(245,245,240,0.35);
-      letter-spacing: 0.3px;
-    }
-
-    .nil-prompt-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-shrink: 0;
-    }
-
-    .nil-prompt-btn {
-      background: #841617;
-      color: #f5f5f0;
-      padding: 14px 28px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      white-space: nowrap;
-      transition: all 0.2s;
-      box-shadow: 0 4px 20px rgba(132,22,23,0.5);
-    }
-
-    .nil-prompt-btn:hover {
-      background: #9a1c1d;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 30px rgba(132,22,23,0.7);
-    }
-
-    .nil-prompt-dismiss {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      color: rgba(245,245,240,0.4);
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .nil-prompt-dismiss:hover {
-      background: rgba(255,255,255,0.1);
-      color: #f5f5f0;
-    }
-
-    .nil-prompt-progress {
-      height: 4px;
-      background: rgba(255,255,255,0.04);
-    }
-
-    .nil-prompt-progress-fill {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #841617, #c9a84c);
-      border-radius: 0 2px 2px 0;
-    }
+    #nil-prompt-container { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; padding: 0 16px 16px; pointer-events: none; }
+    .nil-prompt { pointer-events: all; background: #111111; border: 1px solid rgba(201,168,76,0.6); border-radius: 10px; overflow: hidden; max-width: 480px; margin: 0 auto; box-shadow: 0 0 0 1px rgba(201,168,76,0.15), 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(132,22,23,0.3); animation: nilSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .nil-prompt-exit { animation: nilSlideDown 0.4s ease forwards !important; }
+    @keyframes nilSlideUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes nilSlideDown { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(100%); } }
+    .nil-prompt-accent { height: 4px; background: linear-gradient(90deg, #841617, #c9a84c, #841617); background-size: 200% 100%; animation: accentShimmer 2s linear infinite; }
+    @keyframes accentShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .nil-prompt-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 24px; flex-wrap: wrap; }
+    .nil-prompt-tag { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #c9a84c; margin-bottom: 8px; }
+    .nil-dot { width: 8px; height: 8px; background: #ff4444; border-radius: 50%; animation: nilPulse 1s infinite; flex-shrink: 0; }
+    @keyframes nilPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.4); } }
+    .nil-prompt-message { font-size: 22px; font-weight: 700; color: #f5f5f0; margin-bottom: 6px; line-height: 1.2; }
+    .nil-prompt-sub { font-size: 11px; color: rgba(245,245,240,0.35); letter-spacing: 0.3px; }
+    .nil-prompt-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .nil-prompt-btn { background: #841617; color: #f5f5f0; padding: 14px 28px; border-radius: 5px; text-decoration: none; font-weight: 700; font-size: 15px; white-space: nowrap; transition: all 0.2s; box-shadow: 0 4px 20px rgba(132,22,23,0.5); }
+    .nil-prompt-btn:hover { background: #9a1c1d; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(132,22,23,0.7); }
+    .nil-prompt-dismiss { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; color: rgba(245,245,240,0.4); font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nil-prompt-dismiss:hover { background: rgba(255,255,255,0.1); color: #f5f5f0; }
+    .nil-prompt-progress { height: 4px; background: rgba(255,255,255,0.04); }
+    .nil-prompt-progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #841617, #c9a84c); border-radius: 0 2px 2px 0; }
   </style>
 </head>
 <body>
+  <div id="announcement-bar"></div>
+
   <div class="chat-container">
     <header class="chat-header">
       <a href="https://xsen.fun/sooners" class="header-logo-link" target="_blank" rel="noopener">
@@ -262,7 +122,6 @@
       <div id="fanMessageStatus" class="fan-message-status"></div>
     </div>
 
-    <!-- PAYWALL CARD -->
     <div id="paywallCard">
       <h3>🏈 You've used your 5 free messages!</h3>
       <p>Start your 3-day free trial to keep chatting with Boomer — no charge today.</p>
@@ -523,6 +382,44 @@
   <div id="nil-prompt-container"></div>
   </div>
   <script src="/xsen-nil-notifications.js"></script>
+
+  <!-- XSEN Announcement Banner -->
+  <script>
+    window.XSEN_SCHOOL = 'OU';
+    (async function initXSENBanner() {
+      try {
+        const { data } = await window.supabase
+          .from('xsen_announcements')
+          .select('*')
+          .eq('active', true)
+          .or('school.eq.ALL,school.eq.OU')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        const bar = document.getElementById('announcement-bar');
+        if (!bar || !data?.length) return;
+
+        const now = new Date();
+        const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
+        if (!valid.length) return;
+
+        const colors = {
+          info:     { bg: '#0d1a0d', border: '#00cc66', text: '#00cc66' },
+          warning:  { bg: '#1a1500', border: '#e8c84a', text: '#e8c84a' },
+          critical: { bg: '#1a0500', border: '#cc2200', text: '#cc2200' },
+        };
+
+        bar.style.cssText = 'position:sticky;top:0;z-index:999;';
+        bar.innerHTML = valid.map(a => {
+          const c = colors[a.type] || colors.info;
+          return `<div style="background:${c.bg};border-bottom:2px solid ${c.border};padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:monospace;font-size:0.75rem;color:${c.text};">
+            <span>${a.message}</span>
+            ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} →</a>` : ''}
+          </div>`;
+        }).join('');
+      } catch(e) {}
+    })();
+  </script>
 
 </body>
 </html>
