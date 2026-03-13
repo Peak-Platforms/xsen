@@ -394,7 +394,7 @@
           .eq('active', true)
           .or('school.eq.ALL,school.eq.OU')
           .order('created_at', { ascending: false })
-          .limit(3);
+          .limit(1);
 
         const bar = document.getElementById('announcement-bar');
         if (!bar || !data?.length) return;
