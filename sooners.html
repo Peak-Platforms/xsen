@@ -759,6 +759,7 @@
     </style>
 </head>
 <body>
+    <div id="announcement-bar"></div>
     <!-- Hero -->
     <div class="hero">
         <div class="header">
@@ -1057,6 +1058,42 @@
       <button class="push-optin-no" id="push-optin-no">No thanks</button>
     </div>
     <script src="/xsen-nil-notifications.js"></script>
+    <!-- XSEN Announcement Banner -->
+  <script>
+    (async function() {
+      try {
+        const { data } = await supabase
+          .from('xsen_announcements')
+          .select('*')
+          .eq('active', true)
+          .or('school.eq.ALL,school.eq.OU')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        const bar = document.getElementById('announcement-bar');
+        if (!bar || !data?.length) return;
+
+        const now = new Date();
+        const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
+        if (!valid.length) return;
+
+        const colors = {
+          info:     { bg: '#0d1a0d', border: '#00cc66', text: '#00cc66' },
+          warning:  { bg: '#1a1500', border: '#e8c84a', text: '#e8c84a' },
+          critical: { bg: '#1a0500', border: '#cc2200', text: '#cc2200' },
+        };
+
+        bar.style.cssText = 'position:sticky;top:0;z-index:999;';
+        bar.innerHTML = valid.map(a => {
+          const c = colors[a.type] || colors.info;
+          return `<div style="background:${c.bg};border-bottom:2px solid ${c.border};padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:monospace;font-size:0.75rem;color:${c.text};">
+            <span>${a.message}</span>
+            ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} →</a>` : ''}
+          </div>`;
+        }).join('');
+      } catch(e) {}
+    })();
+  </script>
 
 </body>
 </html>
