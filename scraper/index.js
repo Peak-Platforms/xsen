@@ -1,14 +1,13 @@
 // index.js - XSEN FanCast Pipeline Coordinator
-// Runs all five phases on schedule
 
 import { runScraper }      from './scraper.js';
-import { runScriptGenerator } from './scriptgen.js';
 import { runVoicer }       from './voicer.js';
-import { runAzuraCast }    from './azuracast.js';
+import { startAzuraCast }  from './azuracast.js';
 import { runSocialPoster } from './socialposter.js';
 import express from 'express';
+import cron from 'node-cron';
 
-const app = express();
+const app  = express();
 const PORT = process.env.PORT || 8080;
 
 // ─── Health check ─────────────────────────────────────────────────────────────
@@ -33,41 +32,47 @@ process.on('SIGTERM', () => {
   });
 });
 
-// ─── Start all services ───────────────────────────────────────────────────────
+// ─── Start pipeline ───────────────────────────────────────────────────────────
 async function startPipeline() {
   console.log('\n🚀 XSEN FanCast Pipeline Starting...\n');
 
+  // Phase 1: Scraper — runs immediately then every 2 hours
   try {
-    // Phase 1: Scraper — runs immediately, then every 2 hours
-    const { startScraper } = await import('./scraper.js');
-    startScraper?.() || runScraper();
+    runScraper();
+    cron.schedule('0 */2 * * *', () => runScraper());
     console.log('📡 Scraper started');
-  } catch (err) { console.error('Scraper failed to start:', err.message); }
+  } catch (err) { console.error('Scraper failed:', err.message); }
 
+  // Phase 2: Script Generator — dynamic import to handle export name
   try {
-    // Phase 2: Script Generator — runs every 2 hours at :30
-    const { startScriptGenerator } = await import('./scriptgen.js');
-    startScriptGenerator?.() || runScriptGenerator?.();
-    console.log('✍️  Script generator started');
-  } catch (err) { console.error('Scriptgen failed to start:', err.message); }
+    const sg = await import('./scriptgen.js');
+    const runSG = sg.runScriptGenerator || sg.runScripts || sg.default;
+    if (runSG) {
+      runSG();
+      cron.schedule('30 */2 * * *', () => runSG());
+      console.log('✍️  Script generator started');
+    } else {
+      console.error('Script generator: no export found');
+    }
+  } catch (err) { console.error('Scriptgen failed:', err.message); }
 
+  // Phase 3: Voicer — every hour
   try {
-    // Phase 3: Voicer — runs every hour
-    const { startVoicer } = await import('./voicer.js');
-    startVoicer?.() || runVoicer();
+    runVoicer();
+    cron.schedule('0 * * * *', () => runVoicer());
     console.log('🎙️  Voicer started');
-  } catch (err) { console.error('Voicer failed to start:', err.message); }
+  } catch (err) { console.error('Voicer failed:', err.message); }
 
+  // Phase 4: AzuraCast — every hour
   try {
-    // Phase 4: AzuraCast uploader — runs every hour
-    const { startAzuraCast } = await import('./azuracast.js');
-    startAzuraCast?.();
+    startAzuraCast();
     console.log('📻 AzuraCast uploader started');
-  } catch (err) { console.error('AzuraCast failed to start:', err.message); }
+  } catch (err) { console.error('AzuraCast failed:', err.message); }
 
+  // Phase 5: Social Poster — every hour at :30
   try {
-    // Phase 5: Social poster — runs every hour at :30
     runSocialPoster();
+    cron.schedule('30 * * * *', () => runSocialPoster());
     console.log('📱 Social poster started');
-  } catch (err) { console.error('Social poster failed to start:', err.message); }
+  } catch (err) { console.error('Social poster failed:', err.message); }
 }
