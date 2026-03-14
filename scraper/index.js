@@ -1,55 +1,73 @@
-// index.js - XSEN Scraper + Script Generator + Voicer + AzuraCast Coordinator
+// index.js - XSEN FanCast Pipeline Coordinator
+// Runs all five phases on schedule
 
-import http from "http";
-import * as dotenv from "dotenv";
-dotenv.config();
+import { runScraper }      from './scraper.js';
+import { runScriptGenerator } from './scriptgen.js';
+import { runVoicer }       from './voicer.js';
+import { runAzuraCast }    from './azuracast.js';
+import { runSocialPoster } from './socialposter.js';
+import express from 'express';
 
-// ─── Health Check Server (keeps Railway alive) ────────────────────────────────
-const server = http.createServer((req, res) => res.end("XSEN FanCast Pipeline running"));
-server.listen(
-  process.env.PORT || 3001,
-  () => console.log(`✅ Health check server running on port ${process.env.PORT || 3001}`)
-);
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-// ─── Graceful Shutdown ────────────────────────────────────────────────────────
-let isShuttingDown = false;
+// ─── Health check ─────────────────────────────────────────────────────────────
+app.get('/', (req, res) => res.json({
+  status: 'ok',
+  service: 'XSEN FanCast Pipeline',
+  phases: ['scraper', 'scriptgen', 'voicer', 'azuracast', 'socialposter'],
+  time: new Date().toISOString()
+}));
 
-function shutdown(signal) {
-  if (isShuttingDown) return;
-  isShuttingDown = true;
-  console.log(`\n⚠️  Received ${signal} — waiting for current tasks to finish...`);
+const server = app.listen(PORT, () => {
+  console.log(`✅ Health check server running on port ${PORT}`);
+  startPipeline();
+});
+
+// ─── Graceful shutdown ────────────────────────────────────────────────────────
+process.on('SIGTERM', () => {
+  console.warn('⚠️  Received SIGTERM — waiting for current tasks to finish...');
   server.close(() => {
-    console.log("✅ Health check server closed. Shutting down cleanly.");
+    console.log('✅ Health check server closed. Shutting down cleanly.');
     process.exit(0);
   });
-  // Force exit after 30 seconds if tasks don't finish
-  setTimeout(() => {
-    console.log("⏱️  Forced shutdown after 30s timeout.");
-    process.exit(0);
-  }, 30000);
+});
+
+// ─── Start all services ───────────────────────────────────────────────────────
+async function startPipeline() {
+  console.log('\n🚀 XSEN FanCast Pipeline Starting...\n');
+
+  try {
+    // Phase 1: Scraper — runs immediately, then every 2 hours
+    const { startScraper } = await import('./scraper.js');
+    startScraper?.() || runScraper();
+    console.log('📡 Scraper started');
+  } catch (err) { console.error('Scraper failed to start:', err.message); }
+
+  try {
+    // Phase 2: Script Generator — runs every 2 hours at :30
+    const { startScriptGenerator } = await import('./scriptgen.js');
+    startScriptGenerator?.() || runScriptGenerator?.();
+    console.log('✍️  Script generator started');
+  } catch (err) { console.error('Scriptgen failed to start:', err.message); }
+
+  try {
+    // Phase 3: Voicer — runs every hour
+    const { startVoicer } = await import('./voicer.js');
+    startVoicer?.() || runVoicer();
+    console.log('🎙️  Voicer started');
+  } catch (err) { console.error('Voicer failed to start:', err.message); }
+
+  try {
+    // Phase 4: AzuraCast uploader — runs every hour
+    const { startAzuraCast } = await import('./azuracast.js');
+    startAzuraCast?.();
+    console.log('📻 AzuraCast uploader started');
+  } catch (err) { console.error('AzuraCast failed to start:', err.message); }
+
+  try {
+    // Phase 5: Social poster — runs every hour at :30
+    runSocialPoster();
+    console.log('📱 Social poster started');
+  } catch (err) { console.error('Social poster failed to start:', err.message); }
 }
-
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT",  () => shutdown("SIGINT"));
-
-// ─── Start All Services ───────────────────────────────────────────────────────
-console.log("🚀 Starting XSEN FanCast Pipeline...");
-
-import("./scraper.js")
-  .then(() => console.log("📡 Scraper started"))
-  .catch(err => console.error("Scraper failed to start:", err));
-
-import("./scriptgen.js")
-  .then(() => console.log("✍️  Script generator started"))
-  .catch(err => console.error("Script generator failed to start:", err));
-
-import("./voicer.js")
-  .then(() => console.log("🎙️  Voicer started"))
-  .catch(err => console.error("Voicer failed to start:", err));
-
-import("./azuracast.js")
-  .then(({ startAzuraCast }) => {
-    startAzuraCast();
-    console.log("📻 AzuraCast uploader started");
-  })
-  .catch(err => console.error("AzuraCast uploader failed to start:", err));
