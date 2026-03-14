@@ -213,6 +213,7 @@
     <button class="nav-tab active" onclick="switchTab('episodes')">Episodes</button>
     <button class="nav-tab" onclick="switchTab('queries')">Search Queries</button>
     <button class="nav-tab" onclick="switchTab('announcements')">Announcements</button>
+    <button class="nav-tab" onclick="switchTab('social')">Social Posts</button>
   </div>
 
   <!-- EPISODES TAB -->
@@ -352,6 +353,22 @@
   </div>
 
 
+  <!-- SOCIAL POSTS TAB -->
+  <div class="tab-content" id="tab-social">
+    <div class="queries-panel">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Audiograms Ready to Post</span>
+          <span class="panel-count" id="social-count">0</span>
+        </div>
+        <div id="social-list" style="padding:0.5rem;">
+          <div class="loading"><div class="spinner"></div>LOADING...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 <!-- SCRIPT PREVIEW MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -374,7 +391,7 @@
 
 <script>
 const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -428,6 +445,7 @@ function switchTab(tab) {
   event.target.classList.add('active');
   if (tab === 'queries') loadQueries();
   if (tab === 'announcements') loadAnnouncements();
+  if (tab === 'social') loadSocialPosts();
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
@@ -702,8 +720,6 @@ async function postAnnouncement() {
 
   // Only MASTER can post to ALL — school operators can only post to their school
   const targetSchool = currentStation.school === 'MASTER' ? school : currentStation.school;
-  // Deactivate current announcements for this school before posting new one
-  await sb.from('xsen_announcements').update({ active: false }).eq('school', targetSchool);
 
   const { error } = await sb.from('xsen_announcements').insert({
     message, type, school: targetSchool,
@@ -748,7 +764,7 @@ async function loadAnnouncementBar() {
     .eq('active', true)
     .or(`school.eq.ALL,school.eq.${school}`)
     .order('created_at', { ascending: false })
-    .limit(1);
+    .limit(3);
 
   const bar = document.getElementById('announcement-bar');
   if (!bar) return;
@@ -772,6 +788,53 @@ async function loadAnnouncementBar() {
     </div>`;
   }).join('');
 }
+
+
+// ── SOCIAL POSTS ──────────────────────────────────────────────────────────────
+async function loadSocialPosts() {
+  const { data } = await sb
+    .from('xsen_social_posts')
+    .select('*, xsen_episodes(title, school)')
+    .eq('status', 'ready')
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  const container = document.getElementById('social-list');
+  document.getElementById('social-count').textContent = data?.length || 0;
+
+  if (!data?.length) {
+    container.innerHTML = '<div class="empty">NO AUDIOGRAMS READY YET — CHECK BACK AFTER NEXT PIPELINE RUN</div>';
+    return;
+  }
+
+  container.innerHTML = data.map(p => `
+    <div class="episode-card" id="social-${p.id}">
+      <div class="ep-school-tag">${p.xsen_episodes?.school || ''}</div>
+      <div class="ep-title">${p.xsen_episodes?.title || ''}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin:0.5rem 0;line-height:1.6;">${p.caption || ''}</div>
+      <div class="ep-actions" style="flex-wrap:wrap;gap:0.5rem;">
+        <a href="${p.video_url}" target="_blank" class="btn-preview" style="text-decoration:none;">▶ PREVIEW</a>
+        <button class="btn-approve" onclick="copyCaption('${p.id}', ${JSON.stringify(p.caption || '')})">COPY CAPTION</button>
+        <a href="${p.video_url}" download class="btn-approve" style="text-decoration:none;background:var(--muted);">↓ DOWNLOAD</a>
+        <button class="btn-reject" onclick="markPosted('${p.id}')">MARK POSTED</button>
+      </div>
+    </div>`).join('');
+}
+
+async function markPosted(id) {
+  await sb.from('xsen_social_posts')
+    .update({ status: 'posted', posted_at: new Date().toISOString() })
+    .eq('id', id);
+  document.getElementById(`social-${id}`)?.remove();
+  showToast('Marked as posted', 'success');
+}
+
+function copyCaption(id, caption) {
+  navigator.clipboard.writeText(caption).then(() => {
+    showToast('Caption copied to clipboard', 'success');
+  });
+}
+
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 const saved = sessionStorage.getItem('xsen_station');
