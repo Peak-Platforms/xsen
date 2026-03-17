@@ -48,7 +48,7 @@ async function ensureFFmpeg() {
   if (checkFFmpeg()) { console.log('[Social] FFmpeg ready'); return true; }
   console.log('[Social] Installing FFmpeg...');
   try {
-    execSync('apt-get install -y ffmpeg', { stdio: 'inherit' });
+    execSync('apt-get update && apt-get install -y ffmpeg', { stdio: 'inherit' });
     console.log('[Social] FFmpeg installed');
     return true;
   } catch (err) {
