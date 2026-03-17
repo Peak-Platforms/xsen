@@ -48,7 +48,7 @@ async function ensureFFmpeg() {
   if (checkFFmpeg()) { console.log('[Social] FFmpeg ready'); return true; }
   console.log('[Social] Installing FFmpeg...');
   try {
-    execSync('apt-get update && apt-get install -y ffmpeg', { stdio: 'inherit' });
+    execSync('apt-get install -y ffmpeg', { stdio: 'inherit' });
     console.log('[Social] FFmpeg installed');
     return true;
   } catch (err) {
@@ -87,12 +87,12 @@ async function generateBackground(brand, title, school, outputPath) {
     `-i color=c=${brand.bg.replace('#','')}:size=1080x1080:rate=1`,
     '-vframes 1',
     `-vf "`,
-    `drawrect=x=0:y=0:w=1080:h=120:color=${brand.accent.replace('#','')}@1.0:t=fill,`,
+    `drawbox=x=0:y=0:w=1080:h=120:color=${brand.accent.replace('#','')}@1.0:t=fill,`,
     `drawtext=text='${schoolLabel.toUpperCase()}':fontsize=52:fontcolor=${brand.bg.replace('#','')}:x=40:y=35:font=DejaVuSans-Bold,`,
     `drawtext=text='ON AIR':fontsize=28:fontcolor=${brand.bg.replace('#','')}:x=900:y=46:font=DejaVuSans-Bold,`,
     `drawtext=text='${safeTitle.substring(0,40)}':fontsize=44:fontcolor=${brand.text.replace('#','')}:x=40:y=200:font=DejaVuSans-Bold,`,
     `drawtext=text='${safeTitle.substring(40,80)}':fontsize=44:fontcolor=${brand.text.replace('#','')}:x=40:y=260:font=DejaVuSans-Bold,`,
-    `drawrect=x=0:y=960:w=1080:h=120:color=${brand.accent.replace('#','')}@0.9:t=fill,`,
+    `drawbox=x=0:y=960:w=1080:h=120:color=${brand.accent.replace('#','')}@0.9:t=fill,`,
     `drawtext=text='xsen.fun':fontsize=40:fontcolor=${brand.bg.replace('#','')}:x=40:y=983:font=DejaVuSans-Bold`,
     `"`,
     outputPath
