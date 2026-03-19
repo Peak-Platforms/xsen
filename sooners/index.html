@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XSEN Sooners - Your All-in-One OU Superfan Companion</title>
+    <meta property="og:title" content="XSEN Sooners — Your OU Superfan Hub" />
+    <meta property="og:description" content="Chat with Boomer AI • 4,700+ highlights • Live stats • XSEN Radio. Everything OU in one place." />
+    <meta property="og:url" content="https://xsen.fun/sooners" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://xsen.fun/og-manifesto.jpg" />
     <style>
         * {
             margin: 0;
@@ -16,23 +21,19 @@
             background: #fff;
             color: #333;
             line-height: 1.6;
-            padding-bottom: 80px; /* room for sticky player */
+            padding-bottom: 80px;
         }
-        <meta property="og:title" content="XSEN Sooners — Your OU Superfan Hub" />
-<meta property="og:description" content="Chat with Boomer AI • 4,700+ highlights • Live stats • XSEN Radio. Everything OU in one place." />
-<meta property="og:url" content="https://xsen.fun/sooners" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://xsen.fun/og-manifesto.jpg" />
+        
         /* Header */
         .header {
             background: transparent;
             color: #FDF9D8;
             padding: 20px;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 200;
+            z-index: 1001;
         }
         
         .header-content {
@@ -764,14 +765,17 @@
 </head>
 <body>
     <div id="announcement-bar"></div>
+
+    <!-- Header OUTSIDE and ABOVE hero -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🏈 XSEN Sooners</div>
+            <a href="https://xsen.fun" class="back-link">← Back to XSEN</a>
+        </div>
+    </div>
+
     <!-- Hero -->
     <div class="hero">
-        <div class="header">
-            <div class="header-content">
-                <div class="logo">🏈 XSEN Sooners</div>
-                <a href="https://xsen.fun" class="back-link">← Back to XSEN</a>
-            </div>
-        </div>
         <div class="hero-content" style="padding-top: 140px;">
             <h1>Your All-in-One OU Superfan Hub</h1>
             <p class="subtitle">Chat with Boomer AI • Watch 4,700+ Highlights • Get Live Stats • Listen to OU Radio</p>
@@ -964,7 +968,7 @@
     </div>
 
     <!-- ─── STICKY AUDIO PLAYER ─── -->
-   <div class="sticky-player" id="stickyPlayer">
+    <div class="sticky-player" id="stickyPlayer">
         <div class="player-bar">
             <div class="player-label">
                 <span id="playerBadge" class="player-live-badge offline">📻 Fan Cast</span>
@@ -1011,7 +1015,7 @@
                 playerBadge.textContent = '🔴 LIVE';
                 playerBadge.className   = 'player-live-badge live';
             } else {
-                playerBadge.textContent = '⚪ PLAYLIST';
+                playerBadge.textContent = '📻 Fan Cast';
                 playerBadge.className   = 'player-live-badge offline';
             }
 
@@ -1052,6 +1056,7 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
     );
     </script>
+
     <!-- NIL Notifications -->
     <div id="nil-prompt-container"></div>
     <div id="push-optin-banner">
@@ -1062,8 +1067,9 @@
       <button class="push-optin-no" id="push-optin-no">No thanks</button>
     </div>
     <script src="/xsen-nil-notifications.js"></script>
+
     <!-- XSEN Announcement Banner -->
-  <script>
+    <script>
     (async function() {
       try {
         const { data } = await supabase
@@ -1097,7 +1103,7 @@
         }).join('');
       } catch(e) {}
     })();
-  </script>
+    </script>
 
 </body>
 </html>
