@@ -33,7 +33,9 @@ app.get('/landing.html', (req, res) => {
 app.get('/channels.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'channels.html'));
 });
-
+app.get('/manifesto.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'manifesto.html'));
+});
 // ─── CHAT APP ROUTING ─────────────────────────────────
 app.get('/sooners/app', (req, res) => {
     res.sendFile(path.join(__dirname, 'sooners/app.html'));
