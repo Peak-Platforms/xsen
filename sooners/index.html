@@ -1086,7 +1086,7 @@
         bar.style.cssText = 'position:sticky;top:0;z-index:999;';
         bar.innerHTML = valid.map(a => {
           const c = colors[a.type] || colors.info;
-          return `<div style="background:${c.bg};border-bottom:2px solid ${c.border};padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:monospace;font-size:0.75rem;color:${c.text};">
+          return `<div style="background:${c.bg};border-bottom:2px solid ${c.border};padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:sans-serif;font-size:0.875rem;color:${c.text};">
             <span>${a.message}</span>
             ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} →</a>` : ''}
           </div>`;
