@@ -116,30 +116,44 @@
       margin-top: 2px;
     }
 
-    /* ── Live CTA ───────────────────────────────────────────────── */
-    .live-cta {
+    .header-actions {
+      margin-left: auto;
       display: flex;
-      gap: 10px;
-      padding: 12px 14px;
-      background: var(--surface-2);
-      border-bottom: 1px solid var(--border);
+      align-items: center;
+      gap: 6px;
+      position: relative; z-index: 1;
     }
-    .live-cta button {
-      flex: 1;
-      padding: 10px 14px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    #listenLiveBtn {
+      background: rgba(255,45,45,0.2);
+      border: 1px solid rgba(255,45,45,0.5);
+      color: var(--cream);
+      padding: 5px 10px;
       border-radius: 6px;
-      border: none;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
-    #listenLiveBtn { background: var(--crimson); color: var(--cream); box-shadow: 0 4px 16px var(--crimson-glow); }
-    #listenLiveBtn:hover { background: #9a1c1d; box-shadow: 0 6px 24px rgba(132,22,23,0.6); transform: translateY(-1px); }
-    #donateBtn { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+    #listenLiveBtn:hover { background: rgba(255,45,45,0.35); transform: translateY(-1px); }
+    #donateBtn {
+      background: var(--gold-dim);
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
     #donateBtn:hover { background: rgba(201,168,76,0.26); transform: translateY(-1px); }
 
     /* ── Audio card ─────────────────────────────────────────────── */
@@ -506,12 +520,11 @@
         <span class="bot-name">Boomer Bot</span>
         <span class="bot-sub">XSEN Sooners Network</span>
       </div>
+      <div class="header-actions">
+        <button id="listenLiveBtn" type="button">🔴 Listen Live</button>
+        <button id="donateBtn" type="button">❤️ NIL</button>
+      </div>
     </header>
-
-    <div class="live-cta">
-      <button id="listenLiveBtn" type="button">🔴 Listen Live</button>
-      <button id="donateBtn" type="button">❤️ Support NIL</button>
-    </div>
 
     <div id="xsen-audio-card" style="display:none;">
       <div class="xsen-audio-header">🔴 Live Fan Cast</div>
