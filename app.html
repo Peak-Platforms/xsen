@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boomer Bot — XSEN Sooners</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --crimson:      #841617;
+      --crimson-deep: #5c0f10;
+      --crimson-glow: rgba(132,22,23,0.45);
+      --gold:         #c9a84c;
+      --gold-dim:     rgba(201,168,76,0.18);
+      --cream:        #FDF9D8;
+      --cream-dim:    rgba(253,249,216,0.6);
+      --ink:          #080808;
+      --surface:      #111111;
+      --surface-2:    #1a1a1a;
+      --surface-3:    #222222;
+      --border:       rgba(201,168,76,0.18);
+      --text:         #f0ece0;
+      --text-muted:   rgba(240,236,224,0.45);
+      --font-display: 'Oswald', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --radius:       12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    a { text-decoration: none; }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.55;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(132,22,23,0.22) 0%, transparent 70%);
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ── Shell ──────────────────────────────────────────────────── */
+    .chat-container {
+      position: relative; z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      margin: 16px auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 32px);
+      box-shadow: 0 0 0 1px rgba(132,22,23,0.12), 0 24px 80px rgba(0,0,0,0.7), 0 0 60px var(--crimson-glow);
+      overflow: hidden;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #6b0f10 0%, var(--crimson) 50%, #9e1c1d 100%);
+      padding: 0 16px;
+      height: 62px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .chat-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(0,0,0,0.08) 8px, rgba(0,0,0,0.08) 10px);
+      pointer-events: none;
+    }
+    .chat-header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .header-wordmark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      position: relative; z-index: 1;
+    }
+    .header-wordmark .bot-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .header-wordmark .bot-sub {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    /* ── Live CTA ───────────────────────────────────────────────── */
+    .live-cta {
+      display: flex;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .live-cta button {
+      flex: 1;
+      padding: 10px 14px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #listenLiveBtn { background: var(--crimson); color: var(--cream); box-shadow: 0 4px 16px var(--crimson-glow); }
+    #listenLiveBtn:hover { background: #9a1c1d; box-shadow: 0 6px 24px rgba(132,22,23,0.6); transform: translateY(-1px); }
+    #donateBtn { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+    #donateBtn:hover { background: rgba(201,168,76,0.26); transform: translateY(-1px); }
+
+    /* ── Audio card ─────────────────────────────────────────────── */
+    #xsen-audio-card {
+      margin: 12px 14px;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,45,45,0.25);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .xsen-audio-header {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #ff4444;
+      margin-bottom: 8px;
+    }
+    #xsenAudio { width: 100%; height: 36px; }
+    .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; letter-spacing: 0.3px; }
+
+    /* ── Fan message panel ──────────────────────────────────────── */
+    .fan-message-panel {
+      margin: 0 14px 12px;
+      padding: 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .fan-message-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .fan-message-panel input,
+    .fan-message-panel textarea {
+      width: 100%;
+      margin: 6px 0;
+      padding: 10px 13px;
+      font-size: 13px;
+      font-family: var(--font-body);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--surface-3);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .fan-message-panel input::placeholder,
+    .fan-message-panel textarea::placeholder { color: var(--text-muted); }
+    .fan-message-panel input:focus,
+    .fan-message-panel textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,0.12); }
+    #sendFanMessage {
+      width: 100%;
+      margin-top: 10px;
+      padding: 11px;
+      background: var(--crimson);
+      color: var(--cream);
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px var(--crimson-glow);
+    }
+    #sendFanMessage:hover { background: #9a1c1d; transform: translateY(-1px); }
+    .fan-message-status { text-align: center; font-size: 12px; margin-top: 8px; min-height: 16px; color: var(--text-muted); }
+
+    /* ── Chat messages ──────────────────────────────────────────── */
+    .chat-messages {
+      flex: 1;
+      padding: 16px 14px;
+      overflow-y: auto;
+      background: var(--ink);
+      background-image: radial-gradient(ellipse 70% 40% at 50% 100%, rgba(132,22,23,0.08) 0%, transparent 70%);
+      min-height: 300px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--surface-3) transparent;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      max-width: 85%;
+      line-height: 1.55;
+      font-size: 14px;
+      animation: msgIn 0.22s ease both;
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .message.bot {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 4px 10px 10px 10px;
+    }
+    .message.user {
+      background: linear-gradient(135deg, var(--crimson), #9e1c1d);
+      color: var(--cream);
+      margin-left: auto;
+      border-radius: 10px 4px 10px 10px;
+      box-shadow: 0 4px 16px var(--crimson-glow);
+    }
+    .message.video { padding: 6px; background: transparent; max-width: 100%; }
+    .message.video iframe { max-width: 100%; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
+
+    /* ── Chat input ─────────────────────────────────────────────── */
+    .chat-input {
+      display: flex;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 6px 8px;
+      gap: 8px;
+      align-items: center;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 11px 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      background: var(--surface-2);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .chat-input input::placeholder { color: var(--text-muted); }
+    .chat-input input:focus { outline: none; border-color: rgba(201,168,76,0.35); }
+    .chat-input button {
+      background: var(--crimson);
+      color: var(--cream);
+      border: none;
+      width: 42px; height: 42px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px var(--crimson-glow);
+    }
+    .chat-input button:hover { background: #9a1c1d; transform: translateY(-1px); }
+    .chat-input button:active { transform: scale(0.95); }
+
+    /* ── Nav bar ────────────────────────────────────────────────── */
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 8px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .nav-bar a {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+    .nav-bar a:hover { color: var(--gold); }
+
+    /* ── Paywall card ───────────────────────────────────────────── */
+    #paywallCard {
+      display: none;
+      margin: 12px 14px;
+      padding: 22px;
+      background: var(--surface-2);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    #paywallCard h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+    #paywallCard p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6; }
+    .trial-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--crimson), #9e1c1d);
+      color: var(--cream);
+      padding: 13px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 24px var(--crimson-glow);
+      transition: all 0.2s;
+    }
+    .trial-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 32px rgba(132,22,23,0.6); }
+    .divider { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
+    #activateForm input {
+      width: 100%;
+      padding: 10px 13px;
+      font-size: 13px;
+      font-family: var(--font-body);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--surface-3);
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    #activateForm input:focus { outline: none; border-color: var(--gold); }
+    #activateForm input::placeholder { color: var(--text-muted); }
+    #activateBtn {
+      width: 100%;
+      padding: 10px;
+      background: var(--surface-3);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #activateBtn:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); color: var(--gold); }
+    #activateStatus { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
+
+    /* ── NIL prompt (unchanged) ─────────────────────────────────── */
+    #nil-prompt-container { display:none; position:fixed; bottom:0; left:0; right:0; z-index:999; padding:0 16px 16px; pointer-events:none; }
+    .nil-prompt { pointer-events:all; background:#111111; border:1px solid rgba(201,168,76,0.6); border-radius:10px; overflow:hidden; max-width:480px; margin:0 auto; box-shadow:0 0 0 1px rgba(201,168,76,0.15),0 30px 80px rgba(0,0,0,0.8),0 0 60px rgba(132,22,23,0.3); animation:nilSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .nil-prompt-exit { animation:nilSlideDown 0.4s ease forwards !important; }
+    @keyframes nilSlideUp { from{opacity:0;transform:translateY(100%);} to{opacity:1;transform:translateY(0);} }
+    @keyframes nilSlideDown { from{opacity:1;transform:translateY(0);} to{opacity:0;transform:translateY(100%);} }
+    .nil-prompt-accent { height:4px; background:linear-gradient(90deg,#841617,#c9a84c,#841617); background-size:200% 100%; animation:accentShimmer 2s linear infinite; }
+    @keyframes accentShimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+    .nil-prompt-inner { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 24px; flex-wrap:wrap; }
+    .nil-prompt-tag { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#c9a84c; margin-bottom:8px; }
+    .nil-dot { width:8px; height:8px; background:#ff4444; border-radius:50%; animation:nilPulse 1s infinite; flex-shrink:0; }
+    @keyframes nilPulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.4);} }
+    .nil-prompt-message { font-size:22px; font-weight:700; color:#f5f5f0; margin-bottom:6px; line-height:1.2; }
+    .nil-prompt-sub { font-size:11px; color:rgba(245,245,240,0.35); letter-spacing:0.3px; }
+    .nil-prompt-right { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+    .nil-prompt-btn { background:#841617; color:#f5f5f0; padding:14px 28px; border-radius:5px; text-decoration:none; font-weight:700; font-size:15px; white-space:nowrap; transition:all 0.2s; box-shadow:0 4px 20px rgba(132,22,23,0.5); }
+    .nil-prompt-btn:hover { background:#9a1c1d; transform:translateY(-1px); box-shadow:0 8px 30px rgba(132,22,23,0.7); }
+    .nil-prompt-dismiss { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50%; width:32px; height:32px; color:rgba(245,245,240,0.4); font-size:14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .nil-prompt-dismiss:hover { background:rgba(255,255,255,0.1); color:#f5f5f0; }
+    .nil-prompt-progress { height:4px; background:rgba(255,255,255,0.04); }
+    .nil-prompt-progress-fill { height:100%; width:100%; background:linear-gradient(90deg,#841617,#c9a84c); border-radius:0 2px 2px 0; }
+
+    /* ── Announcement banner ────────────────────────────────────── */
+    #announcement-bar { position:sticky; top:0; z-index:99; }
+    #announcement-bar .xsen-announcement {
+      background: #0d0d0d;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: rgba(240,236,224,0.6);
+      line-height: 1.5;
+    }
+    #announcement-bar .xsen-announcement strong { color: #f0ece0; }
+    #announcement-bar .xsen-announcement .ann-link { background:var(--gold); color:#0a0a0a; border:none; border-radius:4px; padding:5px 12px; font-weight:700; font-size:11px; white-space:nowrap; text-decoration:none; flex-shrink:0; }
+    #announcement-bar .xsen-announcement .ann-link:hover { opacity:0.88; }
+    #announcement-bar .xsen-announcement .ann-dismiss { background:none; border:none; color:rgba(240,236,224,0.3); font-size:11px; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-left:auto; }
+    #announcement-bar .xsen-announcement .ann-dismiss:hover { color:rgba(240,236,224,0.6); }
+
+    /* ── Mobile ─────────────────────────────────────────────────── */
+    @media (max-width: 520px) {
+      .chat-container { margin:0; border-radius:0; border:none; min-height:100vh; box-shadow:none; }
+    }
+
+    /* ── Push opt-in banner ─────────────────────────────────────── */
+    #push-optin-banner {
+      display: none;
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 998;
+      background: #1a1a1a;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 8px;
+      padding: 14px 20px;
+      gap: 14px;
+      align-items: center;
+      max-width: 480px;
+      width: calc(100% - 40px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .push-optin-text {
+      font-size: 13px;
+      color: rgba(245,245,240,0.65);
+      flex: 1;
+      line-height: 1.5;
+    }
+    .push-optin-text strong { color: #f5f5f0; }
+    #push-optin-yes {
+      background: #c9a84c;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #push-optin-no {
+      background: none;
+      border: none;
+      color: rgba(245,245,240,0.3);
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="announcement-bar"></div>
+
+  <div class="chat-container">
+
+    <header class="chat-header">
+      <div class="header-wordmark">
+        <span class="bot-name">Boomer Bot</span>
+        <span class="bot-sub">XSEN Sooners Network</span>
+      </div>
+    </header>
+
+    <div class="live-cta">
+      <button id="listenLiveBtn" type="button">🔴 Listen Live</button>
+      <button id="donateBtn" type="button">❤️ Support NIL</button>
+    </div>
+
+    <div id="xsen-audio-card" style="display:none;">
+      <div class="xsen-audio-header">🔴 Live Fan Cast</div>
+      <audio id="xsenAudio" preload="none" playsinline controls>
+        <source src="" type="audio/mpeg" />
+        Your browser does not support audio.
+      </audio>
+      <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
+    </div>
+
+    <div class="fan-message-panel">
+      <div class="fan-message-header">📣 Message the Broadcaster</div>
+      <input type="text" id="fanName" placeholder="Your name (optional)" />
+      <textarea id="fanMessage" rows="3" placeholder="Send a message to the broadcaster…"></textarea>
+      <button id="sendFanMessage" type="button">Send Message</button>
+      <div id="fanMessageStatus" class="fan-message-status"></div>
+    </div>
+
+    <div id="paywallCard">
+      <h3>🏈 You've used your 5 free messages!</h3>
+      <p>Start your 3-day free trial to keep chatting with Boomer — no charge today.</p>
+      <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01" class="trial-btn">🚀 Start Free Trial</a>
+      <div class="divider">— Already signed up? Activate below —</div>
+      <div id="activateForm">
+        <input type="email" id="activateEmail" placeholder="Enter your email to activate" />
+        <button id="activateBtn" type="button">Activate Access</button>
+        <div id="activateStatus"></div>
+      </div>
+    </div>
+
+    <div id="messages" class="chat-messages">
+      <div class="message bot">
+        👋 Boomer Sooner! Ask me anything about OU sports — history, stats, highlights, schedules, or players.
+      </div>
+    </div>
+
+    <form id="chatForm" class="chat-input">
+      <input type="text" id="userInput" placeholder="Ask Boomer Bot…" autocomplete="off" required />
+      <button type="submit">➤</button>
+    </form>
+
+    <nav class="nav-bar">
+      <a href="https://xsen.fun/sooners">← Home</a>
+      <a href="https://xsen.fun">XSEN</a>
+      <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01">Subscribe</a>
+      <a href="#" id="manageSubLink">⚙️ Account</a>
+    </nav>
+
+  </div>
+
+  <div id="nil-prompt-container"></div>
+  <div id="push-optin-banner">
+    <div class="push-optin-text">
+      <strong>Get notified during big moments.</strong> We'll alert you when something worth supporting happens.
+    </div>
+    <button class="push-optin-yes" id="push-optin-yes">Sure</button>
+    <button class="push-optin-no" id="push-optin-no">No thanks</button>
+  </div>
+  <script src="/xsen-nil-notifications.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.supabase = window.supabase.createClient(
+      'https://hvqzrdlbtfezwuveincs.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
+    );
+  </script>
+  <script>
+    const ORCHESTRATOR_URL  = 'https://glorious-appreciation-production.up.railway.app';
+    const CHAT_API_URL      = 'https://glorious-appreciation-production.up.railway.app/chat';
+    const AUTH_SERVICE_URL  = 'https://energetic-joy-production.up.railway.app';
+    const FAN_MESSAGE_API   = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
+    const LIVE_STATUS_URL   = 'https://xsen-fan-messages-production.up.railway.app/live-status';
+    const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_sooners/radio.mp3';
+    const DONATE_URL        = 'https://thebotosphere.com';
+    const FREE_MESSAGE_LIMIT = 5;
+
+    function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
+    function getMessageCount() { return parseInt(localStorage.getItem('xsen_message_count') || '0'); }
+    function incrementMessageCount() { const c = getMessageCount() + 1; localStorage.setItem('xsen_message_count', c); return c; }
+    function resetMessageCount() { localStorage.setItem('xsen_message_count', '0'); }
+
+    async function activateWithEmail(email) {
+      const res = await fetch(`${AUTH_SERVICE_URL}/api/exchange-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase() })
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('xsen_auth_token', data.token);
+        localStorage.setItem('xsen_user_email', data.email);
+        resetMessageCount();
+        return true;
+      }
+      return false;
+    }
+
+    async function getUserId() {
+      try {
+        const token = localStorage.getItem('xsen_auth_token');
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          if (payload.email || payload.sub) return payload.email || payload.sub;
+        }
+      } catch (e) {}
+      try {
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (session?.user) return session.user.email || session.user.id;
+      } catch (e) {}
+      return 'anonymous';
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const form           = document.getElementById('chatForm');
+      const input          = document.getElementById('userInput');
+      const messages       = document.getElementById('messages');
+      const audioCard      = document.getElementById('xsen-audio-card');
+      const audioEl        = document.getElementById('xsenAudio');
+      const audioStatus    = document.getElementById('audioStatus');
+      const listenLiveBtn  = document.getElementById('listenLiveBtn');
+      const donateBtn      = document.getElementById('donateBtn');
+      const fanNameInput   = document.getElementById('fanName');
+      const fanMsgInput    = document.getElementById('fanMessage');
+      const sendFanMsgBtn  = document.getElementById('sendFanMessage');
+      const fanMsgStatus   = document.getElementById('fanMessageStatus');
+      const manageSubLink  = document.getElementById('manageSubLink');
+      const paywallCard    = document.getElementById('paywallCard');
+      const activateEmail  = document.getElementById('activateEmail');
+      const activateBtn    = document.getElementById('activateBtn');
+      const activateStatus = document.getElementById('activateStatus');
+      let firstVideoPlayed = false;
+
+      function checkPaywall() {
+        if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) {
+          paywallCard.style.display = 'block';
+          form.style.display = 'none';
+        }
+      }
+      checkPaywall();
+
+      activateBtn?.addEventListener('click', async () => {
+        const email = activateEmail?.value.trim();
+        if (!email) { activateStatus.textContent = 'Please enter your email.'; return; }
+        activateStatus.textContent = 'Activating…';
+        try {
+          const success = await activateWithEmail(email);
+          if (success) {
+            activateStatus.textContent = '✅ Access activated!';
+            paywallCard.style.display = 'none';
+            form.style.display = 'flex';
+            addMsg('🏈 Welcome back! You now have full access. Boomer Sooner!', 'bot');
+          } else {
+            activateStatus.textContent = '❌ Email not found. Please check or start a free trial.';
+          }
+        } catch (err) {
+          activateStatus.textContent = '❌ Could not activate. Please try again.';
+        }
+      });
+
+      async function openPortal(e) {
+        if (e) e.preventDefault();
+        const token = localStorage.getItem('xsen_auth_token');
+        if (!token) { window.location.href = 'https://xsen.fun/sooners'; return; }
+        try {
+          const res = await fetch(`${ORCHESTRATOR_URL}/api/create-portal-session`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+          });
+          const data = await res.json();
+          if (data.url) window.location.href = data.url;
+        } catch (e) { alert('Could not open account management. Please try again.'); }
+      }
+      manageSubLink?.addEventListener('click', openPortal);
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        if (!isAuthenticated()) {
+          const count = incrementMessageCount();
+          if (count > FREE_MESSAGE_LIMIT) { checkPaywall(); return; }
+        }
+        addMsg(text, 'user');
+        input.value = '';
+        const thinking = addMsg('🏈 Boomer is thinking…', 'bot');
+        try {
+          const userId = await getUserId();
+          const res = await fetch(CHAT_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text, school: 'sooners', userId })
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          thinking.remove();
+          if (!data?.response) { addMsg("Boomer Sooner! I didn't catch that — try again.", 'bot'); return; }
+          renderResponse(data.response);
+          if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) {
+            setTimeout(() => checkPaywall(), 1000);
+          }
+        } catch (err) {
+          console.error('Chat error:', err);
+          thinking.remove();
+          addMsg("Sorry, Sooner — couldn't reach Boomer right now.", 'bot');
+        }
+      });
+
+      function renderResponse(text) {
+        firstVideoPlayed = false;
+        text.split('\n').forEach(line => {
+          const t = line.trim();
+          if (!t) return;
+          if (/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)) { addMsg('🔊 Starting live fan cast…', 'bot'); playAudio(); return; }
+          const m = t.match(/(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/i);
+          if (m) { const title = t.replace(m[1], '').trim(); if (title) addMsg(title, 'bot'); addVideo(m[1]); }
+          else { addMsg(t, 'bot'); }
+        });
+      }
+
+      function addMsg(text, sender) {
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        div.innerHTML = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#c9a84c;text-decoration:underline;">$1</a>');
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+        return div;
+      }
+
+      function addVideo(url) {
+        const wrap = document.createElement('div');
+        wrap.className = 'message bot video';
+        const iframe = document.createElement('iframe');
+        const src = new URL(url);
+        if (!firstVideoPlayed) { src.searchParams.set('autoplay', '1'); src.searchParams.set('muted', '1'); src.searchParams.set('playsinline', '1'); }
+        iframe.src = src.toString(); iframe.width = '150%'; iframe.height = '300';
+        iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+        iframe.allowFullscreen = true; iframe.loading = 'lazy';
+        iframe.style.cssText = 'border:none; border-radius:10px;';
+        wrap.appendChild(iframe); messages.appendChild(wrap);
+        messages.scrollTop = messages.scrollHeight;
+        firstVideoPlayed = true;
+      }
+
+      function playAudio() {
+        if (!audioEl || !audioCard) return;
+        audioCard.style.display = 'block';
+        audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
+        audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Live fan cast playing'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
+      }
+
+      listenLiveBtn?.addEventListener('click', () => { addMsg('🔴 Connecting you to the live fan cast…', 'bot'); playAudio(); });
+      donateBtn?.addEventListener('click', () => { addMsg('❤️ Supporting NIL helps keep the fan cast alive. Thank you!', 'bot'); window.open(DONATE_URL, '_blank', 'noopener'); });
+
+      sendFanMsgBtn?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const name = fanNameInput?.value.trim();
+        const message = fanMsgInput?.value.trim();
+        if (!message) { fanMsgStatus.textContent = 'Please enter a message.'; return; }
+        fanMsgStatus.textContent = 'Sending…';
+        try {
+          const res = await fetch(FAN_MESSAGE_API, { method: 'POST', body: new URLSearchParams({ name: name || 'Anonymous Fan', message, source: 'Boomer Live' }) });
+          if (!res.ok) throw new Error('Send failed');
+          fanMsgStatus.textContent = '✅ Message sent to the broadcaster!';
+          fanMsgInput.value = '';
+        } catch (err) { fanMsgStatus.textContent = '❌ Could not send message.'; }
+      });
+    });
+  </script>
+
+  <script>
+    window.XSEN_SCHOOL = 'OU';
+    (async function initXSENBanner() {
+      try {
+        const { data } = await window.supabase
+          .from('xsen_announcements')
+          .select('*')
+          .eq('active', true)
+          .or('school.eq.ALL,school.eq.OU')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        const bar = document.getElementById('announcement-bar');
+        if (!bar || !data?.length) return;
+
+        const now = new Date();
+        const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
+        if (!valid.length) return;
+
+        bar.innerHTML = valid.map(a => `
+          <div class="xsen-announcement">
+            <span class="ann-text">${a.message}</span>
+            ${a.link_text && a.link_url
+              ? `<a href="${a.link_url}" target="_blank" class="ann-link">${a.link_text} →</a>`
+              : ''}
+            <button class="ann-dismiss" onclick="this.closest('.xsen-announcement').remove()">✕ dismiss</button>
+          </div>
+        \`).join('');
+      } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>
