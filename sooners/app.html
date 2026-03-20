@@ -115,42 +115,6 @@
       margin-top: 2px;
     }
 
-    .header-actions {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      position: relative; z-index: 1;
-    }
-
-    #manageSubBtn {
-      background: rgba(253,249,216,0.08);
-      border: 1px solid rgba(253,249,216,0.2);
-      color: var(--cream-dim);
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-family: var(--font-body);
-      font-weight: 500;
-      cursor: pointer;
-      letter-spacing: 0.3px;
-      transition: all 0.2s;
-    }
-    #manageSubBtn:hover { background: rgba(253,249,216,0.15); color: var(--cream); }
-
-    .live-badge {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      padding: 5px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-      transition: all 0.25s ease;
-    }
-    .live-badge.live { background: #ff2d2d; color: #fff; box-shadow: 0 0 12px rgba(255,45,45,0.7), 0 0 24px rgba(255,45,45,0.3); }
-    .live-badge.offline { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
-
     /* ── Live CTA ───────────────────────────────────────────────── */
     .live-cta {
       display: flex;
@@ -485,10 +449,6 @@
         <span class="bot-name">Boomer Bot</span>
         <span class="bot-sub">XSEN Sooners Network</span>
       </div>
-      <div class="header-actions">
-        <button id="manageSubBtn" type="button">⚙️ Account</button>
-        <span id="liveBadge" class="live-badge offline">⚪ OFFLINE</span>
-      </div>
     </header>
 
     <div class="live-cta">
@@ -537,8 +497,8 @@
     </form>
 
     <nav class="nav-bar">
-      <a href="https://xsen.fun/sooners">← Channel Home</a>
-      <a href="https://xsen.fun">XSEN Network</a>
+      <a href="https://xsen.fun/sooners">← Home</a>
+      <a href="https://xsen.fun">XSEN</a>
       <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01">Subscribe</a>
       <a href="#" id="manageSubLink">⚙️ Account</a>
     </nav>
@@ -605,7 +565,6 @@
       const form           = document.getElementById('chatForm');
       const input          = document.getElementById('userInput');
       const messages       = document.getElementById('messages');
-      const liveBadge      = document.getElementById('liveBadge');
       const audioCard      = document.getElementById('xsen-audio-card');
       const audioEl        = document.getElementById('xsenAudio');
       const audioStatus    = document.getElementById('audioStatus');
@@ -616,7 +575,6 @@
       const sendFanMsgBtn  = document.getElementById('sendFanMessage');
       const fanMsgStatus   = document.getElementById('fanMessageStatus');
       const manageSubLink  = document.getElementById('manageSubLink');
-      const manageSubBtn   = document.getElementById('manageSubBtn');
       const paywallCard    = document.getElementById('paywallCard');
       const activateEmail  = document.getElementById('activateEmail');
       const activateBtn    = document.getElementById('activateBtn');
@@ -664,7 +622,6 @@
         } catch (e) { alert('Could not open account management. Please try again.'); }
       }
       manageSubLink?.addEventListener('click', openPortal);
-      manageSubBtn?.addEventListener('click',  openPortal);
 
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -758,18 +715,6 @@
           fanMsgInput.value = '';
         } catch (err) { fanMsgStatus.textContent = '❌ Could not send message.'; }
       });
-
-      async function updateLiveStatus() {
-        if (!liveBadge) return;
-        try {
-          const res = await fetch(LIVE_STATUS_URL, { cache: 'no-store' });
-          const data = await res.json();
-          if (data.isLive) { liveBadge.textContent = '🔴 LIVE'; liveBadge.className = 'live-badge live'; }
-          else { liveBadge.textContent = '⚪ OFFLINE'; liveBadge.className = 'live-badge offline'; }
-        } catch (e) { console.warn('Live status check failed:', e); }
-      }
-      updateLiveStatus();
-      setInterval(updateLiveStatus, 20000);
     });
   </script>
 
@@ -800,7 +745,7 @@
               : ''}
             <button class="ann-dismiss" onclick="this.closest('.xsen-announcement').remove()">✕ dismiss</button>
           </div>
-        `).join('');
+        \`).join('');
       } catch(e) {}
     })();
   </script>
