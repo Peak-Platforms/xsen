@@ -163,28 +163,38 @@
     .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; letter-spacing: 0.3px; }
 
     /* ── Fan message panel ──────────────────────────────────────── */
-    .fan-message-panel {
+    #fanToggleBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: calc(100% - 28px);
       margin: 0 14px 8px;
-      padding: 10px 14px;
+      padding: 9px 14px;
       background: var(--surface-2);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .fan-message-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      border-radius: 8px;
       color: var(--gold);
-      margin-bottom: 8px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
     }
+    #fanToggleBtn:hover { background: var(--surface-3); border-color: rgba(201,168,76,0.35); }
+    #fanToggleBtn .fan-toggle-arrow { transition: transform 0.25s; font-style: normal; }
+    #fanToggleBtn.open .fan-toggle-arrow { transform: rotate(180deg); }
+    .fan-message-panel {
+      margin: 0 14px 8px;
+      padding: 12px 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: none;
+    }
+    .fan-message-panel.open { display: block; }
     .fan-message-panel input,
     .fan-message-panel textarea {
       width: 100%;
@@ -512,8 +522,10 @@
       <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
     </div>
 
+    <button id="fanToggleBtn" type="button">
+      📣 Message the Broadcaster <i class="fan-toggle-arrow">▾</i>
+    </button>
     <div class="fan-message-panel">
-      <div class="fan-message-header">📣 Message the Broadcaster</div>
       <input type="text" id="fanName" placeholder="Your name (optional)" />
       <textarea id="fanMessage" rows="2" placeholder="Send a message to the broadcaster…"></textarea>
       <button id="sendFanMessage" type="button">Send Message</button>
@@ -755,6 +767,13 @@
 
       listenLiveBtn?.addEventListener('click', () => { addMsg('🔴 Connecting you to the live fan cast…', 'bot'); playAudio(); });
       donateBtn?.addEventListener('click', () => { addMsg('❤️ Supporting NIL helps keep the fan cast alive. Thank you!', 'bot'); window.open(DONATE_URL, '_blank', 'noopener'); });
+
+      const fanToggleBtn   = document.getElementById('fanToggleBtn');
+      const fanPanel       = document.querySelector('.fan-message-panel');
+      fanToggleBtn?.addEventListener('click', () => {
+        const open = fanPanel.classList.toggle('open');
+        fanToggleBtn.classList.toggle('open', open);
+      });
 
       sendFanMsgBtn?.addEventListener('click', async (e) => {
         e.preventDefault();
