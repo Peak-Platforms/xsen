@@ -1097,6 +1097,165 @@
       } catch(e) {}
     })();
   </script>
+     <script>
+    var XSEN_BUBBLE = {
+      BOT_NAME: 'Boomer Bot',
+      APP_URL:  'https://xsen.fun/sooners/app',
+      COLOR:    '#841617',
+    };
+  </script>
+   <style>
+    #xsen-bubble-wrap {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #xsen-bubble-label {
+      background: #111;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      opacity: 0;
+      animation: xbFadeUp 0.4s ease 1.2s forwards;
+      pointer-events: none;
+    }
+    #xsen-bubble-label strong { color: var(--xb-color, #841617); }
+    #xsen-bubble-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--xb-color, #841617);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+      opacity: 0;
+      animation:
+        xbFadeUp 0.4s ease 0.5s forwards,
+        xbPulse 3s ease-out 2.5s infinite;
+      transition: transform 0.15s ease;
+      text-decoration: none;
+      position: relative;
+    }
+    #xsen-bubble-btn:hover { transform: scale(1.08); }
+    #xsen-bubble-btn:active { transform: scale(0.95); }
+    #xsen-bubble-btn::after {
+      content: '';
+      position: absolute;
+      top: 3px; right: 3px;
+      width: 14px; height: 14px;
+      background: #ff3b3b;
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      opacity: 0;
+      animation: xbDot 0.3s ease 2s forwards;
+    }
+    #xsen-bubble-btn svg {
+      display: block;
+      pointer-events: none;
+    }
+    .xsen-hover-tip {
+      position: absolute;
+      right: 72px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #111;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 7px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .xsen-hover-tip::after {
+      content: '';
+      position: absolute;
+      left: 100%; top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-left-color: #111;
+    }
+    #xsen-bubble-btn:hover .xsen-hover-tip { opacity: 1; }
+    @keyframes xbFadeUp {
+      from { opacity: 0; transform: scale(0.75) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes xbPulse {
+      0%   { box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 0 var(--xb-color, #841617); }
+      50%  { box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 12px rgba(0,0,0,0); }
+      100% { box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 0 rgba(0,0,0,0); }
+    }
+    @keyframes xbDot {
+      from { opacity: 0; transform: scale(0); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+  </style>
+
+  <div id="xsen-bubble-wrap">
+    <div id="xsen-bubble-label">
+      Chat with <strong id="xsen-bubble-name"></strong> →
+    </div>
+    <a id="xsen-bubble-btn" href="#" target="_blank" rel="noopener">
+      <!-- Generic chatbot icon -->
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="34" height="34" style="display:block;pointer-events:none;">
+        <!-- Antenna -->
+        <line x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="20" cy="3" r="2.2" fill="#fff"/>
+        <!-- Head -->
+        <rect x="5" y="9" width="30" height="20" rx="5" fill="#fff" opacity="0.95"/>
+        <!-- Eyes — glow squares -->
+        <rect x="10" y="14.5" width="6" height="6" rx="1.5" fill="var(--xb-color, #841617)"/>
+        <rect x="24" y="14.5" width="6" height="6" rx="1.5" fill="var(--xb-color, #841617)"/>
+        <!-- Mouth bar -->
+        <rect x="13" y="24" width="14" height="2.5" rx="1.25" fill="var(--xb-color, #841617)" opacity="0.55"/>
+        <!-- Ear nubs -->
+        <rect x="1" y="15" width="4" height="7" rx="2" fill="#fff" opacity="0.75"/>
+        <rect x="35" y="15" width="4" height="7" rx="2" fill="#fff" opacity="0.75"/>
+      </svg>
+      <span class="xsen-hover-tip" id="xsen-bubble-tip"></span>
+    </a>
+  </div>
+
+  <script>
+    (function () {
+      var cfg   = window.XSEN_BUBBLE || {};
+      var name  = cfg.BOT_NAME || 'Chat';
+      var url   = cfg.APP_URL  || '#';
+      var color = cfg.COLOR    || '#841617';
+
+      var wrap = document.getElementById('xsen-bubble-wrap');
+      wrap.style.setProperty('--xb-color', color);
+
+      document.getElementById('xsen-bubble-name').textContent = name + ' Bot';
+      document.getElementById('xsen-bubble-tip').textContent  = 'Chat with ' + name + ' Bot →';
+      document.getElementById('xsen-bubble-btn').href         = url;
+      document.getElementById('xsen-bubble-btn').setAttribute('aria-label', 'Chat with ' + name);
+
+      setTimeout(function () {
+        var el = document.getElementById('xsen-bubble-label');
+        if (!el) return;
+        el.style.transition = 'opacity 0.5s ease';
+        el.style.opacity = '0';
+        setTimeout(function () { el.style.display = 'none'; }, 500);
+      }, 6000);
+    })();
+  </script>
 
 </body>
 </html>
