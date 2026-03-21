@@ -148,7 +148,7 @@
     .partner-inner { max-width: 900px; margin: 0 auto; text-align: center; }
     .partner-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 72px); letter-spacing: 1px; margin-bottom: 20px; line-height: 1; }
     .partner-inner p { color: var(--muted); font-size: 17px; max-width: 600px; margin: 0 auto 40px; line-height: 1.7; }
-    .partner-options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; text-align: left; }
+    .partner-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; text-align: left; }
     .partner-option { background: var(--mid); border: 1px solid var(--border); border-radius: 8px; padding: 32px; transition: border-color 0.2s; }
     .partner-option:hover { border-color: rgba(201,168,76,0.4); }
     .partner-option-title { font-weight: 700; font-size: 17px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
@@ -176,8 +176,7 @@
       .scale-grid { grid-template-columns: 1fr; }
       .scale-item { border-right: none; border-bottom: 1px solid var(--border); }
       .scale-item:last-child { border-bottom: none; }
-      .partner-options { grid-template-columns: 1fr; }
-      footer { padding: 40px 20px; }
+      .partner-options { grid-template-columns: 1fr; }      footer { padding: 40px 20px; }
       .footer-copy { flex-direction: column; }
       .hero-content { padding-top: 90px; }
       .hero-sub { font-size: 16px; }
@@ -300,7 +299,7 @@
       </a>
     </div>
     <div style="text-align: center; margin-top: 48px;">
-      <a href="/channels.html" class="btn-outline">View All 130+ Channels →</a>
+      <a href="/channels.html" class="btn-outline">View All Channels →</a>
     </div>
   </section>
 
@@ -335,7 +334,7 @@
     <div class="section-label">Built to Scale</div>
     <h2 class="section-title">From one school to<br>every school.</h2>
     <div class="scale-grid">
-      <div class="scale-item"><div class="scale-num">130+</div><div class="scale-title">Universities Addressable</div><div class="scale-desc">The XSEN model is school-agnostic. Any university with a passionate fan base is a channel waiting to launch.</div></div>
+      <div class="scale-item"><div class="scale-num">500+</div><div class="scale-title">Every Level. Every School.</div><div class="scale-desc">FBS. FCS. Division II. Division III. NAIA. Any school with passionate fans is a channel waiting to launch. XSEN is built for all of them.</div></div>
       <div class="scale-item"><div class="scale-num">$9.99</div><div class="scale-title">Per Month Per Fan</div><div class="scale-desc">Simple subscription pricing. 3-day free trial drives conversion. Revenue share available for university and NIL partners.</div></div>
       <div class="scale-item"><div class="scale-num">B2B</div><div class="scale-title">White-Label Ready</div><div class="scale-desc">Each channel can be white-labeled for university athletics departments, NIL collectives, or media rights partners.</div></div>
     </div>
@@ -351,6 +350,11 @@
           <div class="partner-option-title">🏛️ Universities & Athletics</div>
           <div class="partner-option-desc">Launch a school-branded fan hub in weeks — not months. XSEN handles the AI, the video library, the streaming infrastructure, and the subscription platform.</div>
           <a href="/cdn-cgi/l/email-protection#c6b6a7b4b2a8a3b486beb5a3a8e8a0b3a8">Start a conversation →</a>
+        </div>
+        <div class="partner-option">
+          <div class="partner-option-title">🏟️ High School Programs</div>
+          <div class="partner-option-desc">Friday Night Lights deserves its own network. Launch a channel for your school — booster clubs, athletic departments, and fan communities welcome. Any state, any size.</div>
+          <a href="mailto:partner@xsen.fun">Get your school a channel →</a>
         </div>
         <div class="partner-option">
           <div class="partner-option-title">💼 NIL Collectives & Media</div>
@@ -379,7 +383,7 @@
       <a href="#channels">Channels</a>
       <a href="/platform.html">Platform</a>
       <a href="#partner">Partners</a>
-      <a href="mailto:support@xsen.fun">Support</a>
+      <a href="/cdn-cgi/l/email-protection#bbc8cecbcbd4c9cffbc3c8ded595ddced5">Support</a>
       <a href="https://peak-platforms.com" target="_blank" style="color:var(--gold);">A Peak Platforms Product</a>
     </div>
     <div class="footer-copy">
@@ -388,7 +392,7 @@
     </div>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const LIVE_STREAM_URL = 'https://stream.xsen.fun/listen/xsen_the_fans_network/radio.mp3';
     const LIVE_STATUS_URL = 'https://xsen-fan-messages-production.up.railway.app/live-status';
 
@@ -439,11 +443,4 @@
       audioStatus.textContent = 'Tap ▶ to listen';
     });
 
-    listenBtn.addEventListener('click', openPlayer);
-
-    updateLiveStatus();
-    setInterval(updateLiveStatus, 20000);
-  </script>
-
-</body>
-</html>
+  
