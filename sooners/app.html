@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Design tokens ─────────────────────────────────────────── */
     :root {
       --crimson:      #841617;
       --crimson-deep: #5c0f10;
@@ -32,7 +31,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     a { text-decoration: none; }
 
-    /* Subtle grain overlay */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0;
@@ -51,7 +49,6 @@
       position: relative;
     }
 
-    /* ── Shell ──────────────────────────────────────────────────── */
     .chat-container {
       position: relative; z-index: 1;
       width: 100%;
@@ -68,7 +65,6 @@
       overflow: hidden;
     }
 
-    /* ── Header ─────────────────────────────────────────────────── */
     .chat-header {
       display: flex;
       align-items: center;
@@ -156,13 +152,19 @@
     }
     #donateBtn:hover { background: rgba(201,168,76,0.26); transform: translateY(-1px); }
 
-    /* ── Audio card ─────────────────────────────────────────────── */
+    /* ── Audio card ── */
     #xsen-audio-card {
       margin: 12px 14px;
       background: var(--surface-2);
       border: 1px solid rgba(255,45,45,0.25);
       border-radius: var(--radius);
       padding: 12px 14px;
+    }
+    .xsen-audio-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
     }
     .xsen-audio-header {
       font-family: var(--font-display);
@@ -171,12 +173,38 @@
       letter-spacing: 2.5px;
       text-transform: uppercase;
       color: #ff4444;
-      margin-bottom: 8px;
+    }
+    /* Live badge inside audio card */
+    #appLiveBadge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #2a2a2a;
+      color: #9ca3af;
+      border: 1px solid #3a3a3a;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    #appLiveBadge.live {
+      background: rgba(220,38,38,0.15);
+      color: #f87171;
+      border: 1px solid rgba(220,38,38,0.4);
+    }
+    #appStreamerName {
+      display: none;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-align: center;
+      margin-bottom: 6px;
     }
     #xsenAudio { width: 100%; height: 36px; }
     .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; letter-spacing: 0.3px; }
 
-    /* ── Fan message panel ──────────────────────────────────────── */
+    /* ── Fan message panel ── */
     #fanToggleBtn {
       display: flex;
       align-items: center;
@@ -246,7 +274,7 @@
     #sendFanMessage:hover { background: #9a1c1d; transform: translateY(-1px); }
     .fan-message-status { text-align: center; font-size: 12px; margin-top: 8px; min-height: 16px; color: var(--text-muted); }
 
-    /* ── Chat messages ──────────────────────────────────────────── */
+    /* ── Chat messages ── */
     .chat-messages {
       flex: 1;
       padding: 16px 14px;
@@ -290,7 +318,7 @@
     .message.video { padding: 6px; background: transparent; max-width: 100%; }
     .message.video iframe { max-width: 100%; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
 
-    /* ── Chat input ─────────────────────────────────────────────── */
+    /* ── Chat input ── */
     .chat-input {
       display: flex;
       border-top: 1px solid var(--border);
@@ -330,7 +358,7 @@
     .chat-input button:hover { background: #9a1c1d; transform: translateY(-1px); }
     .chat-input button:active { transform: scale(0.95); }
 
-    /* ── Nav bar ────────────────────────────────────────────────── */
+    /* ── Nav bar ── */
     .nav-bar {
       display: flex;
       justify-content: space-around;
@@ -350,7 +378,7 @@
     }
     .nav-bar a:hover { color: var(--gold); }
 
-    /* ── Paywall card ───────────────────────────────────────────── */
+    /* ── Paywall card ── */
     #paywallCard {
       display: none;
       margin: 12px 14px;
@@ -360,62 +388,19 @@
       border-radius: var(--radius);
       text-align: center;
     }
-    #paywallCard h3 {
-      font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: var(--cream);
-      margin-bottom: 8px;
-    }
+    #paywallCard h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: 0.5px; color: var(--cream); margin-bottom: 8px; }
     #paywallCard p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6; }
-    .trial-btn {
-      display: block;
-      background: linear-gradient(135deg, var(--crimson), #9e1c1d);
-      color: var(--cream);
-      padding: 13px;
-      border-radius: 8px;
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      box-shadow: 0 6px 24px var(--crimson-glow);
-      transition: all 0.2s;
-    }
+    .trial-btn { display: block; background: linear-gradient(135deg, var(--crimson), #9e1c1d); color: var(--cream); padding: 13px; border-radius: 8px; font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; box-shadow: 0 6px 24px var(--crimson-glow); transition: all 0.2s; }
     .trial-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 32px rgba(132,22,23,0.6); }
     .divider { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
-    #activateForm input {
-      width: 100%;
-      padding: 10px 13px;
-      font-size: 13px;
-      font-family: var(--font-body);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: var(--surface-3);
-      color: var(--text);
-      margin-bottom: 8px;
-    }
+    #activateForm input { width: 100%; padding: 10px 13px; font-size: 13px; font-family: var(--font-body); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: var(--surface-3); color: var(--text); margin-bottom: 8px; }
     #activateForm input:focus { outline: none; border-color: var(--gold); }
     #activateForm input::placeholder { color: var(--text-muted); }
-    #activateBtn {
-      width: 100%;
-      padding: 10px;
-      background: var(--surface-3);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    #activateBtn { width: 100%; padding: 10px; background: var(--surface-3); color: var(--text); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     #activateBtn:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); color: var(--gold); }
     #activateStatus { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
 
-    /* ── NIL prompt (unchanged) ─────────────────────────────────── */
+    /* ── NIL prompt ── */
     #nil-prompt-container { display:none; position:fixed; bottom:0; left:0; right:0; z-index:999; padding:0 16px 16px; pointer-events:none; }
     .nil-prompt { pointer-events:all; background:#111111; border:1px solid rgba(201,168,76,0.6); border-radius:10px; overflow:hidden; max-width:480px; margin:0 auto; box-shadow:0 0 0 1px rgba(201,168,76,0.15),0 30px 80px rgba(0,0,0,0.8),0 0 60px rgba(132,22,23,0.3); animation:nilSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
     .nil-prompt-exit { animation:nilSlideDown 0.4s ease forwards !important; }
@@ -437,76 +422,24 @@
     .nil-prompt-progress { height:4px; background:rgba(255,255,255,0.04); }
     .nil-prompt-progress-fill { height:100%; width:100%; background:linear-gradient(90deg,#841617,#c9a84c); border-radius:0 2px 2px 0; }
 
-    /* ── Announcement banner ────────────────────────────────────── */
+    /* ── Announcement banner ── */
     #announcement-bar { position:sticky; top:0; z-index:99; }
-    #announcement-bar .xsen-announcement {
-      background: #0d0d0d;
-      border-bottom: 1px solid rgba(201,168,76,0.25);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: var(--font-body);
-      font-size: 12px;
-      color: rgba(240,236,224,0.6);
-      line-height: 1.5;
-    }
+    #announcement-bar .xsen-announcement { background: #0d0d0d; border-bottom: 1px solid rgba(201,168,76,0.25); padding: 10px 16px; display: flex; align-items: center; gap: 12px; font-family: var(--font-body); font-size: 12px; color: rgba(240,236,224,0.6); line-height: 1.5; }
     #announcement-bar .xsen-announcement strong { color: #f0ece0; }
     #announcement-bar .xsen-announcement .ann-link { background:var(--gold); color:#0a0a0a; border:none; border-radius:4px; padding:5px 12px; font-weight:700; font-size:11px; white-space:nowrap; text-decoration:none; flex-shrink:0; }
     #announcement-bar .xsen-announcement .ann-link:hover { opacity:0.88; }
     #announcement-bar .xsen-announcement .ann-dismiss { background:none; border:none; color:rgba(240,236,224,0.3); font-size:11px; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-left:auto; }
     #announcement-bar .xsen-announcement .ann-dismiss:hover { color:rgba(240,236,224,0.6); }
 
-    /* ── Mobile ─────────────────────────────────────────────────── */
     @media (max-width: 520px) {
       .chat-container { margin:0; border-radius:0; border:none; min-height:100vh; box-shadow:none; }
     }
 
-    /* ── Push opt-in banner ─────────────────────────────────────── */
-    #push-optin-banner {
-      display: none;
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 998;
-      background: #1a1a1a;
-      border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 8px;
-      padding: 14px 20px;
-      gap: 14px;
-      align-items: center;
-      max-width: 480px;
-      width: calc(100% - 40px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .push-optin-text {
-      font-size: 13px;
-      color: rgba(245,245,240,0.65);
-      flex: 1;
-      line-height: 1.5;
-    }
+    #push-optin-banner { display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 998; background: #1a1a1a; border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 14px 20px; gap: 14px; align-items: center; max-width: 480px; width: calc(100% - 40px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .push-optin-text { font-size: 13px; color: rgba(245,245,240,0.65); flex: 1; line-height: 1.5; }
     .push-optin-text strong { color: #f5f5f0; }
-    #push-optin-yes {
-      background: #c9a84c;
-      color: #0a0a0a;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 16px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    #push-optin-no {
-      background: none;
-      border: none;
-      color: rgba(245,245,240,0.3);
-      font-size: 12px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
+    #push-optin-yes { background: #c9a84c; color: #0a0a0a; border: none; border-radius: 4px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    #push-optin-no { background: none; border: none; color: rgba(245,245,240,0.3); font-size: 12px; cursor: pointer; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -526,8 +459,13 @@
       </div>
     </header>
 
+    <!-- ── AUDIO CARD with live badge ── -->
     <div id="xsen-audio-card" style="display:none;">
-      <div class="xsen-audio-header">🔴 Live Fan Cast</div>
+      <div class="xsen-audio-card-header">
+        <div class="xsen-audio-header">📻 Fan Cast</div>
+        <span id="appLiveBadge">PLAYLIST</span>
+      </div>
+      <div id="appStreamerName"></div>
       <audio id="xsenAudio" preload="none" playsinline controls>
         <source src="" type="audio/mpeg" />
         Your browser does not support audio.
@@ -594,13 +532,14 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
     );
   </script>
+
   <script>
     const ORCHESTRATOR_URL  = 'https://glorious-appreciation-production.up.railway.app';
     const CHAT_API_URL      = 'https://glorious-appreciation-production.up.railway.app/chat';
     const AUTH_SERVICE_URL  = 'https://energetic-joy-production.up.railway.app';
     const FAN_MESSAGE_API   = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
-    const LIVE_STATUS_URL   = 'https://xsen-fan-messages-production.up.railway.app/live-status';
     const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_sooners/radio.mp3';
+    const NOW_PLAYING_URL   = 'https://stream.xsen.fun/api/nowplaying/xsen_sooners';
     const DONATE_URL        = 'https://thebotosphere.com';
     const FREE_MESSAGE_LIMIT = 5;
 
@@ -647,6 +586,8 @@
       const audioCard      = document.getElementById('xsen-audio-card');
       const audioEl        = document.getElementById('xsenAudio');
       const audioStatus    = document.getElementById('audioStatus');
+      const appLiveBadge   = document.getElementById('appLiveBadge');
+      const appStreamerName = document.getElementById('appStreamerName');
       const listenLiveBtn  = document.getElementById('listenLiveBtn');
       const donateBtn      = document.getElementById('donateBtn');
       const fanNameInput   = document.getElementById('fanName');
@@ -775,14 +716,14 @@
         if (!audioEl || !audioCard) return;
         audioCard.style.display = 'block';
         audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
-        audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Live fan cast playing'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
+        audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Playing…'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
       }
 
       listenLiveBtn?.addEventListener('click', () => { addMsg('🔴 Connecting you to the live fan cast…', 'bot'); playAudio(); });
       donateBtn?.addEventListener('click', () => { addMsg('❤️ Supporting NIL helps keep the fan cast alive. Thank you!', 'bot'); window.open(DONATE_URL, '_blank', 'noopener'); });
 
-      const fanToggleBtn   = document.getElementById('fanToggleBtn');
-      const fanPanel       = document.querySelector('.fan-message-panel');
+      const fanToggleBtn = document.getElementById('fanToggleBtn');
+      const fanPanel     = document.querySelector('.fan-message-panel');
       fanToggleBtn?.addEventListener('click', () => {
         const open = fanPanel.classList.toggle('open');
         fanToggleBtn.classList.toggle('open', open);
@@ -801,6 +742,37 @@
           fanMsgInput.value = '';
         } catch (err) { fanMsgStatus.textContent = '❌ Could not send message.'; }
       });
+
+      // ── Live status polling (AzuraCast now_playing API) ──
+      async function checkLiveStatus() {
+        try {
+          const res  = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
+          const data = await res.json();
+          const live       = data?.live?.is_live === true;
+          const name       = data?.live?.streamer_name || '';
+          const nowPlaying = data?.now_playing?.song?.title || '';
+
+          if (live) {
+            appLiveBadge.textContent = '🔴 LIVE';
+            appLiveBadge.className   = 'live';
+            appStreamerName.textContent = name ? `Broadcasting: ${name}` : 'Live broadcast in progress';
+            appStreamerName.style.color = 'rgba(255,100,100,0.9)';
+            appStreamerName.style.display = 'block';
+            if (audioCard.style.display !== 'none') {
+              audioStatus.textContent = '🔴 Live now';
+            }
+          } else {
+            appLiveBadge.textContent = 'PLAYLIST';
+            appLiveBadge.className   = '';
+            appStreamerName.textContent = nowPlaying ? `Now playing: ${nowPlaying}` : '';
+            appStreamerName.style.color = 'rgba(240,236,224,0.4)';
+            appStreamerName.style.display = nowPlaying ? 'block' : 'none';
+          }
+        } catch(e) {}
+      }
+
+      checkLiveStatus();
+      setInterval(checkLiveStatus, 15000);
     });
   </script>
 
@@ -831,7 +803,7 @@
               : ''}
             <button class="ann-dismiss" onclick="this.closest('.xsen-announcement').remove()">✕ dismiss</button>
           </div>
-        \`).join('');
+        `).join('');
       } catch(e) {}
     })();
   </script>
