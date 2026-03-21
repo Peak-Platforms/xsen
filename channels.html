@@ -45,44 +45,12 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 2px;
-      color: var(--white);
-      text-decoration: none;
-    }
-
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--white); text-decoration: none; }
     .nav-logo span { color: var(--gold); }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      transition: color 0.2s;
-    }
-
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; transition: color 0.2s; }
     .nav-links a:hover { color: var(--white); }
-
-    .nav-partner {
-      background: var(--gold) !important;
-      color: var(--black) !important;
-      padding: 8px 20px;
-      border-radius: 4px;
-      font-weight: 700 !important;
-      font-size: 13px !important;
-      letter-spacing: 0.5px;
-      transition: opacity 0.2s !important;
-    }
-
+    .nav-partner { background: var(--gold) !important; color: var(--black) !important; padding: 8px 20px; border-radius: 4px; font-weight: 700 !important; font-size: 13px !important; letter-spacing: 0.5px; transition: opacity 0.2s !important; }
     .nav-partner:hover { opacity: 0.85; }
 
     /* ── PAGE HEADER ── */
@@ -97,317 +65,78 @@
       flex-wrap: wrap;
     }
 
-    .page-hero-left {}
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
 
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 14px;
-    }
-
-    .page-hero h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(48px, 7vw, 80px);
-      letter-spacing: 2px;
-      line-height: 0.95;
-      margin-bottom: 16px;
-    }
-
-    .page-hero p {
-      color: var(--muted);
-      font-size: 16px;
-      max-width: 420px;
-    }
+    .page-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 7vw, 80px); letter-spacing: 2px; line-height: 0.95; margin-bottom: 16px; }
+    .page-hero p { color: var(--muted); font-size: 16px; max-width: 420px; }
 
     /* ── SEARCH ── */
-    .search-wrap {
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .search-wrap::before {
-      content: '⌕';
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 20px;
-      pointer-events: none;
-    }
-
-    .search-input {
-      background: var(--mid);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      padding: 14px 20px 14px 44px;
-      width: 300px;
-      transition: all 0.2s;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: rgba(201,168,76,0.5);
-      background: #1f1f1f;
-    }
-
+    .search-wrap { position: relative; flex-shrink: 0; }
+    .search-wrap::before { content: '⌕'; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 20px; pointer-events: none; }
+    .search-input { background: var(--mid); border: 1px solid var(--border); border-radius: 6px; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 14px 20px 14px 44px; width: 300px; transition: all 0.2s; }
+    .search-input:focus { outline: none; border-color: rgba(201,168,76,0.5); background: #1f1f1f; }
     .search-input::placeholder { color: var(--muted); }
 
     /* ── CONTAINER ── */
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 0 40px 100px;
-    }
+    .container { max-width: 1300px; margin: 0 auto; padding: 0 40px 100px; }
 
     /* ── CONFERENCE SECTION ── */
-    .conference-section {
-      margin-bottom: 72px;
-    }
-
-    .conference-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .conference-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 1px;
-    }
-
-    .conference-count {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      letter-spacing: 1px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 3px 10px;
-    }
-
-    .conference-divider {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+    .conference-section { margin-bottom: 72px; }
+    .conference-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    .conference-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 1px; }
+    .conference-count { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 1px; border: 1px solid var(--border); border-radius: 4px; padding: 3px 10px; }
+    .conference-divider { flex: 1; height: 1px; background: var(--border); }
 
     /* ── CHANNEL GRID ── */
-    .channels-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
-    }
+    .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
 
-    /* ── LIVE CARD (same hover as index.html) ── */
-    .channel-card {
-      position: relative;
-      background: var(--mid);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 28px 24px;
-      text-decoration: none;
-      color: var(--white);
-      display: block;
-      overflow: hidden;
-    }
+    .channel-card { position: relative; background: var(--mid); border: 1px solid var(--border); border-radius: 8px; padding: 28px 24px; text-decoration: none; color: var(--white); display: block; overflow: hidden; }
+    .channel-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-accent, var(--red)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+    .channel-card.live { transition: all 0.3s; cursor: pointer; }
+    .channel-card.live:hover::before { transform: scaleX(1); }
+    .channel-card.live:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .channel-card.soon { opacity: 0.5; cursor: default; pointer-events: none; }
 
-    .channel-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--card-accent, var(--red));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s;
-    }
-
-    /* Live cards get full hover treatment */
-    .channel-card.live {
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .channel-card.live:hover::before {
-      transform: scaleX(1);
-    }
-
-    .channel-card.live:hover {
-      border-color: rgba(255,255,255,0.18);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-
-    /* Coming soon cards — no interaction */
-    .channel-card.soon {
-      opacity: 0.5;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .channel-emoji {
-      font-size: 36px;
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .channel-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-      line-height: 1.1;
-    }
-
-    .channel-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .channel-status.live-badge {
-      color: #ff4444;
-    }
-
-    .channel-status.live-badge::before {
-      content: '';
-      width: 7px; height: 7px;
-      background: #ff4444;
-      border-radius: 50%;
-      flex-shrink: 0;
-      animation: pulse 1.4s infinite;
-    }
-
+    .channel-emoji { font-size: 36px; margin-bottom: 14px; display: block; }
+    .channel-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.5px; margin-bottom: 10px; line-height: 1.1; }
+    .channel-status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .channel-status.live-badge { color: #ff4444; }
+    .channel-status.live-badge::before { content: ''; width: 7px; height: 7px; background: #ff4444; border-radius: 50%; flex-shrink: 0; animation: pulse 1.4s infinite; }
     .channel-status.soon-badge { color: var(--muted); }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.3); }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } }
 
-    .channel-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .channel-features li {
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .channel-features li::before {
-      content: '→';
-      color: var(--card-accent, var(--red));
-      font-size: 11px;
-      flex-shrink: 0;
-    }
-
-    .channel-arrow {
-      position: absolute;
-      bottom: 24px;
-      right: 24px;
-      font-size: 18px;
-      color: var(--muted);
-      transition: all 0.2s;
-    }
-
-    .channel-card.live:hover .channel-arrow {
-      color: var(--white);
-      transform: translate(3px, -3px);
-    }
+    .channel-features { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .channel-features li { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+    .channel-features li::before { content: '→'; color: var(--card-accent, var(--red)); font-size: 11px; flex-shrink: 0; }
+    .channel-arrow { position: absolute; bottom: 24px; right: 24px; font-size: 18px; color: var(--muted); transition: all 0.2s; }
+    .channel-card.live:hover .channel-arrow { color: var(--white); transform: translate(3px, -3px); }
 
     /* ── NO RESULTS ── */
-    .no-results {
-      display: none;
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-
+    .no-results { display: none; text-align: center; padding: 60px 20px; color: var(--muted); }
     .no-results-icon { font-size: 48px; margin-bottom: 16px; }
     .no-results h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; margin-bottom: 8px; color: var(--white); }
 
     /* ── FOOTER ── */
-    footer {
-      background: var(--black);
-      border-top: 1px solid var(--border);
-      padding: 48px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      color: var(--muted);
-    }
-
+    footer { background: var(--black); border-top: 1px solid var(--border); padding: 48px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--muted); }
     .footer-logo span { color: var(--gold); }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      transition: color 0.2s;
-    }
-
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
     .footer-links a:hover { color: var(--white); }
-
-    .footer-copy {
-      color: rgba(245,245,240,0.25);
-      font-size: 12px;
-      width: 100%;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .footer-copy { color: rgba(245,245,240,0.25); font-size: 12px; width: 100%; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       nav { padding: 16px 20px; }
       .nav-links a:not(.nav-partner) { display: none; }
-
       .page-hero { padding: 50px 20px 40px; flex-direction: column; align-items: flex-start; }
       .search-wrap { width: 100%; }
       .search-input { width: 100%; }
-
       .container { padding: 0 20px 80px; }
       .channels-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
       footer { padding: 40px 20px; }
     }
-
     @media (max-width: 480px) {
       .channels-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -415,7 +144,6 @@
 </head>
 <body>
 
-  <!-- ── NAV ── -->
   <nav>
     <a href="/" class="nav-logo">X<span>S</span>EN</a>
     <div class="nav-links">
@@ -426,12 +154,11 @@
     </div>
   </nav>
 
-  <!-- ── PAGE HEADER ── -->
   <div class="page-hero">
     <div class="page-hero-left">
       <div class="section-label">XSEN — The Fans' Network™</div>
       <h1>All<br>Channels</h1>
-      <p>Every school, every conference. One network built for superfans.</p>
+      <p>FBS. FCS. Division II. Division III. NAIA. Every level, every school, every fan. One network.</p>
     </div>
     <div class="search-wrap">
       <input type="text" id="searchInput" class="search-input" placeholder="Search schools or conferences…" autocomplete="off" />
@@ -440,7 +167,6 @@
 
   <div class="container">
 
-    <!-- ── NO RESULTS ── -->
     <div class="no-results" id="noResults">
       <div class="no-results-icon">🔍</div>
       <h3>No channels found</h3>
@@ -455,115 +181,34 @@
         <div class="conference-divider"></div>
       </div>
       <div class="channels-grid">
-
         <a href="https://xsen.fun/sooners" class="channel-card live" style="--card-accent:#841617;" data-name="Oklahoma Sooners SEC">
           <span class="channel-emoji">🏈</span>
           <div class="channel-name">Oklahoma Sooners</div>
           <div class="channel-status live-badge">Live Now</div>
-          <ul class="channel-features">
-            <li>Boomer AI Companion</li>
-            <li>4,700+ Video Highlights</li>
-            <li>XSEN Radio</li>
-          </ul>
+          <ul class="channel-features"><li>Boomer AI Companion</li><li>4,700+ Video Highlights</li><li>XSEN Radio</li></ul>
           <span class="channel-arrow">↗</span>
         </a>
-
         <a href="https://xsen.fun/longhorns" class="channel-card live" style="--card-accent:#BF5700;" data-name="Texas Longhorns SEC">
           <span class="channel-emoji">🤘</span>
           <div class="channel-name">Texas Longhorns</div>
           <div class="channel-status live-badge">Live Now</div>
-          <ul class="channel-features">
-            <li>Hook AI Companion</li>
-            <li>3,500+ Video Highlights</li>
-            <li>XSEN Radio</li>
-          </ul>
+          <ul class="channel-features"><li>Hook AI Companion</li><li>3,500+ Video Highlights</li><li>XSEN Radio</li></ul>
           <span class="channel-arrow">↗</span>
         </a>
-
-        <div class="channel-card soon" data-name="Alabama Crimson Tide SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Alabama Crimson Tide</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Georgia Bulldogs SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Georgia Bulldogs</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="LSU Tigers SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">LSU Tigers</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Texas A&M Aggies SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Texas A&amp;M Aggies</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Florida Gators SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Florida Gators</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Tennessee Volunteers SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Tennessee Volunteers</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Auburn Tigers SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Auburn Tigers</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Arkansas Razorbacks SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Arkansas Razorbacks</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Ole Miss Rebels SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Ole Miss Rebels</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Mississippi State Bulldogs SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Mississippi State</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Missouri Tigers SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Missouri Tigers</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="South Carolina Gamecocks SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">South Carolina</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Kentucky Wildcats SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Kentucky Wildcats</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Vanderbilt Commodores SEC">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Vanderbilt</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
+        <div class="channel-card soon" data-name="Alabama Crimson Tide SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Alabama Crimson Tide</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Georgia Bulldogs SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Georgia Bulldogs</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="LSU Tigers SEC"><span class="channel-emoji">🏈</span><div class="channel-name">LSU Tigers</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Texas A&M Aggies SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Texas A&amp;M Aggies</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Florida Gators SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Florida Gators</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Tennessee Volunteers SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Tennessee Volunteers</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Auburn Tigers SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Auburn Tigers</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Arkansas Razorbacks SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Arkansas Razorbacks</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Ole Miss Rebels SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Ole Miss Rebels</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Mississippi State Bulldogs SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Mississippi State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Missouri Tigers SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Missouri Tigers</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="South Carolina Gamecocks SEC"><span class="channel-emoji">🏈</span><div class="channel-name">South Carolina</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Kentucky Wildcats SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Kentucky Wildcats</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Vanderbilt Commodores SEC"><span class="channel-emoji">🏈</span><div class="channel-name">Vanderbilt</div><div class="channel-status soon-badge">Coming Soon</div></div>
       </div>
     </div>
 
@@ -575,109 +220,92 @@
         <div class="conference-divider"></div>
       </div>
       <div class="channels-grid">
-
         <a href="https://xsen.fun/okstate" class="channel-card live" style="--card-accent:#E04E00;" data-name="Oklahoma State Cowboys Big 12">
           <span class="channel-emoji">🤠</span>
           <div class="channel-name">Oklahoma State Cowboys</div>
           <div class="channel-status live-badge">Live Now</div>
-          <ul class="channel-features">
-            <li>Pistol Pete AI</li>
-            <li>2,800+ Video Highlights</li>
-            <li>XSEN Radio</li>
-          </ul>
+          <ul class="channel-features"><li>Pistol Pete AI</li><li>2,800+ Video Highlights</li><li>XSEN Radio</li></ul>
           <span class="channel-arrow">↗</span>
         </a>
+        <div class="channel-card soon" data-name="Arizona Wildcats Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Arizona Wildcats</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Arizona State Sun Devils Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Arizona State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Baylor Bears Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Baylor Bears</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="BYU Cougars Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">BYU Cougars</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="UCF Knights Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">UCF Knights</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Cincinnati Bearcats Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Cincinnati Bearcats</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Colorado Buffaloes Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Colorado Buffaloes</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Houston Cougars Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Houston Cougars</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Iowa State Cyclones Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Iowa State Cyclones</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Kansas Jayhawks Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Kansas Jayhawks</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Kansas State Wildcats Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Kansas State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="TCU Horned Frogs Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">TCU Horned Frogs</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Texas Tech Red Raiders Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Texas Tech</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Utah Utes Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">Utah Utes</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="West Virginia Mountaineers Big 12"><span class="channel-emoji">🏈</span><div class="channel-name">West Virginia</div><div class="channel-status soon-badge">Coming Soon</div></div>
+      </div>
+    </div>
 
-        <div class="channel-card soon" data-name="Arizona Wildcats Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Arizona Wildcats</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
+    <!-- ══ FCS ══ -->
+    <div class="conference-section" data-conference="fcs">
+      <div class="conference-header">
+        <div class="conference-title">FCS</div>
+        <div class="conference-count">Coming Soon</div>
+        <div class="conference-divider"></div>
+      </div>
+      <div class="channels-grid">
+        <div class="channel-card soon" data-name="North Dakota State Bison FCS"><span class="channel-emoji">🏈</span><div class="channel-name">North Dakota State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="South Dakota State Jackrabbits FCS"><span class="channel-emoji">🏈</span><div class="channel-name">South Dakota State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Montana Grizzlies FCS"><span class="channel-emoji">🏈</span><div class="channel-name">Montana Grizzlies</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="James Madison Dukes FCS"><span class="channel-emoji">🏈</span><div class="channel-name">James Madison</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Sacramento State Hornets FCS"><span class="channel-emoji">🏈</span><div class="channel-name">Sacramento State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Villanova Wildcats FCS"><span class="channel-emoji">🏈</span><div class="channel-name">Villanova</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="More FCS Schools"><span class="channel-emoji">🏈</span><div class="channel-name">100+ More Schools</div><div class="channel-status soon-badge">Coming Soon</div></div>
+      </div>
+    </div>
 
-        <div class="channel-card soon" data-name="Arizona State Sun Devils Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Arizona State</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
+    <!-- ══ DIVISION II ══ -->
+    <div class="conference-section" data-conference="division2">
+      <div class="conference-header">
+        <div class="conference-title">Division II</div>
+        <div class="conference-count">Coming Soon</div>
+        <div class="conference-divider"></div>
+      </div>
+      <div class="channels-grid">
+        <div class="channel-card soon" data-name="Ferris State Bulldogs Division II"><span class="channel-emoji">🏈</span><div class="channel-name">Ferris State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Colorado School of Mines Orediggers Division II"><span class="channel-emoji">🏈</span><div class="channel-name">Colorado Mines</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Pittsburg State Gorillas Division II"><span class="channel-emoji">🏈</span><div class="channel-name">Pittsburg State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Angelo State Rams Division II"><span class="channel-emoji">🏈</span><div class="channel-name">Angelo State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="More Division II Schools"><span class="channel-emoji">🏈</span><div class="channel-name">150+ More Schools</div><div class="channel-status soon-badge">Coming Soon</div></div>
+      </div>
+    </div>
 
-        <div class="channel-card soon" data-name="Baylor Bears Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Baylor Bears</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
+    <!-- ══ DIVISION III ══ -->
+    <div class="conference-section" data-conference="division3">
+      <div class="conference-header">
+        <div class="conference-title">Division III</div>
+        <div class="conference-count">Coming Soon</div>
+        <div class="conference-divider"></div>
+      </div>
+      <div class="channels-grid">
+        <div class="channel-card soon" data-name="Mount Union Raiders Division III"><span class="channel-emoji">🏈</span><div class="channel-name">Mount Union</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Mary Hardin-Baylor Crusaders Division III"><span class="channel-emoji">🏈</span><div class="channel-name">Mary Hardin-Baylor</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Wisconsin-Whitewater Warhawks Division III"><span class="channel-emoji">🏈</span><div class="channel-name">Wisconsin-Whitewater</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="More Division III Schools"><span class="channel-emoji">🏈</span><div class="channel-name">250+ More Schools</div><div class="channel-status soon-badge">Coming Soon</div></div>
+      </div>
+    </div>
 
-        <div class="channel-card soon" data-name="BYU Cougars Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">BYU Cougars</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="UCF Knights Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">UCF Knights</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Cincinnati Bearcats Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Cincinnati Bearcats</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Colorado Buffaloes Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Colorado Buffaloes</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Houston Cougars Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Houston Cougars</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Iowa State Cyclones Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Iowa State Cyclones</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Kansas Jayhawks Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Kansas Jayhawks</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Kansas State Wildcats Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Kansas State</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="TCU Horned Frogs Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">TCU Horned Frogs</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Texas Tech Red Raiders Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Texas Tech</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="Utah Utes Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">Utah Utes</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
-        <div class="channel-card soon" data-name="West Virginia Mountaineers Big 12">
-          <span class="channel-emoji">🏈</span>
-          <div class="channel-name">West Virginia</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-        </div>
-
+    <!-- ══ NAIA ══ -->
+    <div class="conference-section" data-conference="naia">
+      <div class="conference-header">
+        <div class="conference-title">NAIA</div>
+        <div class="conference-count">Coming Soon</div>
+        <div class="conference-divider"></div>
+      </div>
+      <div class="channels-grid">
+        <div class="channel-card soon" data-name="Morningside Mustangs NAIA"><span class="channel-emoji">🏈</span><div class="channel-name">Morningside</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Northwestern Oklahoma Storm NAIA"><span class="channel-emoji">🏈</span><div class="channel-name">NW Oklahoma State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="Southeastern Oklahoma State Savage Storm NAIA"><span class="channel-emoji">🏈</span><div class="channel-name">SE Oklahoma State</div><div class="channel-status soon-badge">Coming Soon</div></div>
+        <div class="channel-card soon" data-name="More NAIA Schools"><span class="channel-emoji">🏈</span><div class="channel-name">100+ More Schools</div><div class="channel-status soon-badge">Coming Soon</div></div>
       </div>
     </div>
 
@@ -689,49 +317,18 @@
         <div class="conference-divider"></div>
       </div>
       <div class="channels-grid">
-
-        <div class="channel-card soon" data-name="SEC Conference Channel">
-          <span class="channel-emoji">🏆</span>
-          <div class="channel-name">SEC Channel</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-          <ul class="channel-features" style="margin-top:8px;">
-            <li>All 16 SEC Schools</li>
-          </ul>
-        </div>
-
-        <div class="channel-card soon" data-name="Big 12 Conference Channel">
-          <span class="channel-emoji">⭐</span>
-          <div class="channel-name">Big 12 Channel</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-          <ul class="channel-features" style="margin-top:8px;">
-            <li>All 16 Big 12 Schools</li>
-          </ul>
-        </div>
-
-        <div class="channel-card soon" data-name="Big Ten Conference Channel">
-          <span class="channel-emoji">🏟️</span>
-          <div class="channel-name">Big Ten Channel</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-          <ul class="channel-features" style="margin-top:8px;">
-            <li>All 18 Big Ten Schools</li>
-          </ul>
-        </div>
-
-        <div class="channel-card soon" data-name="ACC Conference Channel">
-          <span class="channel-emoji">🎓</span>
-          <div class="channel-name">ACC Channel</div>
-          <div class="channel-status soon-badge">Coming Soon</div>
-          <ul class="channel-features" style="margin-top:8px;">
-            <li>All 17 ACC Schools</li>
-          </ul>
-        </div>
-
+        <div class="channel-card soon" data-name="SEC Conference Channel"><span class="channel-emoji">🏆</span><div class="channel-name">SEC Channel</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>All 16 SEC Schools</li></ul></div>
+        <div class="channel-card soon" data-name="Big 12 Conference Channel"><span class="channel-emoji">⭐</span><div class="channel-name">Big 12 Channel</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>All 16 Big 12 Schools</li></ul></div>
+        <div class="channel-card soon" data-name="Big Ten Conference Channel"><span class="channel-emoji">🏟️</span><div class="channel-name">Big Ten Channel</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>All 18 Big Ten Schools</li></ul></div>
+        <div class="channel-card soon" data-name="ACC Conference Channel"><span class="channel-emoji">🎓</span><div class="channel-name">ACC Channel</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>All 17 ACC Schools</li></ul></div>
+        <div class="channel-card soon" data-name="FCS Conference Channels"><span class="channel-emoji">🏈</span><div class="channel-name">FCS Conferences</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>Big South, CAA, MVFC &amp; more</li></ul></div>
+        <div class="channel-card soon" data-name="Division II Conference Channels"><span class="channel-emoji">🏈</span><div class="channel-name">Division II Conferences</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>MIAA, RMAC, GLIAC &amp; more</li></ul></div>
+        <div class="channel-card soon" data-name="NAIA Conference Channels"><span class="channel-emoji">🏈</span><div class="channel-name">NAIA Conferences</div><div class="channel-status soon-badge">Coming Soon</div><ul class="channel-features" style="margin-top:8px;"><li>Heart, Frontier, KCAC &amp; more</li></ul></div>
       </div>
     </div>
 
-  </div><!-- /container -->
+  </div>
 
-  <!-- ── FOOTER ── -->
   <footer>
     <div class="footer-logo">X<span>S</span>EN</div>
     <div class="footer-links">
@@ -744,22 +341,21 @@
       <a href="mailto:support@xsen.fun">Support</a>
     </div>
     <div class="footer-copy">
-      <span>© 2025 XSEN — The Fans' Network™</span>
+      <span>© 2026 XSEN — The Fans' Network™</span>
       <span>Not affiliated with any university or athletic program</span>
     </div>
   </footer>
 
   <script>
-    const searchInput  = document.getElementById('searchInput');
-    const allCards     = document.querySelectorAll('.channel-card');
-    const noResults    = document.getElementById('noResults');
-    const sections     = document.querySelectorAll('.conference-section');
+    const searchInput = document.getElementById('searchInput');
+    const allCards    = document.querySelectorAll('.channel-card');
+    const noResults   = document.getElementById('noResults');
+    const sections    = document.querySelectorAll('.conference-section');
 
     searchInput.addEventListener('input', function () {
       const term = this.value.toLowerCase().trim();
 
       if (!term) {
-        // reset everything
         allCards.forEach(c => c.style.display = '');
         sections.forEach(s => s.style.display = '');
         noResults.style.display = 'none';
@@ -771,14 +367,12 @@
       sections.forEach(section => {
         const cards = section.querySelectorAll('.channel-card');
         let sectionVisible = false;
-
         cards.forEach(card => {
           const name = (card.dataset.name || '').toLowerCase();
           const match = name.includes(term);
           card.style.display = match ? '' : 'none';
           if (match) { sectionVisible = true; anyVisible = true; }
         });
-
         section.style.display = sectionVisible ? '' : 'none';
       });
 

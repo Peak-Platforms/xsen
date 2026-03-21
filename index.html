@@ -21,7 +21,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -30,6 +29,7 @@
       color: var(--white);
       line-height: 1.6;
       overflow-x: hidden;
+      padding-bottom: 80px;
     }
 
     /* ── NAV ── */
@@ -44,671 +44,158 @@
       background: linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, transparent 100%);
       backdrop-filter: blur(2px);
     }
-
-    .nav-logo-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 2px;
-      color: var(--white);
-      text-decoration: none;
-    }
-
+    .nav-logo-wrap { display: flex; flex-direction: column; gap: 2px; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--white); text-decoration: none; }
     .nav-logo span { color: var(--gold); }
-
-    /* hidden on desktop, visible on mobile */
-    .nav-tagline {
-      display: none;
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      transition: color 0.2s;
-    }
-
+    .nav-tagline { display: none; font-size: 10px; color: var(--muted); letter-spacing: 0.5px; font-weight: 500; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; transition: color 0.2s; }
     .nav-links a:hover { color: var(--white); }
-
-    .nav-partner {
-      background: var(--gold) !important;
-      color: var(--black) !important;
-      padding: 8px 20px;
-      border-radius: 4px;
-      font-weight: 700 !important;
-      font-size: 13px !important;
-      letter-spacing: 0.5px;
-      transition: opacity 0.2s !important;
-    }
-
+    .nav-partner { background: var(--gold) !important; color: var(--black) !important; padding: 8px 20px; border-radius: 4px; font-weight: 700 !important; font-size: 13px !important; letter-spacing: 0.5px; transition: opacity 0.2s !important; }
     .nav-partner:hover { opacity: 0.85; }
 
     /* ── HERO ── */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      overflow: hidden;
-    }
+    .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.35; }
+    .hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center top, rgba(132,22,23,0.25) 0%, transparent 60%), linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.85) 100%); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; max-width: 860px; padding: 0 24px; }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); line-height: 0.92; letter-spacing: 2px; margin-bottom: 24px; }
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .hero-sub { font-size: 18px; color: var(--muted); max-width: 560px; margin: 0 auto 44px; line-height: 1.7; }
+    .hero-network-tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
-    .hero-video {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      opacity: 0.35;
-    }
+    .btn-primary { background: var(--red); color: var(--white); padding: 16px 36px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; transition: all 0.2s; border: 1px solid transparent; }
+    .btn-primary:hover { background: #9a1a1b; transform: translateY(-1px); box-shadow: 0 8px 24px var(--red-glow); }
 
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at center top, rgba(132,22,23,0.25) 0%, transparent 60%),
-        linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.85) 100%);
-      z-index: 1;
-    }
+    .btn-outline { background: transparent; color: var(--white); padding: 16px 36px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.25); transition: all 0.2s; }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 860px;
-      padding: 0 24px;
-    }
+    .btn-listen { background: transparent; color: var(--white); padding: 16px 36px; border-radius: 4px; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.25); transition: all 0.2s; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; }
+    .btn-listen:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
+    .btn-listen .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #888; flex-shrink: 0; transition: background 0.3s; }
+    .btn-listen .status-dot.live { background: #ff2d2d; box-shadow: 0 0 6px rgba(255,45,45,0.9); animation: dotpulse 1.4s infinite; }
 
-    .hero-eyebrow {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(201,168,76,0.4);
-      padding: 6px 16px;
-      border-radius: 2px;
-      margin-bottom: 28px;
-    }
+    @keyframes dotpulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } }
 
-    .hero h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(64px, 10vw, 120px);
-      line-height: 0.92;
-      letter-spacing: 2px;
-      margin-bottom: 24px;
-    }
+    .scroll-hint { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+    .scroll-hint::after { content: ''; display: block; width: 1px; height: 40px; background: var(--muted); opacity: 0.5; animation: scrollLine 1.8s ease-in-out infinite; }
+    @keyframes scrollLine { 0%, 100% { opacity: 0.4; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.1); } }
 
-    .hero h1 em {
-      font-style: normal;
-      color: var(--gold);
-    }
-
-    .hero-sub {
-      font-size: 18px;
-      color: var(--muted);
-      max-width: 560px;
-      margin: 0 auto 44px;
-      line-height: 1.7;
-    }
-
-    .hero-network-tag {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .hero-ctas {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--red);
-      color: var(--white);
-      padding: 16px 36px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-      border: 1px solid transparent;
-    }
-
-    .btn-primary:hover {
-      background: #9a1a1b;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px var(--red-glow);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--white);
-      padding: 16px 36px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-      border: 1px solid rgba(255,255,255,0.25);
-      transition: all 0.2s;
-    }
-
-    .btn-outline:hover {
-      border-color: rgba(255,255,255,0.6);
-      background: rgba(255,255,255,0.05);
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 36px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .scroll-hint::after {
-      content: '';
-      display: block;
-      width: 1px;
-      height: 40px;
-      background: var(--muted);
-      opacity: 0.5;
-      animation: scrollLine 1.8s ease-in-out infinite;
-    }
-
-    @keyframes scrollLine {
-      0%, 100% { opacity: 0.4; transform: scaleY(1); }
-      50% { opacity: 1; transform: scaleY(1.1); }
-    }
+    /* ── STICKY PLAYER ── */
+    .sticky-player { position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; background: linear-gradient(135deg, #841617 0%, #6a1112 100%); color: #FDF9D8; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .sticky-player.open { transform: translateY(0); }
+    .player-bar { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+    .player-label { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 15px; white-space: nowrap; flex-shrink: 0; }
+    .player-live-badge { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); white-space: nowrap; }
+    .player-live-badge.live { background: #ff2d2d; color: #fff; box-shadow: 0 0 6px rgba(255,45,45,0.8); }
+    .player-live-badge.offline { background: #555; color: #ddd; }
+    .player-audio-wrap { flex: 1; min-width: 0; }
+    .player-audio-wrap audio { width: 100%; height: 36px; }
+    .player-audio-status { color: rgba(253,249,216,0.7); font-size: 12px; margin-top: 4px; text-align: center; }
+    .player-close { background: rgba(255,255,255,0.15); border: none; color: #FDF9D8; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+    .player-close:hover { background: rgba(255,255,255,0.28); }
 
     /* ── CHANNELS ── */
-    .channels-section {
-      padding: 100px 40px;
-      max-width: 1300px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(36px, 5vw, 56px);
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .section-sub {
-      color: var(--muted);
-      font-size: 16px;
-      margin-bottom: 56px;
-      max-width: 500px;
-    }
-
-    .channels-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .channel-card {
-      position: relative;
-      background: var(--mid);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px 28px;
-      text-decoration: none;
-      color: var(--white);
-      transition: all 0.3s;
-      overflow: hidden;
-      display: block;
-    }
-
-    .channel-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--card-accent, var(--red));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s;
-    }
-
+    .channels-section { padding: 100px 40px; max-width: 1300px; margin: 0 auto; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 56px); letter-spacing: 1px; margin-bottom: 12px; }
+    .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 56px; max-width: 500px; }
+    .channels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .channel-card { position: relative; background: var(--mid); border: 1px solid var(--border); border-radius: 8px; padding: 32px 28px; text-decoration: none; color: var(--white); transition: all 0.3s; overflow: hidden; display: block; }
+    .channel-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-accent, var(--red)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
     .channel-card:hover::before { transform: scaleX(1); }
-
-    .channel-card:hover {
-      border-color: rgba(255,255,255,0.18);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-
-    .channel-card.coming-soon {
-      opacity: 0.6;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .channel-card.coming-soon:hover {
-      transform: none;
-      box-shadow: none;
-    }
-
-    .channel-emoji {
-      font-size: 40px;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .channel-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-
-    .channel-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-
+    .channel-card:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .channel-card.coming-soon { opacity: 0.6; cursor: default; pointer-events: none; }
+    .channel-emoji { font-size: 40px; margin-bottom: 16px; display: block; }
+    .channel-name { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; margin-bottom: 6px; }
+    .channel-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
     .channel-status.live { color: #ff4444; }
-    .channel-status.live::before {
-      content: '';
-      width: 7px; height: 7px;
-      background: #ff4444;
-      border-radius: 50%;
-      animation: pulse 1.4s infinite;
-    }
-
+    .channel-status.live::before { content: ''; width: 7px; height: 7px; background: #ff4444; border-radius: 50%; animation: dotpulse 1.4s infinite; }
     .channel-status.soon { color: var(--muted); }
+    .channel-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .channel-features li { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .channel-features li::before { content: '→'; color: var(--card-accent, var(--red)); font-size: 12px; flex-shrink: 0; }
+    .channel-arrow { position: absolute; bottom: 28px; right: 28px; font-size: 20px; color: var(--muted); transition: all 0.2s; }
+    .channel-card:hover .channel-arrow { color: var(--white); transform: translate(3px, -3px); }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.3); }
-    }
-
-    .channel-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .channel-features li {
-      font-size: 13px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .channel-features li::before {
-      content: '→';
-      color: var(--card-accent, var(--red));
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    .channel-arrow {
-      position: absolute;
-      bottom: 28px;
-      right: 28px;
-      font-size: 20px;
-      color: var(--muted);
-      transition: all 0.2s;
-    }
-
-    .channel-card:hover .channel-arrow {
-      color: var(--white);
-      transform: translate(3px, -3px);
-    }
-
-    /* ── WHAT IS XSEN (pitch) ── */
-    .pitch-section {
-      background: var(--dark);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 100px 40px;
-    }
-
-    .pitch-inner {
-      max-width: 1300px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .pitch-left {}
-
-    .pitch-left p {
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.8;
-      margin-bottom: 20px;
-    }
-
-    .pitch-stat-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 40px;
-    }
-
-    .pitch-stat {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 20px;
-    }
-
-    .pitch-stat-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 42px;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .pitch-stat-label {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-    }
-
-    .pitch-right {}
-
-    .pitch-pillars {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .pillar {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 20px 24px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      transition: background 0.2s;
-    }
-
+    /* ── PITCH ── */
+    .pitch-section { background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 100px 40px; }
+    .pitch-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .pitch-left p { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
+    .pitch-stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+    .pitch-stat { border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
+    .pitch-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+    .pitch-stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
+    .pitch-pillars { display: flex; flex-direction: column; gap: 2px; }
+    .pillar { border: 1px solid var(--border); border-radius: 6px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; transition: background 0.2s; }
     .pillar:hover { background: var(--mid); }
-
-    .pillar-icon {
-      font-size: 22px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .pillar-title {
-      font-weight: 700;
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-
-    .pillar-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
+    .pillar-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .pillar-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+    .pillar-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
     /* ── SCALE ── */
-    .scale-section {
-      padding: 100px 40px;
-      max-width: 1300px;
-      margin: 0 auto;
-    }
-
-    .scale-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      margin-top: 56px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .scale-item {
-      padding: 40px 32px;
-      background: var(--mid);
-      border-right: 1px solid var(--border);
-    }
-
+    .scale-section { padding: 100px 40px; max-width: 1300px; margin: 0 auto; }
+    .scale-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 56px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .scale-item { padding: 40px 32px; background: var(--mid); border-right: 1px solid var(--border); }
     .scale-item:last-child { border-right: none; }
+    .scale-num { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+    .scale-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+    .scale-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
-    .scale-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 56px;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .scale-title {
-      font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-
-    .scale-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    /* ── PARTNER CTA ── */
-    .partner-section {
-      background: var(--dark);
-      border-top: 1px solid var(--border);
-      padding: 100px 40px;
-    }
-
-    .partner-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .partner-inner h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(40px, 6vw, 72px);
-      letter-spacing: 1px;
-      margin-bottom: 20px;
-      line-height: 1;
-    }
-
-    .partner-inner p {
-      color: var(--muted);
-      font-size: 17px;
-      max-width: 600px;
-      margin: 0 auto 40px;
-      line-height: 1.7;
-    }
-
-    .partner-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 56px;
-      text-align: left;
-    }
-
-    .partner-option {
-      background: var(--mid);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px;
-      transition: border-color 0.2s;
-    }
-
+    /* ── PARTNER ── */
+    .partner-section { background: var(--dark); border-top: 1px solid var(--border); padding: 100px 40px; }
+    .partner-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+    .partner-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 72px); letter-spacing: 1px; margin-bottom: 20px; line-height: 1; }
+    .partner-inner p { color: var(--muted); font-size: 17px; max-width: 600px; margin: 0 auto 40px; line-height: 1.7; }
+    .partner-options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; text-align: left; }
+    .partner-option { background: var(--mid); border: 1px solid var(--border); border-radius: 8px; padding: 32px; transition: border-color 0.2s; }
     .partner-option:hover { border-color: rgba(201,168,76,0.4); }
-
-    .partner-option-title {
-      font-weight: 700;
-      font-size: 17px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .partner-option-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .partner-option a {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gold);
-      text-decoration: none;
-      letter-spacing: 0.5px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: gap 0.2s;
-    }
-
+    .partner-option-title { font-weight: 700; font-size: 17px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .partner-option-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .partner-option a { font-size: 13px; font-weight: 700; color: var(--gold); text-decoration: none; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
     .partner-option a:hover { gap: 10px; }
 
     /* ── FOOTER ── */
-    footer {
-      background: var(--black);
-      border-top: 1px solid var(--border);
-      padding: 48px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      color: var(--muted);
-    }
-
+    footer { background: var(--black); border-top: 1px solid var(--border); padding: 48px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--muted); }
     .footer-logo span { color: var(--gold); }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      transition: color 0.2s;
-    }
-
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
     .footer-links a:hover { color: var(--white); }
-
-    .footer-copy {
-      color: rgba(245,245,240,0.25);
-      font-size: 12px;
-      width: 100%;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .footer-copy { color: rgba(245,245,240,0.25); font-size: 12px; width: 100%; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
     /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-  nav { padding: 16px 20px; position: fixed; background: rgba(10,10,10,0.95); backdrop-filter: none; }
-  .nav-links { gap: 16px; }
-  .nav-links a { display: none; }
-  .nav-tagline { display: none; }
-    
-  .channels-section,
-  .scale-section { padding: 70px 20px; }
-  .pitch-section { padding: 70px 20px; }
-  .pitch-inner { grid-template-columns: 1fr; gap: 50px; }
-  .scale-grid { grid-template-columns: 1fr; }
-  .scale-item { border-right: none; border-bottom: 1px solid var(--border); }
-  .scale-item:last-child { border-bottom: none; }
-  .partner-section { padding: 70px 20px; }
-  .partner-options { grid-template-columns: 1fr; }
-  footer { padding: 40px 20px; }
-  .footer-copy { flex-direction: column; }
-  .hero-content { padding-top: 90px; }
-  .hero-sub { font-size: 16px; }
-  .pitch-stat-row { grid-template-columns: 1fr 1fr; }
-  .scroll-hint { display: none; }
-}
-
+    @media (max-width: 900px) {
+      nav { padding: 16px 20px; background: rgba(10,10,10,0.95); backdrop-filter: none; }
+      .nav-links { gap: 16px; }
+      .nav-links a { display: none; }
+      .channels-section, .scale-section { padding: 70px 20px; }
+      .pitch-section, .partner-section { padding: 70px 20px; }
+      .pitch-inner { grid-template-columns: 1fr; gap: 50px; }
+      .scale-grid { grid-template-columns: 1fr; }
+      .scale-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .scale-item:last-child { border-bottom: none; }
+      .partner-options { grid-template-columns: 1fr; }
+      footer { padding: 40px 20px; }
+      .footer-copy { flex-direction: column; }
+      .hero-content { padding-top: 90px; }
+      .hero-sub { font-size: 16px; }
+      .pitch-stat-row { grid-template-columns: 1fr 1fr; }
+      .scroll-hint { display: none; }
+      .player-label { display: none; }
+      .player-bar { padding: 10px 14px; gap: 10px; }
+    }
     @media (max-width: 480px) {
       .hero-ctas { flex-direction: column; align-items: center; }
-      .btn-primary, .btn-outline { width: 100%; text-align: center; }
+      .btn-primary, .btn-outline, .btn-listen { width: 100%; text-align: center; justify-content: center; }
       .pitch-stat-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── NAV ── -->
   <nav>
-    <!-- CHANGE 1 — wrap logo + tagline -->
     <div class="nav-logo-wrap">
       <a href="/" class="nav-logo"><span>X</span>SEN</a>
       <div class="nav-tagline"><span style="font-family:'Bebas Neue',sans-serif;color:var(--gold);font-size:1.3em;">X</span>perience Sports &amp; Entertainment Network&#8482;</div>
@@ -721,36 +208,49 @@
     </div>
   </nav>
 
-  <!-- ── HERO ── -->
   <section class="hero">
     <video class="hero-video" autoplay muted playsinline preload="auto">
       <source src="https://storage.googleapis.com/xsenassets/XSEN.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
-
     <div class="hero-content">
-    
       <h1>Sports.<br>Reimagined<br>for <em>Superfans.</em></h1>
       <p class="hero-network-tag">The Fan's Network&#8482;</p>
       <p class="hero-sub">Every school has a channel. Every fan has a voice.</p>
       <div class="hero-ctas">
         <a href="#channels" class="btn-primary">Choose Your Channel</a>
+        <button class="btn-listen" id="listenBtn">
+          <span class="status-dot" id="statusDot"></span>
+          XSEN Radio
+        </button>
         <a href="/manifesto.html" class="btn-outline">Why We Built This →</a>
       </div>
     </div>
-
     <div class="scroll-hint">Scroll</div>
   </section>
 
-  <!-- ── CHANNELS ── -->
+  <!-- STICKY PLAYER -->
+  <div class="sticky-player" id="stickyPlayer">
+    <div class="player-bar">
+      <div class="player-label">
+        <span id="playerBadge" class="player-live-badge offline">⚪ OFFLINE</span>
+        XSEN Radio
+      </div>
+      <div class="player-audio-wrap">
+        <audio id="xsenAudio" preload="none" playsinline controls>
+          <source src="" type="audio/mpeg" />
+        </audio>
+        <div id="audioStatus" class="player-audio-status">Tap ▶ to listen</div>
+      </div>
+      <button class="player-close" id="playerClose" title="Close">✕</button>
+    </div>
+  </div>
+
   <section class="channels-section" id="channels">
     <div class="section-label">Live Channels</div>
     <h2 class="section-title">Your School. Your Network.</h2>
     <p class="section-sub">School-specific fan hubs powered by AI, live audio, and 45 years of highlights.</p>
-
     <div class="channels-grid">
-
-      <!-- OU Sooners -->
       <a href="https://xsen.fun/sooners" class="channel-card" style="--card-accent: #841617;">
         <span class="channel-emoji">🏈</span>
         <div class="channel-name">Oklahoma Sooners</div>
@@ -763,8 +263,6 @@
         </ul>
         <span class="channel-arrow">↗</span>
       </a>
-
-      <!-- OSU Cowboys -->
       <a href="https://xsen.fun/okstate" class="channel-card" style="--card-accent: #E04E00;">
         <span class="channel-emoji">🤠</span>
         <div class="channel-name">Oklahoma State Cowboys</div>
@@ -777,8 +275,6 @@
         </ul>
         <span class="channel-arrow">↗</span>
       </a>
-
-      <!-- Texas Longhorns -->
       <a href="https://xsen.fun/longhorns" class="channel-card" style="--card-accent: #BF5700;">
         <span class="channel-emoji">🤘</span>
         <div class="channel-name">Texas Longhorns</div>
@@ -791,8 +287,6 @@
         </ul>
         <span class="channel-arrow">↗</span>
       </a>
-
-      <!-- SEC -->
       <a href="#" class="channel-card coming-soon" style="--card-accent: var(--gold);">
         <span class="channel-emoji">🏆</span>
         <div class="channel-name">SEC Network</div>
@@ -804,118 +298,54 @@
           <li>Rivalry Content</li>
         </ul>
       </a>
-
     </div>
     <div style="text-align: center; margin-top: 48px;">
       <a href="/channels.html" class="btn-outline">View All 130+ Channels →</a>
     </div>
   </section>
 
-  <!-- ── PLATFORM PITCH ── -->
   <section class="pitch-section" id="platform">
     <div class="pitch-inner">
-
       <div class="pitch-left">
         <div class="section-label">The Platform</div>
         <h2 class="section-title" style="margin-bottom: 24px;">One hub.<br>Every e<span style="font-family:'Bebas Neue',sans-serif;color:var(--gold);font-size:1.1em;">X</span>perience.</h2>
         <p>Fans shouldn't have to juggle five tabs to follow a game. XSEN brings together AI fan companions, live audio streaming, a searchable video archive, and real-time stats into one school-branded experience.</p>
         <p>Each channel is built around a community — with its own personality, its own history, and its own voice. Fans get a superfan on speed dial. Universities get a direct engagement channel with their most passionate base.</p>
-
         <div class="pitch-stat-row">
-          <div class="pitch-stat">
-            <div class="pitch-stat-num">11K+</div>
-            <div class="pitch-stat-label">Video highlights across channels</div>
-          </div>
-          <div class="pitch-stat">
-            <div class="pitch-stat-num">45+</div>
-            <div class="pitch-stat-label">Years of sports history covered</div>
-          </div>
-          <div class="pitch-stat">
-            <div class="pitch-stat-num">24/7</div>
-            <div class="pitch-stat-label">Live radio streaming</div>
-          </div>
-          <div class="pitch-stat">
-            <div class="pitch-stat-num">3</div>
-            <div class="pitch-stat-label">Active channels, more launching</div>
-          </div>
+          <div class="pitch-stat"><div class="pitch-stat-num">11K+</div><div class="pitch-stat-label">Video highlights across channels</div></div>
+          <div class="pitch-stat"><div class="pitch-stat-num">45+</div><div class="pitch-stat-label">Years of sports history covered</div></div>
+          <div class="pitch-stat"><div class="pitch-stat-num">24/7</div><div class="pitch-stat-label">Live radio streaming</div></div>
+          <div class="pitch-stat"><div class="pitch-stat-num">3</div><div class="pitch-stat-label">Active channels, more launching</div></div>
         </div>
       </div>
-
       <div class="pitch-right">
         <div class="section-label" style="margin-bottom: 24px;">What's Inside</div>
         <div class="pitch-pillars">
-          <div class="pillar">
-            <div class="pillar-icon">🤖</div>
-            <div>
-              <div class="pillar-title">AI Fan Companion</div>
-              <div class="pillar-desc">School-specific AI trained on decades of team history, rosters, stats, and memorable moments. Ask anything, anytime.</div>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">📻</div>
-            <div>
-              <div class="pillar-title">XSEN Radio</div>
-              <div class="pillar-desc">24/7 school-themed audio stream. Live when there's a broadcast, playlist when there isn't. Always on.</div>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">🎥</div>
-            <div>
-              <div class="pillar-title">Video Archive</div>
-              <div class="pillar-desc">Searchable highlight library spanning decades. Find any play, any game, any moment — instantly.</div>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">📊</div>
-            <div>
-              <div class="pillar-title">Live Stats & Data</div>
-              <div class="pillar-desc">Real-time rosters, schedules, injury reports, and analytics updated daily via ESPN and CFBD.</div>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">💳</div>
-            <div>
-              <div class="pillar-title">Subscription Platform</div>
-              <div class="pillar-desc">Freemium model with a 3-day trial. $9.99/month per channel. White-label and enterprise tiers available.</div>
-            </div>
-          </div>
+          <div class="pillar"><div class="pillar-icon">🤖</div><div><div class="pillar-title">AI Fan Companion</div><div class="pillar-desc">School-specific AI trained on decades of team history, rosters, stats, and memorable moments. Ask anything, anytime.</div></div></div>
+          <div class="pillar"><div class="pillar-icon">📻</div><div><div class="pillar-title">XSEN Radio</div><div class="pillar-desc">24/7 school-themed audio stream. Live when there's a broadcast, playlist when there isn't. Always on.</div></div></div>
+          <div class="pillar"><div class="pillar-icon">🎥</div><div><div class="pillar-title">Video Archive</div><div class="pillar-desc">Searchable highlight library spanning decades. Find any play, any game, any moment — instantly.</div></div></div>
+          <div class="pillar"><div class="pillar-icon">📊</div><div><div class="pillar-title">Live Stats & Data</div><div class="pillar-desc">Real-time rosters, schedules, injury reports, and analytics updated daily via ESPN and CFBD.</div></div></div>
+          <div class="pillar"><div class="pillar-icon">💳</div><div><div class="pillar-title">Subscription Platform</div><div class="pillar-desc">Freemium model with a 3-day trial. $9.99/month per channel. White-label and enterprise tiers available.</div></div></div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ── SCALE ── -->
   <section class="scale-section">
     <div class="section-label">Built to Scale</div>
     <h2 class="section-title">From one school to<br>every school.</h2>
-
     <div class="scale-grid">
-      <div class="scale-item">
-        <div class="scale-num">130+</div>
-        <div class="scale-title">Universities Addressable</div>
-        <div class="scale-desc">The XSEN model is school-agnostic. Any university with a passionate fan base is a channel waiting to launch.</div>
-      </div>
-      <div class="scale-item">
-        <div class="scale-num">$9.99</div>
-        <div class="scale-title">Per Month Per Fan</div>
-        <div class="scale-desc">Simple subscription pricing. 3-day free trial drives conversion. Revenue share available for university and NIL partners.</div>
-      </div>
-      <div class="scale-item">
-        <div class="scale-num">B2B</div>
-        <div class="scale-title">White-Label Ready</div>
-        <div class="scale-desc">Each channel can be white-labeled for university athletics departments, NIL collectives, or media rights partners.</div>
-      </div>
+      <div class="scale-item"><div class="scale-num">130+</div><div class="scale-title">Universities Addressable</div><div class="scale-desc">The XSEN model is school-agnostic. Any university with a passionate fan base is a channel waiting to launch.</div></div>
+      <div class="scale-item"><div class="scale-num">$9.99</div><div class="scale-title">Per Month Per Fan</div><div class="scale-desc">Simple subscription pricing. 3-day free trial drives conversion. Revenue share available for university and NIL partners.</div></div>
+      <div class="scale-item"><div class="scale-num">B2B</div><div class="scale-title">White-Label Ready</div><div class="scale-desc">Each channel can be white-labeled for university athletics departments, NIL collectives, or media rights partners.</div></div>
     </div>
   </section>
 
-  <!-- ── PARTNER CTA ── -->
   <section class="partner-section" id="partner">
     <div class="partner-inner">
       <div class="section-label" style="text-align:center;">Work With XSEN</div>
       <h2>Let's build your<br>fan eXperience.</h2>
       <p>Whether you're a university athletics department, an NIL collective, or a media rights partner — XSEN is built to plug into your existing fan e<span style="font-family:'Bebas Neue',sans-serif;color:var(--gold);font-size:1.1em;">X</span>perience ecosystem.</p>
-
       <div class="partner-options">
         <div class="partner-option">
           <div class="partner-option-title">🏛️ Universities & Athletics</div>
@@ -928,8 +358,6 @@
           <a href="/cdn-cgi/l/email-protection#e3938291978d8691a39b90868dcd85968d">Explore partnership →</a>
         </div>
       </div>
-
-      <!-- NIL micro-donation spotlight -->
       <div style="margin-top: 20px; background: var(--mid); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 32px; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;">
         <div>
           <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:var(--gold); margin-bottom:10px;">NIL MICRO-DONATIONS</div>
@@ -938,15 +366,13 @@
         </div>
         <a href="/nil_demo.html" style="background:var(--gold); color:var(--black); padding:14px 28px; border-radius:4px; font-weight:700; font-size:14px; text-decoration:none; white-space:nowrap; flex-shrink:0;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">See How It Works →</a>
       </div>
-
       <div style="margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
         <a href="/cdn-cgi/l/email-protection#0676677472686374467e75636828607368" class="btn-primary">Email Us to Partner</a>
         <a href="https://xsen.fun/sooners" class="btn-outline">See a Live Channel</a>
       </div>
-
     </div>
   </section>
-<!-- ── FOOTER ── -->
+
   <footer>
     <div class="footer-logo"><span>X</span>SEN</div>
     <div class="footer-links">
@@ -961,6 +387,63 @@
       <a href="https://peak-platforms.com" target="_blank" style="color:rgba(245,245,240,0.25);text-decoration:none;">A Peak Platforms Product</a>
     </div>
   </footer>
+
+  <script>
+    const LIVE_STREAM_URL = 'https://stream.xsen.fun/listen/xsen_the_fans_network/radio.mp3';
+    const LIVE_STATUS_URL = 'https://xsen-fan-messages-production.up.railway.app/live-status';
+
+    const stickyPlayer = document.getElementById('stickyPlayer');
+    const playerBadge  = document.getElementById('playerBadge');
+    const audioEl      = document.getElementById('xsenAudio');
+    const audioStatus  = document.getElementById('audioStatus');
+    const playerClose  = document.getElementById('playerClose');
+    const listenBtn    = document.getElementById('listenBtn');
+    const statusDot    = document.getElementById('statusDot');
+
+    let isLive = false;
+
+    async function updateLiveStatus() {
+      try {
+        const res  = await fetch(LIVE_STATUS_URL, { cache: 'no-store' });
+        const data = await res.json();
+        isLive = !!data.isLive;
+      } catch (e) { isLive = false; }
+
+      statusDot.classList.toggle('live', isLive);
+
+      if (isLive) {
+        playerBadge.textContent = '🔴 LIVE';
+        playerBadge.className = 'player-live-badge live';
+        listenBtn.lastChild.textContent = ' Listen Live';
+      } else {
+        playerBadge.textContent = '⚪ OFFLINE';
+        playerBadge.className = 'player-live-badge offline';
+        listenBtn.lastChild.textContent = ' XSEN Radio';
+      }
+    }
+
+    function openPlayer() {
+      stickyPlayer.classList.add('open');
+      if (!audioEl.src || audioEl.src === window.location.href) {
+        audioEl.src = LIVE_STREAM_URL + '?ts=' + Date.now();
+        audioEl.play()
+          .then(() => { audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Radio'; })
+          .catch(() => { audioStatus.textContent = 'Tap ▶ to listen'; });
+      }
+    }
+
+    playerClose.addEventListener('click', () => {
+      stickyPlayer.classList.remove('open');
+      audioEl.pause();
+      audioEl.src = '';
+      audioStatus.textContent = 'Tap ▶ to listen';
+    });
+
+    listenBtn.addEventListener('click', openPlayer);
+
+    updateLiveStatus();
+    setInterval(updateLiveStatus, 20000);
+  </script>
 
 </body>
 </html>
