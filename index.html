@@ -299,7 +299,7 @@
       </a>
     </div>
     <div style="text-align: center; margin-top: 48px;">
-      <a href="/channels.html" class="btn-outline">View All Channels →</a>
+      <a href="/channels.html" class="btn-outline">View All 130+ Channels →</a>
     </div>
   </section>
 
@@ -354,7 +354,7 @@
         <div class="partner-option">
           <div class="partner-option-title">🏟️ High School Programs</div>
           <div class="partner-option-desc">Friday Night Lights deserves its own network. Launch a channel for your school — booster clubs, athletic departments, and fan communities welcome. Any state, any size.</div>
-          <a href="mailto:partner@xsen.fun">Get your school a channel →</a>
+          <a href="/cdn-cgi/l/email-protection#e5958497918b8097a59d96808bcb83908b">Get your school a channel →</a>
         </div>
         <div class="partner-option">
           <div class="partner-option-title">💼 NIL Collectives & Media</div>
@@ -392,7 +392,7 @@
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const LIVE_STREAM_URL = 'https://stream.xsen.fun/listen/xsen_the_fans_network/radio.mp3';
     const LIVE_STATUS_URL = 'https://xsen-fan-messages-production.up.railway.app/live-status';
 
@@ -436,6 +436,8 @@
       }
     }
 
+    listenBtn.addEventListener('click', openPlayer);
+
     playerClose.addEventListener('click', () => {
       stickyPlayer.classList.remove('open');
       audioEl.pause();
@@ -443,4 +445,9 @@
       audioStatus.textContent = 'Tap ▶ to listen';
     });
 
-  
+    updateLiveStatus();
+    setInterval(updateLiveStatus, 20000);
+  </script>
+
+</body>
+</html>
