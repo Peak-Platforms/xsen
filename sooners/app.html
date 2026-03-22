@@ -318,6 +318,33 @@
     .message.video { padding: 6px; background: transparent; max-width: 100%; }
     .message.video iframe { max-width: 100%; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
 
+    /* ── Suggested questions ── */
+    .suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 4px 0 10px 8px;
+      animation: msgIn 0.22s ease both;
+    }
+    .suggestion-btn {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      border-radius: 16px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      width: fit-content;
+      max-width: 90%;
+    }
+    .suggestion-btn:hover {
+      background: var(--gold);
+      color: #000;
+    }
+
     /* ── Chat input ── */
     .chat-input {
       display: flex;
@@ -643,6 +670,10 @@
       }
       manageSubLink?.addEventListener('click', openPortal);
 
+      function sendMessage() {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const text = input.value.trim();
@@ -678,14 +709,56 @@
 
       function renderResponse(text) {
         firstVideoPlayed = false;
-        text.split('\n').forEach(line => {
+
+        // Split out SUGGESTED block before rendering
+        const suggestedMatch = text.match(/SUGGESTED:\n([\s\S]*?)$/m);
+        let cleanText = text;
+        let suggestions = [];
+
+        if (suggestedMatch) {
+          cleanText = text.replace(suggestedMatch[0], '').trim();
+          suggestions = suggestedMatch[1]
+            .split('\n')
+            .map(l => l.replace(/^[-•]\s*/, '').trim())
+            .filter(Boolean);
+        }
+
+        // Render the main response as before
+        cleanText.split('\n').forEach(line => {
           const t = line.trim();
           if (!t) return;
-          if (/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)) { addMsg('🔊 Starting live fan cast…', 'bot'); playAudio(); return; }
+          if (/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)) {
+            addMsg('🔊 Starting live fan cast…', 'bot');
+            playAudio();
+            return;
+          }
           const m = t.match(/(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/i);
-          if (m) { const title = t.replace(m[1], '').trim(); if (title) addMsg(title, 'bot'); addVideo(m[1]); }
-          else { addMsg(t, 'bot'); }
+          if (m) {
+            const title = t.replace(m[1], '').trim();
+            if (title) addMsg(title, 'bot');
+            addVideo(m[1]);
+          } else {
+            addMsg(t, 'bot');
+          }
         });
+
+        // Render suggested questions as tappable buttons
+        if (suggestions.length > 0) {
+          const suggestDiv = document.createElement('div');
+          suggestDiv.className = 'suggestions';
+          suggestions.forEach(q => {
+            const btn = document.createElement('button');
+            btn.className = 'suggestion-btn';
+            btn.textContent = q;
+            btn.onclick = () => {
+              input.value = q;
+              sendMessage();
+            };
+            suggestDiv.appendChild(btn);
+          });
+          messages.appendChild(suggestDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }
       }
 
       function addMsg(text, sender) {
