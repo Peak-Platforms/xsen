@@ -401,6 +401,7 @@
 
       <span class="notify-label">Notify me when it's live</span>
       <div class="notify-form">
+        <input type="text" id="nilName" placeholder="Your name (optional)" />
         <input type="email" id="nilEmail" placeholder="your@email.com" />
         <button class="notify-btn" onclick="handleNotify()">Notify Me</button>
       </div>
@@ -443,10 +444,18 @@
     <p>© 2025 XSEN — The Fans' Network &nbsp;·&nbsp; <a href="https://xsen.fun">xsen.fun</a> &nbsp;·&nbsp; A Peak Platforms Product</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    function handleNotify() {
-      const email = document.getElementById('nilEmail').value.trim();
+    const _supabase = window.supabase.createClient(
+      'https://hvqzrdlbtfezwuveincs.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
+    );
+
+    async function handleNotify() {
+      const name   = document.getElementById('nilName').value.trim();
+      const email  = document.getElementById('nilEmail').value.trim();
       const status = document.getElementById('notifyStatus');
+      const btn    = document.querySelector('.notify-btn');
 
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         status.textContent = 'Please enter a valid email address.';
@@ -454,16 +463,34 @@
         return;
       }
 
-      // Store locally for now — swap for a real endpoint when ready
-      const existing = JSON.parse(localStorage.getItem('xsen_nil_notify') || '[]');
-      if (!existing.includes(email)) {
-        existing.push(email);
-        localStorage.setItem('xsen_nil_notify', JSON.stringify(existing));
-      }
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
 
-      status.textContent = "✅ You're on the list. We'll reach out when NIL support launches. Boomer Sooner!";
-      status.style.color = '#c9a84c';
-      document.getElementById('nilEmail').value = '';
+      try {
+        const { error } = await _supabase.from('xsen_leads').insert([{
+          name:   name || 'Sooner Fan',
+          email:  email,
+          school: 'sooners',
+          source: 'NIL Page'
+        }]);
+
+        if (error && error.code !== '23505') {
+          // 23505 = duplicate — treat silently as success
+          throw error;
+        }
+
+        status.textContent = "✅ You're on the list! We'll reach out when NIL support launches. Boomer Sooner!";
+        status.style.color = '#c9a84c';
+        document.getElementById('nilEmail').value = '';
+        document.getElementById('nilName').value  = '';
+      } catch (err) {
+        console.error('NIL signup error:', err);
+        status.textContent = '❌ Something went wrong. Please try again.';
+        status.style.color = '#f87171';
+      } finally {
+        btn.textContent = 'Notify Me';
+        btn.disabled = false;
+      }
     }
 
     document.getElementById('nilEmail')?.addEventListener('keydown', (e) => {
