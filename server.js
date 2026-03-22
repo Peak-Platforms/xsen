@@ -22,7 +22,7 @@ app.post('/api/manifesto-signup', async (req, res) => {
 
     try {
         await resendManifesto.emails.send({
-            from: 'Kevin at XSEN <kevin@xsen.fun>',
+            from: 'Kevin at XSEN <kevin@mail.xsen.fun>',
             to: email,
             subject: isPEWatch
                 ? "You're on the PE Watch list — XSEN"
