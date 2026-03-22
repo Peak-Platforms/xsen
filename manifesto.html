@@ -856,9 +856,9 @@ const _supabase = window.supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
 );
 
-  async function insertLead(email, school, source) {
-    const { error } = await _supabase.from('leads_manifesto').insert([{
-      email, school: school || null, source
+ async function insertLead(email, school, source) {
+    const { error } = await _supabase.from('xsen_leads').insert([{
+      email, name: 'Manifesto Fan', school: school || 'unknown', source
     }]);
     if (error && error.code !== '23505') throw error;
   }
