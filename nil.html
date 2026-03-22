@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Support Sooner NIL — XSEN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --crimson:      #841617;
+      --crimson-deep: #5c0f10;
+      --crimson-glow: rgba(132,22,23,0.5);
+      --gold:         #c9a84c;
+      --gold-dim:     rgba(201,168,76,0.15);
+      --gold-glow:    rgba(201,168,76,0.3);
+      --cream:        #FDF9D8;
+      --ink:          #080808;
+      --surface:      #111111;
+      --surface-2:    #1a1a1a;
+      --surface-3:    #222222;
+      --text:         #f0ece0;
+      --text-muted:   rgba(240,236,224,0.45);
+      --font-display: 'Oswald', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 40px;
+      text-align: center;
+      background-image:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(132,22,23,0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(201,168,76,0.08) 0%, transparent 60%);
+      z-index: 1;
+    }
+
+    /* Diagonal accent lines */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 60px,
+        rgba(132,22,23,0.04) 60px,
+        rgba(132,22,23,0.04) 61px
+      );
+      pointer-events: none;
+    }
+
+    .xsen-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .xsen-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-bottom: 16px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 10vw, 80px);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 8px;
+      animation: fadeUp 0.6s 0.15s ease both;
+    }
+
+    .hero-headline .accent {
+      color: var(--gold);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.65;
+      margin: 24px auto 0;
+      animation: fadeUp 0.6s 0.25s ease both;
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── COMING SOON CARD ── */
+    .coming-soon-card {
+      position: relative;
+      background: var(--surface-2);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 16px;
+      padding: 40px 36px;
+      max-width: 520px;
+      width: 100%;
+      margin: 48px auto 0;
+      animation: fadeUp 0.6s 0.35s ease both;
+      overflow: hidden;
+    }
+
+    .coming-soon-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--crimson), var(--gold), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .card-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .card-body {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .card-body strong {
+      color: var(--text);
+    }
+
+    /* ── EMAIL CAPTURE ── */
+    .notify-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .notify-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .notify-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 16px;
+      background: var(--surface-3);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .notify-form input::placeholder { color: var(--text-muted); }
+    .notify-form input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.12);
+    }
+
+    .notify-btn {
+      padding: 12px 24px;
+      background: var(--crimson);
+      color: var(--cream);
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px var(--crimson-glow);
+      white-space: nowrap;
+    }
+
+    .notify-btn:hover {
+      background: #9a1c1d;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--crimson-glow);
+    }
+
+    .notify-status {
+      font-size: 13px;
+      color: var(--gold);
+      margin-top: 10px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    /* ── WHAT'S COMING ── */
+    .whats-coming {
+      max-width: 520px;
+      width: 100%;
+      margin: 32px auto 0;
+      animation: fadeUp 0.6s 0.45s ease both;
+    }
+
+    .whats-coming-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .feature-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .feature-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .feature-text span {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 48px;
+      margin-bottom: 40px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+      animation: fadeUp 0.6s 0.5s ease both;
+    }
+
+    .back-link:hover { color: var(--gold); }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 560px) {
+      .coming-soon-card { padding: 28px 20px; }
+      .notify-form { flex-direction: column; }
+      .notify-form input { min-width: unset; }
+      .notify-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="hero">
+
+    <div class="xsen-badge">
+      <span class="dot"></span>
+      XSEN — The Fans' Network
+    </div>
+
+    <p class="hero-eyebrow">Oklahoma Sooners</p>
+
+    <h1 class="hero-headline">
+      Fan-Powered
+      <span class="accent">NIL Support</span>
+    </h1>
+
+    <p class="hero-sub">
+      We're building a direct way for Sooner fans to support student-athletes through NIL.
+      <strong>No middleman. No red tape.</strong> Just fans backing the players they love.
+    </p>
+
+    <!-- Coming Soon Card -->
+    <div class="coming-soon-card">
+      <span class="card-icon">🏈</span>
+      <div class="card-title">Launching Soon</div>
+      <p class="card-body">
+        The XSEN NIL Fund is in development. When it launches, every dollar goes directly
+        to supporting <strong>Oklahoma Sooners student-athletes</strong> — through fan subscriptions,
+        direct contributions, and community campaigns.
+      </p>
+
+      <span class="notify-label">Notify me when it's live</span>
+      <div class="notify-form">
+        <input type="email" id="nilEmail" placeholder="your@email.com" />
+        <button class="notify-btn" onclick="handleNotify()">Notify Me</button>
+      </div>
+      <div class="notify-status" id="notifyStatus"></div>
+    </div>
+
+    <!-- What's Coming -->
+    <div class="whats-coming">
+      <p class="whats-coming-title">What we're building</p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="feature-icon">🎯</span>
+          <div class="feature-text">
+            <strong>Direct Fan-to-Athlete Support</strong>
+            <span>Subscribe monthly and a portion goes directly into the NIL fund for Sooners athletes.</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📣</span>
+          <div class="feature-text">
+            <strong>Fan-Driven Campaigns</strong>
+            <span>Rally the fanbase around specific players or moments — big plays, milestone games, senior nights.</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🔒</span>
+          <div class="feature-text">
+            <strong>Transparent & Compliant</strong>
+            <span>Built to meet NCAA NIL guidelines so athletes and fans are always protected.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="javascript:history.back()" class="back-link">← Back to Boomer Bot</a>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 XSEN — The Fans' Network &nbsp;·&nbsp; <a href="https://xsen.fun">xsen.fun</a> &nbsp;·&nbsp; A Peak Platforms Product</p>
+  </footer>
+
+  <script>
+    function handleNotify() {
+      const email = document.getElementById('nilEmail').value.trim();
+      const status = document.getElementById('notifyStatus');
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = 'Please enter a valid email address.';
+        status.style.color = '#f87171';
+        return;
+      }
+
+      // Store locally for now — swap for a real endpoint when ready
+      const existing = JSON.parse(localStorage.getItem('xsen_nil_notify') || '[]');
+      if (!existing.includes(email)) {
+        existing.push(email);
+        localStorage.setItem('xsen_nil_notify', JSON.stringify(existing));
+      }
+
+      status.textContent = "✅ You're on the list. We'll reach out when NIL support launches. Boomer Sooner!";
+      status.style.color = '#c9a84c';
+      document.getElementById('nilEmail').value = '';
+    }
+
+    document.getElementById('nilEmail')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleNotify();
+    });
+  </script>
+
+</body>
+</html>
