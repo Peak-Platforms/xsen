@@ -849,113 +849,102 @@
     <p>XSEN — The Fan's Network™ &nbsp;·&nbsp; A Peak Platforms Company &nbsp;·&nbsp; Built by fans, for fans</p>
   </footer>
 
-  <script>
-    const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const _supabase = window.supabase.createClient(
+    'https://hvqzrdlbtfezwuveincs.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
+  );
 
-    async function insertLead(email, school, source) {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/leads_manifesto`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON,
-          'Authorization': `Bearer ${SUPABASE_ANON}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ email, school: school || null, source })
-      });
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err);
-      }
+  async function insertLead(email, school, source) {
+    const { error } = await _supabase.from('leads_manifesto').insert([{
+      email, school: school || null, source
+    }]);
+    if (error && error.code !== '23505') throw error;
+  }
+
+  async function submitPEWatch() {
+    const emailEl = document.getElementById('pe-email');
+    const btnEl   = document.getElementById('pe-btn');
+    const msgEl   = document.getElementById('pe-msg');
+    const email   = emailEl.value.trim();
+
+    if (!email || !email.includes('@')) {
+      msgEl.style.color = '#C41E3A';
+      msgEl.textContent = 'Please enter a valid email address.';
+      return;
     }
 
-    async function submitPEWatch() {
-      const emailEl = document.getElementById('pe-email');
-      const btnEl   = document.getElementById('pe-btn');
-      const msgEl   = document.getElementById('pe-msg');
-      const email   = emailEl.value.trim();
+    btnEl.disabled = true;
+    btnEl.textContent = 'Sending...';
 
-      if (!email || !email.includes('@')) {
-        msgEl.style.color = '#C41E3A';
-        msgEl.textContent = 'Please enter a valid email address.';
-        return;
-      }
+    try {
+      await insertLead(email, null, 'pe_watch');
+      emailEl.value = '';
+      btnEl.textContent = '✓ You\'re on the watch list';
+      btnEl.style.background = '#166534';
+      msgEl.style.color = '#166534';
+      msgEl.textContent = 'We\'ll tell you when something breaks. Thank you.';
+    } catch (e) {
+      btnEl.disabled = false;
+      btnEl.textContent = 'Keep Me Posted →';
+      msgEl.style.color = '#C41E3A';
+      msgEl.textContent = e.code === '23505'
+        ? 'You\'re already on the list.'
+        : 'Something went wrong. Please try again.';
+    }
+  }
 
-      btnEl.disabled = true;
-      btnEl.textContent = 'Sending...';
+  async function submitSchoolLaunch() {
+    const emailEl  = document.getElementById('school-email');
+    const schoolEl = document.getElementById('school-name');
+    const btnEl    = document.getElementById('school-btn');
+    const msgEl    = document.getElementById('school-msg');
+    const email    = emailEl.value.trim();
+    const school   = schoolEl.value.trim();
 
-      try {
-        await insertLead(email, null, 'pe_watch');
-        emailEl.value = '';
-        btnEl.textContent = '✓ You\'re on the watch list';
-        btnEl.style.background = '#166534';
-        msgEl.style.color = '#166534';
-        msgEl.textContent = 'We\'ll tell you when something breaks. Thank you.';
-      } catch (e) {
-        btnEl.disabled = false;
-        btnEl.textContent = 'Keep Me Posted →';
-        msgEl.style.color = '#C41E3A';
-        msgEl.textContent = e.message.includes('duplicate') 
-          ? 'You\'re already on the list.' 
-          : 'Something went wrong. Please try again.';
-      }
+    if (!email || !email.includes('@')) {
+      msgEl.style.color = '#C41E3A';
+      msgEl.textContent = 'Please enter a valid email address.';
+      return;
     }
 
-    async function submitSchoolLaunch() {
-      const emailEl  = document.getElementById('school-email');
-      const schoolEl = document.getElementById('school-name');
-      const btnEl    = document.getElementById('school-btn');
-      const msgEl    = document.getElementById('school-msg');
-      const email    = emailEl.value.trim();
-      const school   = schoolEl.value.trim();
+    btnEl.disabled = true;
+    btnEl.textContent = 'Sending...';
 
-      if (!email || !email.includes('@')) {
-        msgEl.style.color = '#C41E3A';
-        msgEl.textContent = 'Please enter a valid email address.';
-        return;
-      }
-
-      btnEl.disabled = true;
-      btnEl.textContent = 'Sending...';
-
-      try {
-        await insertLead(email, school, 'school_launch');
-        emailEl.value = '';
-        schoolEl.value = '';
-        btnEl.textContent = school ? `✓ We'll notify you when ${school} launches` : '✓ You\'re on the list';
-        btnEl.style.background = '#166534';
-        btnEl.style.fontSize = '0.8rem';
-        msgEl.style.color = '#166534';
-        msgEl.textContent = 'You\'ll be the first to know. Thank you for standing up.';
-      } catch (e) {
-        btnEl.disabled = false;
-        btnEl.textContent = 'Count Me In →';
-        msgEl.style.color = '#C41E3A';
-        msgEl.textContent = e.message.includes('duplicate') 
-          ? 'You\'re already on the list.' 
-          : 'Something went wrong. Please try again.';
-      }
+    try {
+      await insertLead(email, school, 'school_launch');
+      emailEl.value = '';
+      schoolEl.value = '';
+      btnEl.textContent = school ? `✓ We'll notify you when ${school} launches` : '✓ You\'re on the list';
+      btnEl.style.background = '#166534';
+      btnEl.style.fontSize = '0.8rem';
+      msgEl.style.color = '#166534';
+      msgEl.textContent = 'You\'ll be the first to know. Thank you for standing up.';
+    } catch (e) {
+      btnEl.disabled = false;
+      btnEl.textContent = 'Count Me In →';
+      msgEl.style.color = '#C41E3A';
+      msgEl.textContent = e.code === '23505'
+        ? 'You\'re already on the list.'
+        : 'Something went wrong. Please try again.';
     }
+  }
 
-    // Share buttons
-    document.querySelectorAll('.share-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const url  = window.location.href;
-        const text = 'College sports belongs to the fans. Read the XSEN manifesto.';
-        if (btn.textContent.includes('Facebook')) {
-          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-        } else if (btn.textContent.includes('X')) {
-          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
-        } else {
-          navigator.clipboard.writeText(url).then(() => {
-            btn.textContent = '✓ Copied!';
-            setTimeout(() => btn.textContent = 'Copy Link', 2000);
-          });
-        }
-      });
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const url  = window.location.href;
+      const text = 'College sports belongs to the fans. Read the XSEN manifesto.';
+      if (btn.textContent.includes('Facebook')) {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+      } else if (btn.textContent.includes('X')) {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          btn.textContent = '✓ Copied!';
+          setTimeout(() => btn.textContent = 'Copy Link', 2000);
+        });
+      }
     });
-  </script>
-
-</body>
-</html>
+  });
+</script>
