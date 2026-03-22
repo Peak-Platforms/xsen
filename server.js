@@ -11,9 +11,18 @@ app.get('/health', (req, res) => {
     res.status(200).send('OK');
 });
 
-// ─── MANIFESTO SIGNUP ─────────────────────────────────
+// ─── MANIFESTO SIGNUP ────────────────────────────────
+// Triggered by Supabase webhook on leads_manifesto INSERT
+// Supabase wraps the new row in req.body.record
 app.post('/api/manifesto-signup', async (req, res) => {
-    const { email, school, source } = req.body;
+    const record = req.body.record || req.body;
+    const { email, school, source } = record;
+
+    if (!email) {
+        console.log('Manifesto webhook: no email in payload', JSON.stringify(req.body));
+        return res.json({ success: true });
+    }
+
     const isPEWatch = source === 'pe_watch';
     const schoolName = school || 'your school';
 
@@ -66,7 +75,7 @@ app.post('/api/manifesto-signup', async (req, res) => {
             })
         });
         const result = await resendRes.json();
-        console.log('Manifesto email result:', result);
+        console.log('Manifesto email result:', JSON.stringify(result));
         res.json({ success: true });
     } catch (err) {
         console.error('Manifesto email error:', err);
