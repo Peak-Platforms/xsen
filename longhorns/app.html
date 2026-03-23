@@ -568,8 +568,8 @@
     const FAN_MESSAGE_API   = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
     const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_longhorns/radio.mp3';
     const NOW_PLAYING_URL   = 'https://stream.xsen.fun/api/nowplaying/xsen_longhorns';
-    const DONATE_URL        = 'https://xsen.fun/nil';
-    const FREE_MESSAGE_LIMIT = 5;
+    const DONATE_URL        = 'https://xsen.fun/nil?school=texas';
+    const FREE_MESSAGE_LIMIT = 10;
 
     function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
     function getMessageCount() { return parseInt(localStorage.getItem('xsen_message_count') || '0'); }
