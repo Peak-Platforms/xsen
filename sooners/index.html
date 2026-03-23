@@ -7,22 +7,22 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #fff; color: #333; line-height: 1.6; padding-bottom: 80px; }
-        .header { background: transparent; color: #FDF9D8; padding: 20px; position: absolute; top: 0; left: 0; right: 0; z-index: 200; }
+        .header { background: transparent; color: #fff; padding: 20px; position: absolute; top: 0; left: 0; right: 0; z-index: 200; }
         .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; }
-        .back-link { color: #FDF9D8; text-decoration: none; opacity: 0.9; font-size: 14px; }
+        .back-link { color: #fff; text-decoration: none; opacity: 0.9; font-size: 14px; }
         .back-link:hover { opacity: 1; }
-        .hero { position: relative; min-height: 500px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; color: #FDF9D8; background: linear-gradient(135deg, #841617 0%, #6a1112 100%); }
+        .hero { position: relative; min-height: 500px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; color: #fff; background: linear-gradient(135deg, #841617 0%, #6a1112 100%); }
         .hero-content { position: relative; z-index: 2; padding: 80px 20px; max-width: 900px; }
         .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(132,22,23,0.82) 0%, rgba(106,17,18,0.88) 100%); z-index: 1; }
         .hero h1 { font-size: 52px; margin-bottom: 20px; line-height: 1.2; }
         .hero .subtitle { font-size: 22px; margin-bottom: 40px; opacity: 0.95; }
         .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
-        .hero-cta { background: #FDF9D8; color: #841617; padding: 20px 50px; font-size: 20px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .hero-cta { background: #fff; color: #841617; padding: 20px 50px; font-size: 20px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
-        .listen-btn { background: transparent; color: #FDF9D8; padding: 20px 40px; font-size: 20px; border-radius: 50px; border: 2px solid #FDF9D8; cursor: pointer; font-weight: bold; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; }
-        .listen-btn:hover { background: rgba(253,249,216,0.15); transform: translateY(-2px); }
+        .listen-btn { background: transparent; color: #fff; padding: 20px 40px; font-size: 20px; border-radius: 50px; border: 2px solid #fff; cursor: pointer; font-weight: bold; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .listen-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
         .listen-btn .status-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; background: #888; transition: background 0.3s; }
         .listen-btn .status-dot.live { background: #ff2d2d; box-shadow: 0 0 6px rgba(255,45,45,0.9); animation: pulse 1.4s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
@@ -30,12 +30,12 @@
         .player-live-badge.live { background: #ff2d2d; color: #fff; box-shadow: 0 0 6px rgba(255,45,45,0.8); }
         .player-live-badge.offline { background: #555; color: #ddd; }
         .trial-note { margin-top: 15px; font-size: 14px; opacity: 0.9; }
-        .sticky-player { position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; background: linear-gradient(135deg, #841617 0%, #6a1112 100%); color: #FDF9D8; box-shadow: 0 -4px 20px rgba(0,0,0,0.4); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .sticky-player { position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; background: linear-gradient(135deg, #841617 0%, #6a1112 100%); color: #fff; box-shadow: 0 -4px 20px rgba(0,0,0,0.4); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .sticky-player.open { transform: translateY(0); }
         .player-bar { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
         .player-label { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 15px; white-space: nowrap; flex-shrink: 0; }
         .player-audio-wrap { flex: 1; min-width: 0; }
-        .player-close { background: rgba(255,255,255,0.15); border: none; color: #FDF9D8; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+        .player-close { background: rgba(255,255,255,0.15); border: none; color: #fff; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
         .player-close:hover { background: rgba(255,255,255,0.28); }
         .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; }
         .section { margin-bottom: 100px; }
@@ -51,7 +51,7 @@
         .solution li:before { content: "✅"; flex-shrink: 0; }
         .examples-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         .example-card { background: white; border: 2px solid #841617; border-radius: 12px; padding: 30px; transition: all 0.3s; }
-        .example-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(132, 22, 23, 0.2); }
+        .example-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(132,22,23,0.2); }
         .example-question { font-weight: bold; color: #841617; margin-bottom: 15px; font-size: 18px; }
         .example-answer { color: #666; font-size: 15px; line-height: 1.8; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
@@ -69,16 +69,16 @@
         .features-list { list-style: none; padding: 0; margin: 40px 0; text-align: left; }
         .features-list li { padding: 15px 0; border-bottom: 1px solid #eee; font-size: 18px; }
         .features-list li:before { content: "✓ "; color: #4CAF50; font-weight: bold; margin-right: 10px; }
-        .cta-button { background: #841617; color: #FDF9D8; padding: 20px 60px; font-size: 22px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s; margin-top: 20px; }
+        .cta-button { background: #841617; color: #fff; padding: 20px 60px; font-size: 22px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s; margin-top: 20px; }
         .cta-button:hover { background: #6a1112; transform: scale(1.05); }
         .faq-item { margin-bottom: 30px; background: white; padding: 30px; border-radius: 8px; border-left: 4px solid #841617; }
         .faq-question { font-size: 20px; font-weight: bold; color: #841617; margin-bottom: 10px; }
         .faq-answer { color: #666; line-height: 1.8; }
         .footer { background: #000; color: #666; padding: 40px 20px; text-align: center; }
         .footer a { color: #999; text-decoration: none; }
-        .footer a:hover { color: #FDF9D8; }
+        .footer a:hover { color: #fff; }
         #nil-prompt-container { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; padding: 0 16px 16px; pointer-events: none; }
-        .nil-prompt { pointer-events: all; background: #111111; border: 1px solid rgba(201,168,76,0.6); border-radius: 10px; overflow: hidden; max-width: 720px; margin: 0 auto; box-shadow: 0 0 0 1px rgba(201,168,76,0.15), 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(132,22,23,0.3); animation: nilSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .nil-prompt { pointer-events: all; background: #111111; border: 1px solid rgba(132,22,23,0.6); border-radius: 10px; overflow: hidden; max-width: 720px; margin: 0 auto; box-shadow: 0 0 0 1px rgba(132,22,23,0.15), 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(132,22,23,0.3); animation: nilSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .nil-prompt-exit { animation: nilSlideDown 0.4s ease forwards !important; }
         @keyframes nilSlideUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
         @keyframes nilSlideDown { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(100%); } }
@@ -91,47 +91,24 @@
         .nil-prompt-message { font-size: 22px; font-weight: 700; color: #f5f5f0; margin-bottom: 6px; line-height: 1.2; }
         .nil-prompt-sub { font-size: 11px; color: rgba(245,245,240,0.35); letter-spacing: 0.3px; }
         .nil-prompt-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-        .nil-prompt-btn { background: #841617; color: #f5f5f0; padding: 14px 28px; border-radius: 5px; text-decoration: none; font-weight: 700; font-size: 15px; white-space: nowrap; transition: all 0.2s; box-shadow: 0 4px 20px rgba(132,22,23,0.5); }
-        .nil-prompt-btn:hover { background: #9a1c1d; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(132,22,23,0.7); }
+        .nil-prompt-btn { background: #841617; color: #fff; padding: 14px 28px; border-radius: 5px; text-decoration: none; font-weight: 700; font-size: 15px; white-space: nowrap; transition: all 0.2s; box-shadow: 0 4px 20px rgba(132,22,23,0.5); }
+        .nil-prompt-btn:hover { background: #6a1112; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(132,22,23,0.7); }
         .nil-prompt-dismiss { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; color: rgba(245,245,240,0.4); font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .nil-prompt-dismiss:hover { background: rgba(255,255,255,0.1); color: #f5f5f0; }
         .nil-prompt-progress { height: 4px; background: rgba(255,255,255,0.04); }
         .nil-prompt-progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #841617, #c9a84c); border-radius: 0 2px 2px 0; }
-        #push-optin-banner { display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 998; background: #1a1a1a; border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 14px 20px; gap: 14px; align-items: center; max-width: 480px; width: calc(100% - 40px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        #push-optin-banner { display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 998; background: #1a1a1a; border: 1px solid rgba(132,22,23,0.3); border-radius: 8px; padding: 14px 20px; gap: 14px; align-items: center; max-width: 480px; width: calc(100% - 40px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         .push-optin-text { font-size: 13px; color: rgba(245,245,240,0.65); flex: 1; line-height: 1.5; }
         .push-optin-text strong { color: #f5f5f0; }
-        #push-optin-yes { background: #c9a84c; color: #0a0a0a; border: none; border-radius: 4px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
+        #push-optin-yes { background: #841617; color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
         #push-optin-no { background: none; border: none; color: rgba(245,245,240,0.3); font-size: 12px; cursor: pointer; white-space: nowrap; }
-        @media (max-width: 768px) {
-            .hero { min-height: 100svh; }
-            .hero h1 { font-size: 30px; }
-            .hero .subtitle { font-size: 16px; margin-bottom: 28px; }
-            .hero-content { padding: 40px 16px; }
-            .hero-buttons { flex-direction: column; align-items: center; }
-            .hero-cta, .listen-btn { padding: 16px 36px; font-size: 17px; width: 100%; justify-content: center; }
-            .two-col { grid-template-columns: 1fr; gap: 40px; }
-            .section-title { font-size: 28px; }
-            .price { font-size: 48px; }
-            .player-label { display: none; }
-            .player-bar { padding: 10px 14px; gap: 10px; }
-            .logo { font-size: 16px; }
-            .back-link { font-size: 12px; }
-        }
-        @media (max-width: 600px) {
-          .nil-prompt-inner { padding: 18px 16px; gap: 14px; }
-          .nil-prompt-message { font-size: 18px; }
-          .nil-prompt-btn { padding: 12px 20px; font-size: 14px; }
-          .nil-prompt-right { width: 100%; justify-content: space-between; }
-        }
-        @media (max-width: 390px) {
-            .hero h1 { font-size: 26px; }
-            .hero .subtitle { font-size: 14px; }
-        }
+        @media (max-width: 768px) { .hero { min-height: 100svh; } .hero h1 { font-size: 30px; } .hero .subtitle { font-size: 16px; margin-bottom: 28px; } .hero-content { padding: 40px 16px; } .hero-buttons { flex-direction: column; align-items: center; } .hero-cta, .listen-btn { padding: 16px 36px; font-size: 17px; width: 100%; justify-content: center; } .two-col { grid-template-columns: 1fr; gap: 40px; } .section-title { font-size: 28px; } .price { font-size: 48px; } .player-label { display: none; } .player-bar { padding: 10px 14px; gap: 10px; } .logo { font-size: 16px; } .back-link { font-size: 12px; } }
+        @media (max-width: 600px) { .nil-prompt-inner { padding: 18px 16px; gap: 14px; } .nil-prompt-message { font-size: 18px; } .nil-prompt-btn { padding: 12px 20px; font-size: 14px; } .nil-prompt-right { width: 100%; justify-content: space-between; } }
+        @media (max-width: 390px) { .hero h1 { font-size: 26px; } .hero .subtitle { font-size: 14px; } }
     </style>
 </head>
 <body>
     <div id="announcement-bar"></div>
-
     <div class="hero">
         <div class="header">
             <div class="header-content">
@@ -140,20 +117,16 @@
             </div>
         </div>
         <div class="hero-content" style="padding-top: 140px;">
-            <h1>Your All-in-One OU Superfan Hub</h1>
+            <h1>Your All-in-One<br>OU Superfan Hub</h1>
             <p style="font-size:13px; letter-spacing:3px; text-transform:uppercase; opacity:0.6; margin-bottom:20px;">The Fans' Network</p>
             <p class="subtitle">Chat with Boomer Bot • Watch 4,700+ Highlights • Get Live Stats • Listen to OU Radio</p>
             <div class="hero-buttons">
                 <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01" class="hero-cta">Start Your Free Trial</a>
-                <button class="listen-btn">
-                    <span class="status-dot"></span>
-                    Listen to XSEN Sooners
-                </button>
+                <button class="listen-btn"><span class="status-dot"></span>Listen to XSEN Sooners</button>
             </div>
             <p class="trial-note">3 days free, then $9.99/month • Cancel anytime</p>
         </div>
     </div>
-
     <div class="problem-solution">
         <div class="two-col">
             <div class="col problem">
@@ -162,7 +135,7 @@
                     <li>Searching 10 different sites for OU info</li>
                     <li>Can't find that one highlight you remember</li>
                     <li>Don't know who's starting this week</li>
-                    <li>Missing the deep OU knowledge from the glory years</li>
+                    <li>Missing the deep Sooner knowledge from the glory years</li>
                     <li>Wish you had a Sooner superfan on speed dial</li>
                 </ul>
             </div>
@@ -170,77 +143,36 @@
                 <h3>Get This Instead</h3>
                 <ul>
                     <li>Everything OU in one place</li>
-                    <li>4,700+ searchable video highlights</li>
+                    <li>Searchable video highlights</li>
                     <li>Instant roster, stats, and schedule updates</li>
-                    <li>Chat with Boomer Bot - 45+ years of OU history</li>
+                    <li>Chat with Boomer Bot — 45+ years of OU history at your fingertips</li>
                     <li>24/7 access to your AI Sooner expert</li>
                 </ul>
             </div>
         </div>
     </div>
-
     <div class="container">
         <div class="section">
             <h2 class="section-title">Ask Boomer Bot About OU Sports</h2>
             <div class="examples-grid">
-                <div class="example-card">
-                    <div class="example-question">"Who's starting QB this week?"</div>
-                    <div class="example-answer">Get instant lineup updates, depth charts, and injury reports before kickoff.</div>
-                </div>
-                <div class="example-card">
-                    <div class="example-question">"Show me Baker Mayfield's best moments"</div>
-                    <div class="example-answer">Watch highlights from 4,700+ videos spanning 45 years of Sooner football.</div>
-                </div>
-                <div class="example-card">
-                    <div class="example-question">"What's our record against Texas?"</div>
-                    <div class="example-answer">Get historical stats, memorable games, and rivalry insights instantly.</div>
-                </div>
-                <div class="example-card">
-                    <div class="example-question">"Tell me about the 2000 championship run"</div>
-                    <div class="example-answer">Relive legendary moments with someone who knows every play, every player.</div>
-                </div>
-                <div class="example-card">
-                    <div class="example-question">"Who won the Heisman in 1978?"</div>
-                    <div class="example-answer">Billy Sims! Boomer knows OU history from the 1970s to today.</div>
-                </div>
-                <div class="example-card">
-                    <div class="example-question">"When's the next game?"</div>
-                    <div class="example-answer">Complete schedule with times, opponents, and where to watch.</div>
-                </div>
+                <div class="example-card"><div class="example-question">"Who's starting QB this week?"</div><div class="example-answer">Get instant lineup updates, depth charts, and injury reports before kickoff.</div></div>
+                <div class="example-card"><div class="example-question">"Show me Baker Mayfield's best moments"</div><div class="example-answer">Watch highlights from 4,700+ videos spanning 45 years of Sooner football.</div></div>
+                <div class="example-card"><div class="example-question">"What's our record against Texas?"</div><div class="example-answer">Get historical stats, memorable games, and rivalry insights instantly.</div></div>
+                <div class="example-card"><div class="example-question">"Tell me about the 2000 championship run"</div><div class="example-answer">Relive legendary moments with someone who knows every play, every player.</div></div>
+                <div class="example-card"><div class="example-question">"When's the next game?"</div><div class="example-answer">Complete schedule with times, opponents, and where to watch.</div></div>
+                <div class="example-card"><div class="example-question">"Who won the Heisman in 1978?"</div><div class="example-answer">Billy Sims! Boomer knows OU history from the 1970s to today.</div></div>
             </div>
         </div>
-
         <div class="section">
             <h2 class="section-title">Everything You Need in One Place</h2>
             <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">🤖</div>
-                    <h3>Boomer Bot</h3>
-                    <p>Your personal OU expert with 45+ years of Sooner knowledge. Ask anything, anytime.</p>
-                    <div class="feature-stat">100 msgs/mo</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🎥</div>
-                    <h3>Video Highlights</h3>
-                    <p>Searchable archive of every big play, every memorable moment, instantly accessible.</p>
-                    <div class="feature-stat">4,700+ videos</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">📊</div>
-                    <h3>Live Stats & Data</h3>
-                    <p>Real-time rosters, schedules, stats, and the numbers that matter. Always up to date.</p>
-                    <div class="feature-stat">Updated daily</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">📻</div>
-                    <h3>XSEN Radio</h3>
-                    <p>Your 24/7 Sooner station — live broadcasts, FanCasting, and programming built for OU fans.</p>
-                    <div class="feature-stat live">FanCast</div>
-                </div>
+                <div class="feature"><div class="feature-icon">🤖</div><h3>Boomer Bot</h3><p>Your personal OU expert with 45+ years of Sooner knowledge. Ask anything, anytime.</p><div class="feature-stat">100 msgs/mo</div></div>
+                <div class="feature"><div class="feature-icon">🎥</div><h3>Video Highlights</h3><p>Searchable archive of every big play, every memorable moment, instantly accessible.</p><div class="feature-stat">Updated live</div></div>
+                <div class="feature"><div class="feature-icon">📊</div><h3>Live Stats & Data</h3><p>Real-time rosters, schedules, stats, and the numbers that matter. Always up to date.</p><div class="feature-stat">Updated daily</div></div>
+                <div class="feature"><div class="feature-icon">📻</div><h3>XSEN Radio</h3><p>Your 24/7 Sooner station — live broadcasts, FanCasting, and programming built for OU fans.</p><div class="feature-stat live">FanCast</div></div>
             </div>
         </div>
     </div>
-
     <div class="pricing-section" id="pricing">
         <div class="container">
             <h2 class="section-title">Simple, Honest Pricing</h2>
@@ -249,7 +181,7 @@
                 <div class="price">$9.99<span class="price-period">/mo</span></div>
                 <ul class="features-list">
                     <li>Chat with Boomer Bot (100 messages/month)</li>
-                    <li>4,700+ searchable video highlights</li>
+                    <li>Searchable video highlights</li>
                     <li>Live stats, rosters, schedules</li>
                     <li>XSEN Radio (24/7 streaming)</li>
                     <li>Cancel anytime, no commitments</li>
@@ -259,260 +191,137 @@
             </div>
         </div>
     </div>
-
     <div class="container">
         <div class="section">
             <h2 class="section-title">Questions? We've Got Answers</h2>
-            <div class="faq-item">
-                <div class="faq-question">What exactly is Boomer AI?</div>
-                <div class="faq-answer">Boomer is your personal OU sports expert powered by AI. It has access to 45+ years of Oklahoma football history, current rosters, stats, and our massive video archive. Think of it as having an OU superfan on speed dial 24/7.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">How does the free trial work?</div>
-                <div class="faq-answer">Start your 3-day free trial with full access to everything. No credit card charged until day 4. Cancel anytime during the trial and pay nothing.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">What if I run out of messages?</div>
-                <div class="faq-answer">You get 100 messages per month (about 3 per day). That's plenty for most fans! If you need more, we'll add message packs soon. Your message count resets every month.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Can I cancel anytime?</div>
-                <div class="faq-answer">Absolutely. Cancel with one click, no questions asked. If you cancel, you keep access until the end of your billing period.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Is this officially affiliated with OU?</div>
-                <div class="faq-answer">No, XSEN is an independent fan platform created by OU superfans, for OU superfans. We're not affiliated with the University of Oklahoma.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">What is XSEN Radio?</div>
-                <div class="faq-answer">XSEN Radio is our 24/7 Sooner-themed audio stream — OU highlight audio, Boomer-curated music, and fan programming. Click "Listen Live" at the top of this page to tune in right now, free.</div>
-            </div>
+            <div class="faq-item"><div class="faq-question">What exactly is Boomer Bot?</div><div class="faq-answer">Boomer Bot is your personal OU sports expert powered by AI. It has access to 45+ years of Oklahoma football history, current rosters, stats, and our massive video archive. Think of it as having an OU superfan on speed dial 24/7.</div></div>
+            <div class="faq-item"><div class="faq-question">How does the free trial work?</div><div class="faq-answer">Start your 3-day free trial with full access to everything. No credit card charged until day 4. Cancel anytime during the trial and pay nothing.</div></div>
+            <div class="faq-item"><div class="faq-question">What if I run out of messages?</div><div class="faq-answer">You get 100 messages per month (about 3 per day). That's plenty for most fans! Your message count resets every month.</div></div>
+            <div class="faq-item"><div class="faq-question">Can I cancel anytime?</div><div class="faq-answer">Absolutely. Cancel with one click, no questions asked. If you cancel, you keep access until the end of your billing period.</div></div>
+            <div class="faq-item"><div class="faq-question">Is this officially affiliated with OU?</div><div class="faq-answer">No, XSEN is an independent fan platform created by OU superfans, for OU superfans. We're not affiliated with the University of Oklahoma.</div></div>
+            <div class="faq-item"><div class="faq-question">What is XSEN Radio?</div><div class="faq-answer">XSEN Radio is our 24/7 Sooner-themed audio stream — OU highlight audio, Boomer-curated music, and fan programming. Click "Listen Live" at the top of this page to tune in right now, free.</div></div>
         </div>
     </div>
-
     <div class="hero" style="min-height: 300px;">
-        <video class="hero-video" autoplay muted playsinline>
-            <source src="https://storage.googleapis.com/xsenassets/XSEN.mp4" type="video/mp4">
-        </video>
+        <video class="hero-video" autoplay muted playsinline><source src="https://storage.googleapis.com/xsenassets/XSEN.mp4" type="video/mp4"></video>
         <div class="hero-overlay"></div>
         <div class="hero-content" style="padding: 60px 20px;">
             <h2 style="font-size: 38px; margin-bottom: 16px;">Ready to Join the XSEN Sooners Community?</h2>
             <p style="opacity:0.85; margin-bottom:24px; font-size:15px;">Not ready to subscribe yet? Drop your info and we'll keep you in the loop on game alerts, FanCasts, and exclusive offers.</p>
             <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
-                <input type="text" id="leadName" placeholder="Your Name"
-                    style="padding:14px 20px; border-radius:50px; border:2px solid rgba(253,249,216,0.4); background:rgba(0,0,0,0.3); color:#FDF9D8; font-size:16px; width:220px; outline:none;"
-                    onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(253,249,216,0.4)'" />
-                <input type="email" id="leadEmail" placeholder="Email Address"
-                    style="padding:14px 20px; border-radius:50px; border:2px solid rgba(253,249,216,0.4); background:rgba(0,0,0,0.3); color:#FDF9D8; font-size:16px; width:260px; outline:none;"
-                    onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(253,249,216,0.4)'" />
-                <button id="leadSubmitBtn" onclick="submitLead()"
-                    style="padding:14px 28px; border-radius:50px; border:none; background:#c9a84c; color:#0a0a0a; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s;"
-                    onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-                    Keep Me Posted
-                </button>
+                <input type="text" id="leadName" placeholder="Your Name" style="padding:14px 20px; border-radius:50px; border:2px solid rgba(255,255,255,0.4); background:rgba(0,0,0,0.3); color:#fff; font-size:16px; width:220px; outline:none;" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(255,255,255,0.4)'" />
+                <input type="email" id="leadEmail" placeholder="Email Address" style="padding:14px 20px; border-radius:50px; border:2px solid rgba(255,255,255,0.4); background:rgba(0,0,0,0.3); color:#fff; font-size:16px; width:260px; outline:none;" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(255,255,255,0.4)'" />
+                <button id="leadSubmitBtn" onclick="submitLead()" style="padding:14px 28px; border-radius:50px; border:none; background:#fff; color:#841617; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Keep Me Posted</button>
             </div>
             <div id="leadStatus" style="min-height:20px; font-size:13px; opacity:0.85; margin-bottom:16px;"></div>
             <div class="hero-buttons">
                 <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01" class="hero-cta">Start Your Free Trial Now</a>
-                <button class="listen-btn">
-                    <span class="status-dot"></span>
-                    Listen to XSEN Sooners
-                </button>
+                <button class="listen-btn"><span class="status-dot"></span>XSEN Radio • Listen Live</button>
             </div>
             <p class="trial-note">Join other OU superfans • 3 days free • Cancel anytime</p>
         </div>
     </div>
-
     <div class="footer">
         <p>© 2026 XSEN - The eXperience Sports Entertainment Network</p>
-        <p style="margin-top: 10px;">
-            <a href="https://xsen.fun">XSEN Home</a> •
-            <a href="https://xsen.fun/sooners/app">Member Login</a> •
-            <a href="mailto:support@xsen.fun">Support</a>
-        </p>
+        <p style="margin-top: 10px;"><a href="https://xsen.fun">XSEN Home</a> • <a href="https://xsen.fun/sooners/app">Member Login</a> • <a href="mailto:support@xsen.fun">Support</a></p>
         <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">Not affiliated with the University of Oklahoma</p>
     </div>
-
-    <!-- ─── STICKY AUDIO PLAYER ─── -->
     <div class="sticky-player" id="stickyPlayer">
         <div class="player-bar">
-            <div class="player-label">
-                <span id="playerBadge" class="player-live-badge offline">⚪ PLAYLIST</span>
-                XSEN Radio
-            </div>
+            <div class="player-label"><span id="playerBadge" class="player-live-badge offline">⚪ PLAYLIST</span>XSEN Radio</div>
             <div class="player-audio-wrap">
-                <audio id="xsenAudio" preload="none" playsinline controls style="width:100%; height:36px;">
-                    <source src="" type="audio/mpeg" />
-                </audio>
-                <div id="audioStatus" style="color:rgba(253,249,216,0.7); font-size:12px; margin-top:4px; text-align:center;">Tap ▶ to listen</div>
+                <audio id="xsenAudio" preload="none" playsinline controls style="width:100%; height:36px;"><source src="" type="audio/mpeg" /></audio>
+                <div id="audioStatus" style="color:rgba(255,255,255,0.7); font-size:12px; margin-top:4px; text-align:center;">Tap ▶ to listen</div>
                 <div id="playerStreamer" style="display:none; font-size:11px; margin-top:2px; text-align:center; font-weight:600; letter-spacing:0.3px;"></div>
             </div>
             <button class="player-close" id="playerClose" title="Close">✕</button>
         </div>
     </div>
-
     <script>
         const LIVE_STREAM_URL = 'https://stream.xsen.fun/listen/xsen_sooners/radio.mp3';
         const NOW_PLAYING_URL = 'https://stream.xsen.fun/api/nowplaying/xsen_sooners';
-        const stickyPlayer  = document.getElementById('stickyPlayer');
-        const playerBadge   = document.getElementById('playerBadge');
+        const stickyPlayer = document.getElementById('stickyPlayer');
+        const playerBadge = document.getElementById('playerBadge');
         const playerStreamer = document.getElementById('playerStreamer');
-        const audioEl       = document.getElementById('xsenAudio');
-        const audioStatus   = document.getElementById('audioStatus');
-        const playerClose   = document.getElementById('playerClose');
-        const listenBtns    = document.querySelectorAll('.listen-btn');
-        const statusDots    = document.querySelectorAll('.listen-btn .status-dot');
+        const audioEl = document.getElementById('xsenAudio');
+        const audioStatus = document.getElementById('audioStatus');
+        const playerClose = document.getElementById('playerClose');
+        const listenBtns = document.querySelectorAll('.listen-btn');
+        const statusDots = document.querySelectorAll('.listen-btn .status-dot');
         let isLive = false;
-
         async function updateLiveStatus() {
             try {
-                const res  = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
+                const res = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
                 const data = await res.json();
                 isLive = data?.live?.is_live === true;
-                const streamer   = data?.live?.streamer_name || '';
+                const streamer = data?.live?.streamer_name || '';
                 const nowPlaying = data?.now_playing?.song?.title || '';
                 statusDots.forEach(dot => dot.classList.toggle('live', isLive));
-                if (isLive) {
-                    playerBadge.textContent     = '🔴 LIVE';
-                    playerBadge.className       = 'player-live-badge live';
-                    playerStreamer.textContent  = streamer ? `Broadcasting: ${streamer}` : 'Live broadcast in progress';
-                    playerStreamer.style.color  = 'rgba(255,100,100,0.9)';
-                    playerStreamer.style.display = 'block';
-                } else {
-                    playerBadge.textContent     = '⚪ PLAYLIST';
-                    playerBadge.className       = 'player-live-badge offline';
-                    playerStreamer.textContent  = nowPlaying ? `Now playing: ${nowPlaying}` : '';
-                    playerStreamer.style.color  = 'rgba(253,249,216,0.5)';
-                    playerStreamer.style.display = nowPlaying ? 'block' : 'none';
-                }
-                listenBtns.forEach(btn => {
-                    const textNode = Array.from(btn.childNodes).find(n => n.nodeType === 3);
-                    if (textNode) textNode.textContent = isLive ? ' Listen Live' : ' XSEN Radio';
-                });
-                if (stickyPlayer.classList.contains('open')) {
-                    audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Sooners Radio';
-                }
+                if (isLive) { playerBadge.textContent = '🔴 LIVE'; playerBadge.className = 'player-live-badge live'; playerStreamer.textContent = streamer ? `Broadcasting: ${streamer}` : 'Live broadcast in progress'; playerStreamer.style.color = 'rgba(255,100,100,0.9)'; playerStreamer.style.display = 'block'; }
+                else { playerBadge.textContent = '⚪ PLAYLIST'; playerBadge.className = 'player-live-badge offline'; playerStreamer.textContent = nowPlaying ? `Now playing: ${nowPlaying}` : ''; playerStreamer.style.color = 'rgba(255,255,255,0.5)'; playerStreamer.style.display = nowPlaying ? 'block' : 'none'; }
+                listenBtns.forEach(btn => { const textNode = Array.from(btn.childNodes).find(n => n.nodeType === 3); if (textNode) textNode.textContent = isLive ? ' Listen Live' : ' XSEN Radio'; });
+                if (stickyPlayer.classList.contains('open')) { audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Sooners Radio'; }
             } catch (e) { isLive = false; }
         }
-
         function openPlayer() {
             stickyPlayer.classList.add('open');
-            if (!audioEl.src || audioEl.src === window.location.href) {
-                audioEl.src = LIVE_STREAM_URL + '?ts=' + Date.now();
-                audioEl.play()
-                    .then(() => { audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Sooners Radio'; })
-                    .catch(() => { audioStatus.textContent = 'Tap ▶ to listen'; });
-            }
+            if (!audioEl.src || audioEl.src === window.location.href) { audioEl.src = LIVE_STREAM_URL + '?ts=' + Date.now(); audioEl.play().then(() => { audioStatus.textContent = isLive ? '🔴 Live now' : '🎵 Playing XSEN Sooners Radio'; }).catch(() => { audioStatus.textContent = 'Tap ▶ to listen'; }); }
         }
-
-        playerClose.addEventListener('click', () => {
-            stickyPlayer.classList.remove('open');
-            audioEl.pause();
-            audioEl.src = '';
-            audioStatus.textContent = 'Tap ▶ to listen';
-            playerStreamer.style.display = 'none';
-        });
-
+        playerClose.addEventListener('click', () => { stickyPlayer.classList.remove('open'); audioEl.pause(); audioEl.src = ''; audioStatus.textContent = 'Tap ▶ to listen'; playerStreamer.style.display = 'none'; });
         listenBtns.forEach(btn => btn.addEventListener('click', openPlayer));
         updateLiveStatus();
         setInterval(updateLiveStatus, 15000);
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-    var supabase = window.supabase.createClient(
-        'https://hvqzrdlbtfezwuveincs.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
-    );
+    var supabase = window.supabase.createClient('https://hvqzrdlbtfezwuveincs.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo');
     </script>
-
     <div id="nil-prompt-container"></div>
     <div id="push-optin-banner">
-      <div class="push-optin-text">
-        <strong>Get notified during big moments.</strong> We'll alert you when something worth supporting happens.
-      </div>
+      <div class="push-optin-text"><strong>Get notified during big moments.</strong> We'll alert you when something worth supporting happens.</div>
       <button class="push-optin-yes" id="push-optin-yes">Sure</button>
       <button class="push-optin-no" id="push-optin-no">No thanks</button>
     </div>
-    <script src="/xsen-nil-notifications.js"></script>
-
     <script>
     async function submitLead() {
-        const name   = document.getElementById('leadName').value.trim();
-        const email  = document.getElementById('leadEmail').value.trim();
+        const name = document.getElementById('leadName').value.trim();
+        const email = document.getElementById('leadEmail').value.trim();
         const status = document.getElementById('leadStatus');
-        const btn    = document.getElementById('leadSubmitBtn');
+        const btn = document.getElementById('leadSubmitBtn');
         if (!email) { status.textContent = '⚠️ Please enter your email address.'; return; }
-        btn.textContent = 'Sending…';
-        btn.disabled = true;
+        btn.textContent = 'Sending…'; btn.disabled = true;
         try {
-            const { error } = await supabase.from('xsen_leads').insert([{
-                name: name || null, email: email, school: 'oklahoma', source: 'community'
-            }]);
+            const { error } = await supabase.from('xsen_leads').insert([{ name: name || null, email: email, school: 'oklahoma', source: 'community' }]);
             if (error) throw error;
             status.innerHTML = '✅ <strong>You\'re in!</strong> Check your email — Boomer Sooner! 🏈';
-            document.getElementById('leadName').value  = '';
-            document.getElementById('leadEmail').value = '';
-            btn.textContent = '✓ Done';
-        } catch (err) {
-            console.error('Lead submit error:', err);
-            status.textContent = '❌ Something went wrong. Please try again.';
-            btn.textContent = 'Keep Me Posted';
-            btn.disabled = false;
-        }
+            document.getElementById('leadName').value = ''; document.getElementById('leadEmail').value = ''; btn.textContent = '✓ Done';
+        } catch (err) { console.error('Lead submit error:', err); status.textContent = '❌ Something went wrong. Please try again.'; btn.textContent = 'Keep Me Posted'; btn.disabled = false; }
     }
     </script>
-
     <script>
     (async function() {
       try {
-        const { data } = await supabase
-          .from('xsen_announcements')
-          .select('*')
-          .eq('active', true)
-          .or('school.eq.ALL,school.eq.OU')
-          .order('created_at', { ascending: false })
-          .limit(1);
-
+        const { data } = await supabase.from('xsen_announcements').select('*').eq('active', true).or('school.eq.ALL,school.eq.oklahoma').order('created_at', { ascending: false }).limit(1);
         const bar = document.getElementById('announcement-bar');
         if (!bar || !data?.length) return;
-
         const now = new Date();
         const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
         if (!valid.length) return;
-
-        const colors = {
-          info:     { bg: '#0d1a0d', border: '#00cc66', text: '#00cc66' },
-          warning:  { bg: '#1a1500', border: '#e8c84a', text: '#e8c84a' },
-          critical: { bg: '#1a0500', border: '#cc2200', text: '#cc2200' },
-        };
-
+        const colors = { info: { bg: '#0d1a0d', border: '#00cc66', text: '#00cc66' }, warning: { bg: '#1a1500', border: '#e8c84a', text: '#e8c84a' }, critical: { bg: '#1a0500', border: '#cc2200', text: '#cc2200' } };
         bar.style.cssText = 'position:sticky;top:0;z-index:999;';
-        bar.innerHTML = valid.map(a => {
-          const c = colors[a.type] || colors.info;
-          return `<div style="background:${c.bg};border-bottom:2px solid ${c.border};padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:sans-serif;font-size:0.875rem;color:${c.text};">
-            <span>${a.message}</span>
-            ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} →</a>` : ''}
-          </div>`;
-        }).join('');
+        bar.innerHTML = valid.map(a => { const c = colors[a.type] || colors.info; return `<div style="background:${c.bg};border-bottom:2px solid ${c.border};padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:sans-serif;font-size:0.875rem;color:${c.text};"><span>${a.message}</span>${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} →</a>` : ''}</div>`; }).join('');
       } catch(e) {}
     })();
     </script>
-
     <script>
-    var XSEN_BUBBLE = {
-      BOT_NAME: 'Boomer',
-      APP_URL:  'https://xsen.fun/sooners/app',
-      COLOR:    '#841617',
-    };
+    var XSEN_BUBBLE = { BOT_NAME: 'Boomer', APP_URL: 'https://xsen.fun/sooners/app', COLOR: '#841617' };
     </script>
     <style>
     #xsen-bubble-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; font-family: system-ui, -apple-system, sans-serif; }
     #xsen-bubble-label { background: #111; color: #fff; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 20px; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.4); opacity: 0; animation: xbFadeUp 0.4s ease 1.2s forwards; pointer-events: none; }
     #xsen-bubble-label strong { color: var(--xb-color, #841617); }
     #xsen-bubble-btn { width: 64px; height: 64px; border-radius: 50%; background: var(--xb-color, #841617); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.35); opacity: 0; animation: xbFadeUp 0.4s ease 0.5s forwards, xbPulse 3s ease-out 2.5s infinite; transition: transform 0.15s ease; text-decoration: none; position: relative; }
-    #xsen-bubble-btn:hover { transform: scale(1.08); }
-    #xsen-bubble-btn:active { transform: scale(0.95); }
+    #xsen-bubble-btn:hover { transform: scale(1.08); } #xsen-bubble-btn:active { transform: scale(0.95); }
     #xsen-bubble-btn::after { content: ''; position: absolute; top: 3px; right: 3px; width: 14px; height: 14px; background: #ff3b3b; border-radius: 50%; border: 2.5px solid #fff; opacity: 0; animation: xbDot 0.3s ease 2s forwards; }
     #xsen-bubble-btn svg { display: block; pointer-events: none; }
     .xsen-hover-tip { position: absolute; right: 72px; top: 50%; transform: translateY(-50%); background: #111; color: #fff; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 7px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
@@ -522,7 +331,6 @@
     @keyframes xbPulse { 0% { box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 0 var(--xb-color, #841617); } 50% { box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 12px rgba(0,0,0,0); } 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 0 rgba(0,0,0,0); } }
     @keyframes xbDot { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
     </style>
-
     <div id="xsen-bubble-wrap">
       <div id="xsen-bubble-label">Chat with <strong id="xsen-bubble-name"></strong> →</div>
       <a id="xsen-bubble-btn" href="#" target="_blank" rel="noopener">
@@ -539,28 +347,20 @@
         <span class="xsen-hover-tip" id="xsen-bubble-tip"></span>
       </a>
     </div>
-
     <script>
     (function () {
-      var cfg   = window.XSEN_BUBBLE || {};
-      var name  = cfg.BOT_NAME || 'Chat';
-      var url   = cfg.APP_URL  || '#';
-      var color = cfg.COLOR    || '#841617';
-      var wrap  = document.getElementById('xsen-bubble-wrap');
+      var cfg = window.XSEN_BUBBLE || {};
+      var name = cfg.BOT_NAME || 'Chat';
+      var url = cfg.APP_URL || '#';
+      var color = cfg.COLOR || '#841617';
+      var wrap = document.getElementById('xsen-bubble-wrap');
       wrap.style.setProperty('--xb-color', color);
       document.getElementById('xsen-bubble-name').textContent = name + ' Bot';
-      document.getElementById('xsen-bubble-tip').textContent  = 'Chat with ' + name + ' Bot →';
-      document.getElementById('xsen-bubble-btn').href         = url;
+      document.getElementById('xsen-bubble-tip').textContent = 'Chat with ' + name + ' Bot →';
+      document.getElementById('xsen-bubble-btn').href = url;
       document.getElementById('xsen-bubble-btn').setAttribute('aria-label', 'Chat with ' + name);
-      setTimeout(function () {
-        var el = document.getElementById('xsen-bubble-label');
-        if (!el) return;
-        el.style.transition = 'opacity 0.5s ease';
-        el.style.opacity = '0';
-        setTimeout(function () { el.style.display = 'none'; }, 500);
-      }, 6000);
+      setTimeout(function () { var el = document.getElementById('xsen-bubble-label'); if (!el) return; el.style.transition = 'opacity 0.5s ease'; el.style.opacity = '0'; setTimeout(function () { el.style.display = 'none'; }, 500); }, 6000);
     })();
     </script>
-
 </body>
 </html>
