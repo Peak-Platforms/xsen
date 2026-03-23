@@ -447,7 +447,7 @@
         btn.disabled = true;
         try {
             const { error } = await supabase.from('xsen_leads').insert([{
-                name: name || null, email: email, school: 'OU', source: 'bottom_hero'
+                name: name || null, email: email, school: 'oklahoma', source: 'community'
             }]);
             if (error) throw error;
             status.innerHTML = '✅ <strong>You\'re in!</strong> Check your email — Boomer Sooner! 🏈';
