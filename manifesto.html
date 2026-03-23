@@ -8,6 +8,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
   <style>
+    .back-link {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.5rem;
+  color: var(--gold);
+  text-decoration: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+.back-link:hover { opacity: 1; }
     :root {
       --crimson: #8B0000;
       --crimson-bright: #C41E3A;
@@ -639,6 +653,7 @@
 
   <!-- HEADER -->
   <header>
+    <a href="https://xsen.fun" class="back-link">← Back to XSEN</a>
     <div class="header-eyebrow">The Fan's Network™</div>
     <div class="header-logo"><span class="x-letter">X</span>SEN</div>
     <div class="header-tagline">Built by fans. For fans. Before the window closes.</div>
