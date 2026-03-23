@@ -885,8 +885,8 @@
             const { error } = await supabase.from('xsen_leads').insert([{
                 name:   name || null,
                 email:  email,
-                school: 'OSU',
-                source: 'bottom_hero'
+                school: 'okstate',
+                source: 'community'
             }]);
 
             if (error) throw error;
