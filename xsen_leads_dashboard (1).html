@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XSEN Leads Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #e8c84a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; min-height: 100vh; }
+
+  #config-banner {
+    background: linear-gradient(90deg, #1a1200, #1a0a00);
+    border-bottom: 1px solid var(--accent);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--accent);
+    flex-wrap: wrap;
+  }
+  #config-banner input {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(232,200,74,0.3);
+    color: var(--text);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+    width: 300px;
+  }
+  #config-banner button {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  header {
+    padding: 24px 32px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 2px; color: var(--accent); }
+  .logo span { color: var(--muted); font-size: 13px; font-family: 'DM Sans', sans-serif; letter-spacing: 0; margin-left: 10px; }
+  #last-updated { font-size: 11px; color: var(--muted); }
+
+  main { padding: 24px 32px; }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .metric-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-color, var(--accent));
+  }
+  .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .metric-value { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1; color: var(--text); }
+
+  #school-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .school-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 100px;
+    flex: 1 1 100px;
+    max-width: 150px;
+    position: relative;
+    overflow: hidden;
+  }
+  .school-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--school-color, #555);
+  }
+  .school-card .metric-label { font-size: 10px; text-transform: capitalize; }
+  .school-card .metric-value { font-size: 28px; }
+
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .chart-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 14px; }
+  .chart-wrap { position: relative; height: 200px; }
+
+  .table-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .table-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); white-space: nowrap; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+  .filter-btn.active { background: var(--btn-color, var(--accent)); border-color: var(--btn-color, var(--accent)); color: #000; font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); padding: 9px 18px; border-bottom: 1px solid var(--border); background: var(--bg3); font-weight: 500; }
+  td { padding: 10px 18px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .school-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+  }
+  .source-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: monospace;
+    background: rgba(62,207,170,0.12);
+    color: #3ecfaa;
+  }
+  .source-badge.pe_watch, .source-badge.school_launch, .source-badge.community {
+    background: rgba(232,200,74,0.1);
+    color: var(--accent);
+  }
+  .source-badge.nil_page { background: rgba(85,153,238,0.12); color: #5599ee; }
+
+  .search-input {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    width: 170px;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .empty { padding: 36px; text-align: center; color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 700px) {
+    .charts-row { grid-template-columns: 1fr; }
+    header { flex-direction: column; align-items: flex-start; gap: 6px; }
+    main { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="config-banner">
+  <span>⚙ SUPABASE</span>
+  <input type="text" id="sb-url" placeholder="https://xxxx.supabase.co" />
+  <input type="text" id="sb-key" placeholder="anon key..." style="width:260px;" />
+  <button onclick="connect()">Connect</button>
+  <span id="conn-status" style="margin-left:4px;"></span>
+</div>
+
+<header>
+  <div class="logo">XSEN <span>Leads Dashboard</span></div>
+  <div id="last-updated">Not connected</div>
+</header>
+
+<main>
+  <div class="summary-row">
+    <div class="metric-card" style="--card-color: var(--accent)">
+      <div class="metric-label">Total Leads</div>
+      <div class="metric-value" id="m-total">—</div>
+    </div>
+    <div class="metric-card" style="--card-color: #3ecfaa">
+      <div class="metric-label">Schools</div>
+      <div class="metric-value" id="m-schools">—</div>
+    </div>
+    <div class="metric-card" style="--card-color: #e8c84a">
+      <div class="metric-label">Manifesto</div>
+      <div class="metric-value" id="m-manifesto">—</div>
+    </div>
+    <div class="metric-card" style="--card-color: #5599ee">
+      <div class="metric-label">NIL Interest</div>
+      <div class="metric-value" id="m-nil">—</div>
+    </div>
+    <div class="metric-card" style="--card-color: #555">
+      <div class="metric-label">Unknown School</div>
+      <div class="metric-value" id="m-unknown">—</div>
+    </div>
+  </div>
+
+  <div id="school-cards"></div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Leads by School</div>
+      <div class="chart-wrap"><canvas id="schoolChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Leads by Source</div>
+      <div class="chart-wrap"><canvas id="sourceChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">All Leads</div>
+      <div class="filters" id="filter-bar">
+        <button class="filter-btn active" style="--btn-color: var(--accent)" onclick="filterLeads('all', this)">All</button>
+      </div>
+      <input class="search-input" type="text" id="search" placeholder="Search name or email…" oninput="renderTable()" />
+    </div>
+    <div id="table-container">
+      <div class="empty">Connect to Supabase to load leads</div>
+    </div>
+  </div>
+</main>
+
+<script>
+let supabaseClient = null;
+let allLeads = [];
+let activeFilter = 'all';
+let schoolChart = null;
+let sourceChart = null;
+
+// Known school brand colors — grows as you add schools
+const SCHOOL_COLORS = {
+  oklahoma:           '#cc2929',
+  okstate:            '#ff6600',
+  texas:              '#bf5700',
+  ohio_state:         '#bb0000',
+  oregon_state:       '#dc4405',
+  boise_state:        '#0033a0',
+  memphis:            '#003087',
+  ucf:                '#ba9b37',
+  appalachian_state:  '#ffcc00',
+  coastal_carolina:   '#006f51',
+  utsa:               '#f15a22',
+  new_mexico_highlands: '#007a33',
+};
+
+const PALETTE = ['#7b68ee','#3ecfaa','#5599ee','#e85555','#aa88cc','#ff8833','#44bbcc','#ee8855','#88cc44','#cc44aa'];
+
+function schoolColor(slug, index) {
+  return SCHOOL_COLORS[slug] || PALETTE[index % PALETTE.length];
+}
+
+async function connect() {
+  const url = document.getElementById('sb-url').value.trim();
+  const key = document.getElementById('sb-key').value.trim();
+  if (!url || !key) { alert('Enter Supabase URL and anon key'); return; }
+  document.getElementById('conn-status').textContent = 'Connecting…';
+  try {
+    supabaseClient = window.supabase.createClient(url, key);
+    await loadLeads();
+    document.getElementById('conn-status').textContent = '✓ Connected';
+    document.getElementById('conn-status').style.color = '#3ecfaa';
+  } catch(e) {
+    document.getElementById('conn-status').textContent = '✗ ' + e.message;
+    document.getElementById('conn-status').style.color = '#e85555';
+  }
+}
+
+async function loadLeads() {
+  const { data, error } = await supabaseClient
+    .from('xsen_leads')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  allLeads = data || [];
+  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  updateSummary();
+  buildSchoolCards();
+  buildFilterBar();
+  renderCharts();
+  renderTable();
+}
+
+function getSchoolCounts() {
+  const counts = {};
+  allLeads.forEach(r => {
+    const s = (r.school || '').toLowerCase().trim();
+    if (s && s !== 'unknown') counts[s] = (counts[s] || 0) + 1;
+  });
+  return counts;
+}
+
+function getSourceCounts() {
+  const counts = {};
+  allLeads.forEach(r => {
+    const s = (r.source || 'unknown').toLowerCase().trim();
+    counts[s] = (counts[s] || 0) + 1;
+  });
+  return counts;
+}
+
+function updateSummary() {
+  const schools = getSchoolCounts();
+  document.getElementById('m-total').textContent = allLeads.length;
+  document.getElementById('m-schools').textContent = Object.keys(schools).length;
+  document.getElementById('m-manifesto').textContent = allLeads.filter(r =>
+    ['pe_watch','school_launch'].includes((r.source||'').toLowerCase())).length;
+  document.getElementById('m-nil').textContent = allLeads.filter(r =>
+    (r.source||'').toLowerCase() === 'nil_page').length;
+  document.getElementById('m-unknown').textContent = allLeads.filter(r =>
+    !r.school || (r.school||'').toLowerCase() === 'unknown').length;
+}
+
+function buildSchoolCards() {
+  const schools = getSchoolCounts();
+  const container = document.getElementById('school-cards');
+  const sorted = Object.entries(schools).sort((a,b) => b[1]-a[1]);
+  if (!sorted.length) { container.innerHTML = ''; return; }
+  container.innerHTML = sorted.map(([slug, count], i) => {
+    const color = schoolColor(slug, i);
+    const label = slug.replace(/_/g,' ');
+    return `<div class="school-card" style="--school-color:${color}">
+      <div class="metric-label">${label}</div>
+      <div class="metric-value">${count}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildFilterBar() {
+  const schools = getSchoolCounts();
+  const sources = getSourceCounts();
+  let html = `<button class="filter-btn active" style="--btn-color:var(--accent)" onclick="filterLeads('all',this)">All</button>`;
+
+  // Dynamic school filters
+  Object.entries(schools).sort((a,b) => b[1]-a[1]).forEach(([slug, count], i) => {
+    const color = schoolColor(slug, i);
+    const label = slug.replace(/_/g,' ');
+    html += `<button class="filter-btn" style="--btn-color:${color}" onclick="filterLeads('school:${slug}',this)">${label} (${count})</button>`;
+  });
+
+  // Fixed source filters — only show if that source has leads
+  [
+    { key: 'community',     label: 'Community' },
+    { key: 'nil_page',      label: 'NIL' },
+    { key: 'pe_watch',      label: 'PE Watch' },
+    { key: 'school_launch', label: 'School Launch' },
+  ].forEach(({ key, label }) => {
+    if (sources[key]) html += `<button class="filter-btn" onclick="filterLeads('source:${key}',this)">${label} (${sources[key]})</button>`;
+  });
+
+  const unknownCount = allLeads.filter(r => !r.school || (r.school||'').toLowerCase() === 'unknown').length;
+  if (unknownCount) html += `<button class="filter-btn" onclick="filterLeads('unknown',this)">Unknown (${unknownCount})</button>`;
+
+  document.getElementById('filter-bar').innerHTML = html;
+}
+
+function renderCharts() {
+  const schools = getSchoolCounts();
+  const sources = getSourceCounts();
+
+  const schoolEntries = Object.entries(schools).sort((a,b) => b[1]-a[1]);
+  if (schoolChart) schoolChart.destroy();
+  schoolChart = new Chart(document.getElementById('schoolChart'), {
+    type: 'doughnut',
+    data: {
+      labels: schoolEntries.map(([s]) => s.replace(/_/g,' ')),
+      datasets: [{
+        data: schoolEntries.map(([,c]) => c),
+        backgroundColor: schoolEntries.map(([s],i) => schoolColor(s,i)),
+        borderWidth: 2, borderColor: '#111118'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: true, position: 'right', labels: { color: '#888', font: { size: 10 }, boxWidth: 10, padding: 8 } } }
+    }
+  });
+
+  const sourceEntries = Object.entries(sources).sort((a,b) => b[1]-a[1]);
+  const srcPalette = ['#e8c84a','#3ecfaa','#5599ee','#e85555','#aa88cc','#ff8833'];
+  if (sourceChart) sourceChart.destroy();
+  sourceChart = new Chart(document.getElementById('sourceChart'), {
+    type: 'bar',
+    data: {
+      labels: sourceEntries.map(([s]) => s),
+      datasets: [{
+        data: sourceEntries.map(([,c]) => c),
+        backgroundColor: sourceEntries.map((_,i) => srcPalette[i % srcPalette.length]),
+        borderRadius: 4, borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#666', font: { size: 10 }, autoSkip: false, maxRotation: 30 }, grid: { display: false } },
+        y: { ticks: { color: '#666', font: { size: 10 }, stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+}
+
+function filterLeads(filter, btn) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  const search = (document.getElementById('search')?.value || '').toLowerCase();
+  let rows = allLeads;
+
+  if (activeFilter !== 'all') {
+    rows = rows.filter(r => {
+      const school = (r.school || '').toLowerCase().trim();
+      const source = (r.source || '').toLowerCase().trim();
+      if (activeFilter.startsWith('school:')) return school === activeFilter.slice(7);
+      if (activeFilter.startsWith('source:')) return source === activeFilter.slice(7);
+      if (activeFilter === 'unknown') return !r.school || school === 'unknown';
+      return false;
+    });
+  }
+
+  if (search) {
+    rows = rows.filter(r =>
+      (r.name||'').toLowerCase().includes(search) ||
+      (r.email||'').toLowerCase().includes(search)
+    );
+  }
+
+  const container = document.getElementById('table-container');
+  if (!rows.length) { container.innerHTML = '<div class="empty">No leads match this filter</div>'; return; }
+
+  const schoolBadge = (s) => {
+    const slug = (s||'unknown').toLowerCase().trim();
+    const color = SCHOOL_COLORS[slug] || '#888';
+    return `<span class="school-badge" style="background:${color}22;color:${color}">${slug.replace(/_/g,' ')}</span>`;
+  };
+
+  const sourceBadge = (s) => {
+    const slug = (s||'unknown').toLowerCase().trim();
+    return `<span class="source-badge ${slug}">${slug}</span>`;
+  };
+
+  container.innerHTML = `
+    <table>
+      <thead><tr>
+        <th style="width:80px">ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>School</th>
+        <th>Source</th>
+        <th>Date</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr>
+          <td style="color:#555;font-size:11px;font-family:monospace">${(r.id||'').substring(0,8)}…</td>
+          <td>${r.name||'—'}</td>
+          <td style="color:#aaa">${r.email||'—'}</td>
+          <td>${schoolBadge(r.school)}</td>
+          <td>${sourceBadge(r.source)}</td>
+          <td style="color:#555;font-size:11px">${r.created_at ? new Date(r.created_at).toLocaleDateString() : '—'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+</script>
+</body>
+</html>
