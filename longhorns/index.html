@@ -911,7 +911,7 @@
           .from('xsen_announcements')
           .select('*')
           .eq('active', true)
-          .or('school.eq.ALL,school.eq.TX')
+          .or('school.eq.ALL,school.eq.texas')
           .order('created_at', { ascending: false })
           .limit(1);
 
