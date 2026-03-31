@@ -329,6 +329,70 @@
     .goliath li::before { color: var(--crimson-bright); }
     .david li::before { color: var(--gold); }
 
+    /* ── PROJECT RUDY ── */
+    .project-rudy {
+      background: var(--paper-warm);
+    }
+    .project-rudy h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .project-rudy .subhead {
+      font-size: 1rem;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    .project-rudy p {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--text);
+      margin-bottom: 1.4rem;
+    }
+    .rudy-facts {
+      background: var(--ink);
+      padding: 1.75rem 2rem;
+      margin: 2rem 0;
+      border-left: 3px solid var(--crimson-bright);
+    }
+    .rudy-facts-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--crimson-bright);
+      margin-bottom: 1rem;
+    }
+    .rudy-facts ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .rudy-facts ul li {
+      font-size: 0.95rem;
+      color: var(--paper-mid);
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .rudy-facts ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--crimson-bright);
+      opacity: 0.7;
+    }
+    .rudy-source {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-top: 1.5rem;
+    }
+
     /* ── PE WATCH ── */
     .pe-watch {
       background: var(--paper-warm);
@@ -742,6 +806,33 @@
     </div>
   </section>
 
+  <!-- PROJECT RUDY -->
+  <section class="project-rudy">
+    <div class="container">
+      <div class="section-label">What We're Up Against</div>
+      <h2>The threat has a name.<br>It's called Project Rudy.</h2>
+      <p class="subhead">This isn't a conspiracy theory. It's been reported by CBS Sports, Yahoo Sports, and Sports Illustrated.</p>
+
+      <p>In October 2024, a proposal called Project Rudy quietly began circulating among college athletics leadership. Spearheaded by former Disney executives — Evan Richter, Kevin Mayer, and Tom Staggs — now working at a private equity firm called Smash Capital, the plan would restructure college football into a 70-team super league backed by $9 billion in private capital. More than 25 athletic directors from Power Four conferences have already seen the presentation.</p>
+
+      <div class="rudy-facts">
+        <div class="rudy-facts-label">What Project Rudy Would Mean for Fans</div>
+        <ul>
+          <li>A 70-team structure that permanently excludes the bottom tier of college football programs</li>
+          <li>All games against smaller schools eliminated — engineered out of existence because they don't fit the media package</li>
+          <li>One consolidated media rights deal replacing all conference agreements — controlled by private equity, not fans</li>
+          <li>A tiered revenue system where the top 16 schools earn up to $250 million per year while others get table scraps</li>
+          <li>No more Boise State upsets. No more App State moments. No more Cinderella stories. They don't maximize a media package.</li>
+          <li>A system that begins after current media deals expire — quietly, around 2031 — by which point the decisions will already be made</li>
+        </ul>
+      </div>
+
+      <p>We're not here to stop private equity with a hashtag. But we believe fans deserve to know what's being decided in their name — before it's decided. An organized, vocal fan base is harder to ignore than a passive one. That's why we're building this.</p>
+
+      <p class="rudy-source">Sources: CBS Sports, Yahoo Sports, On3, Sports Illustrated — October–November 2024</p>
+    </div>
+  </section>
+
   <!-- PE WATCH -->
   <section class="pe-watch">
     <div class="container">
@@ -953,3 +1044,5 @@ const _supabase = window.supabase.createClient(
     });
   });
 </script>
+</body>
+</html>
