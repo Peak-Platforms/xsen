@@ -266,7 +266,7 @@
       <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
     </div>
 
-    <button id="fanToggleBtn" type="button">
+   <button id="fanToggleBtn" type="button" style="display:none;">
       📣 Message the Broadcaster <i class="fan-toggle-arrow">▾</i>
     </button>
     <div class="fan-message-panel">
@@ -400,19 +400,22 @@
       let activeThumbIndex = 0;
 
       // ── Tab switching ──
-      tabVideo.addEventListener('click', () => {
-        tabVideo.classList.add('active');
-        tabRadio.classList.remove('active');
-        videoPanel.style.display = 'block';
-        radioPanel.style.display = 'none';
-      });
-      tabRadio.addEventListener('click', () => {
-        tabRadio.classList.add('active');
-        tabVideo.classList.remove('active');
-        radioPanel.style.display = 'block';
-        videoPanel.style.display = 'none';
-      });
-
+     tabVideo.addEventListener('click', () => {
+  tabVideo.classList.add('active');
+  tabRadio.classList.remove('active');
+  videoPanel.style.display = 'block';
+  radioPanel.style.display = 'none';
+  fanToggleBtn.style.display = 'none';
+  fanPanel.classList.remove('open');
+  fanToggleBtn.classList.remove('open');
+});
+tabRadio.addEventListener('click', () => {
+  tabRadio.classList.add('active');
+  tabVideo.classList.remove('active');
+  radioPanel.style.display = 'block';
+  videoPanel.style.display = 'none';
+  fanToggleBtn.style.display = 'flex';
+});
       // ── Load video into main player ──
       function loadVideoInPanel(videoId, title, thumbIndex) {
         activeThumbIndex = thumbIndex;
