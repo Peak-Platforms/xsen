@@ -91,6 +91,7 @@
     .media-tabs { display: flex; background: #111; border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .media-tab { flex: 1; text-align: center; padding: 9px; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; color: var(--text-muted); }
     .media-tab.active { color: var(--crimson); border-bottom-color: var(--crimson); }
+    #tabLiveVideo { display: none; }
 
     /* ── Video panel ── */
     #videoPanel { background: #000; flex-shrink: 0; }
@@ -109,6 +110,12 @@
     .video-thumb.active { border-color: var(--crimson); box-shadow: 0 0 0 1px var(--crimson); }
     .video-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
     .video-thumb-title { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); font-size: 9px; color: rgba(240,236,224,0.85); padding: 3px 5px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+    /* ── Live Video panel ── */
+    #liveVideoPanel { display: none; background: #000; flex-shrink: 0; }
+    #liveVideoPanel .live-video-wrap { position: relative; aspect-ratio: 16/9; background: #111; }
+    #liveVideoFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    #liveChatFrame { width: 100%; height: 200px; border: none; border-top: 1px solid var(--border); display: block; background: #fff; }
 
     /* ── Radio panel ── */
     #radioPanel { display: none; background: #111; padding: 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
@@ -139,7 +146,6 @@
     .chat-messages::-webkit-scrollbar { width: 4px; }
     .chat-messages::-webkit-scrollbar-track { background: transparent; }
     .chat-messages::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
-
     .message { margin-bottom: 10px; padding: 10px 14px; border-radius: 10px; max-width: 100%; line-height: 1.55; font-size: 14px; animation: msgIn 0.22s ease both; }
     @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .message.bot { background: var(--surface-2); border: 1px solid rgba(255,255,255,0.06); color: var(--text); border-radius: 4px 10px 10px 10px; }
@@ -237,6 +243,7 @@
     <!-- ── Media tabs ── -->
     <div class="media-tabs">
       <div class="media-tab active" id="tabVideo">🎬 Video</div>
+      <div class="media-tab" id="tabLiveVideo">🔴 Live</div>
       <div class="media-tab" id="tabRadio">📻 Radio</div>
     </div>
 
@@ -253,6 +260,14 @@
       <div id="videoThumbs" style="display:none; gap:6px; padding:8px 10px; background:#0d0d0d; border-bottom:1px solid var(--border);"></div>
     </div>
 
+    <!-- ── Live Video panel ── -->
+    <div id="liveVideoPanel">
+      <div class="live-video-wrap">
+        <iframe id="liveVideoFrame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <iframe id="liveChatFrame" allowfullscreen></iframe>
+    </div>
+
     <!-- ── Radio panel ── -->
     <div id="radioPanel">
       <div class="radio-header">
@@ -266,7 +281,7 @@
       <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
     </div>
 
-   <button id="fanToggleBtn" type="button" style="display:none;">
+    <button id="fanToggleBtn" type="button" style="display:none;">
       📣 Message the Broadcaster <i class="fan-toggle-arrow">▾</i>
     </button>
     <div class="fan-message-panel">
@@ -370,52 +385,102 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      const form           = document.getElementById('chatForm');
-      const input          = document.getElementById('userInput');
-      const messages       = document.getElementById('messages');
-      const audioEl        = document.getElementById('xsenAudio');
-      const audioStatus    = document.getElementById('audioStatus');
-      const appLiveBadge   = document.getElementById('appLiveBadge');
+      const form            = document.getElementById('chatForm');
+      const input           = document.getElementById('userInput');
+      const messages        = document.getElementById('messages');
+      const audioEl         = document.getElementById('xsenAudio');
+      const audioStatus     = document.getElementById('audioStatus');
+      const appLiveBadge    = document.getElementById('appLiveBadge');
       const appStreamerName = document.getElementById('appStreamerName');
-      const donateBtn      = document.getElementById('donateBtn');
-      const fanNameInput   = document.getElementById('fanName');
-      const fanMsgInput    = document.getElementById('fanMessage');
-      const sendFanMsgBtn  = document.getElementById('sendFanMessage');
-      const fanMsgStatus   = document.getElementById('fanMessageStatus');
-      const manageSubLink  = document.getElementById('manageSubLink');
-      const paywallCard    = document.getElementById('paywallCard');
-      const activateEmail  = document.getElementById('activateEmail');
-      const activateBtn    = document.getElementById('activateBtn');
-      const activateStatus = document.getElementById('activateStatus');
-      const mainVideoFrame = document.getElementById('mainVideoFrame');
+      const donateBtn       = document.getElementById('donateBtn');
+      const fanNameInput    = document.getElementById('fanName');
+      const fanMsgInput     = document.getElementById('fanMessage');
+      const sendFanMsgBtn   = document.getElementById('sendFanMessage');
+      const fanMsgStatus    = document.getElementById('fanMessageStatus');
+      const manageSubLink   = document.getElementById('manageSubLink');
+      const paywallCard     = document.getElementById('paywallCard');
+      const activateEmail   = document.getElementById('activateEmail');
+      const activateBtn     = document.getElementById('activateBtn');
+      const activateStatus  = document.getElementById('activateStatus');
+      const mainVideoFrame  = document.getElementById('mainVideoFrame');
       const videoPlaceholder = document.getElementById('videoPlaceholder');
       const nowPlayingLabel  = document.getElementById('nowPlayingLabel');
       const videoThumbs      = document.getElementById('videoThumbs');
       const tabVideo         = document.getElementById('tabVideo');
+      const tabLiveVideo     = document.getElementById('tabLiveVideo');
       const tabRadio         = document.getElementById('tabRadio');
       const videoPanel       = document.getElementById('videoPanel');
+      const liveVideoPanel   = document.getElementById('liveVideoPanel');
       const radioPanel       = document.getElementById('radioPanel');
+      const liveVideoFrame   = document.getElementById('liveVideoFrame');
+      const liveChatFrame    = document.getElementById('liveChatFrame');
+      const fanToggleBtn     = document.getElementById('fanToggleBtn');
+      const fanPanel         = document.querySelector('.fan-message-panel');
 
       let currentVideos = [];
       let activeThumbIndex = 0;
 
+      // ── Helper: hide all panels ──
+      function hideAll() {
+        videoPanel.style.display    = 'none';
+        liveVideoPanel.style.display = 'none';
+        radioPanel.style.display    = 'none';
+        fanToggleBtn.style.display  = 'none';
+        fanPanel.classList.remove('open');
+        fanToggleBtn.classList.remove('open');
+        [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
+      }
+
       // ── Tab switching ──
-     tabVideo.addEventListener('click', () => {
-  tabVideo.classList.add('active');
-  tabRadio.classList.remove('active');
-  videoPanel.style.display = 'block';
-  radioPanel.style.display = 'none';
-  fanToggleBtn.style.display = 'none';
-  fanPanel.classList.remove('open');
-  fanToggleBtn.classList.remove('open');
-});
-tabRadio.addEventListener('click', () => {
-  tabRadio.classList.add('active');
-  tabVideo.classList.remove('active');
-  radioPanel.style.display = 'block';
-  videoPanel.style.display = 'none';
-  fanToggleBtn.style.display = 'flex';
-});
+      tabVideo.addEventListener('click', () => {
+        hideAll();
+        tabVideo.classList.add('active');
+        videoPanel.style.display = 'block';
+      });
+
+      tabLiveVideo.addEventListener('click', () => {
+        hideAll();
+        tabLiveVideo.classList.add('active');
+        liveVideoPanel.style.display = 'block';
+      });
+
+      tabRadio.addEventListener('click', () => {
+        hideAll();
+        tabRadio.classList.add('active');
+        radioPanel.style.display = 'block';
+        fanToggleBtn.style.display = 'flex';
+      });
+
+      // ── YouTube Live: check Supabase every 30s ──
+      async function checkYTLive() {
+        try {
+          const { data } = await window.supabase
+            .from('xsen_stations')
+            .select('youtube_live_id')
+            .eq('school', 'sooners')
+            .single();
+          const streamId = data?.youtube_live_id || '';
+          if (streamId) {
+            tabLiveVideo.style.display = 'block';
+            if (liveVideoFrame.getAttribute('data-stream') !== streamId) {
+              liveVideoFrame.setAttribute('data-stream', streamId);
+              liveVideoFrame.src = `https://www.youtube.com/embed/${streamId}?autoplay=1&mute=0`;
+              liveChatFrame.src  = `https://www.youtube.com/live_chat?v=${streamId}&embed_domain=xsen.fun`;
+            }
+          } else {
+            tabLiveVideo.style.display = 'none';
+            if (tabLiveVideo.classList.contains('active')) {
+              tabVideo.click();
+            }
+            liveVideoFrame.removeAttribute('data-stream');
+            liveVideoFrame.src = '';
+            liveChatFrame.src  = '';
+          }
+        } catch(e) {}
+      }
+      checkYTLive();
+      setInterval(checkYTLive, 30000);
+
       // ── Load video into main player ──
       function loadVideoInPanel(videoId, title, thumbIndex) {
         activeThumbIndex = thumbIndex;
@@ -429,11 +494,9 @@ tabRadio.addEventListener('click', () => {
         videoPlaceholder.style.display = 'none';
         nowPlayingLabel.textContent = title || 'Now playing';
         nowPlayingLabel.style.display = 'block';
-        // Update active thumb
         document.querySelectorAll('.video-thumb').forEach((t, i) => {
           t.classList.toggle('active', i === thumbIndex);
         });
-        // Switch to video tab
         tabVideo.click();
       }
 
@@ -452,7 +515,6 @@ tabRadio.addEventListener('click', () => {
           thumb.addEventListener('click', () => loadVideoInPanel(videoId, v.title, i));
           videoThumbs.appendChild(thumb);
         });
-        // Auto-load first video
         const firstId = videos[0].url.includes('v=') ? videos[0].url.split('v=')[1].split('&')[0]
                        : videos[0].url.includes('youtu.be/') ? videos[0].url.split('youtu.be/')[1]
                        : videos[0].url.split('?v=').pop();
@@ -536,27 +598,21 @@ tabRadio.addEventListener('click', () => {
         const suggestedMatch = text.match(/SUGGESTED:\n([\s\S]*?)$/m);
         let cleanText = text;
         let suggestions = [];
-
         if (suggestedMatch) {
           cleanText = text.replace(suggestedMatch[0], '').trim();
           suggestions = suggestedMatch[1].split('\n').map(l => l.replace(/^[-•]\s*/, '').trim()).filter(Boolean);
         }
-
-        // Extract all video URLs from response
         const videoUrls = [];
         const videoRegex = /(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/gi;
         let match;
         while ((match = videoRegex.exec(cleanText)) !== null) {
           videoUrls.push(match[1]);
         }
-
-        // If videos found, render them in the panel
         if (videoUrls.length > 0) {
           const videoObjects = videoUrls.map((url, i) => {
             const vId = url.split('?v=')[1];
             return { url, title: `Highlight ${i + 1}`, videoId: vId };
           });
-          // Try to get titles from text around the URLs
           cleanText.split('\n').forEach(line => {
             const m = line.match(/(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/);
             if (m) {
@@ -568,20 +624,13 @@ tabRadio.addEventListener('click', () => {
           currentVideos = videoObjects;
           renderThumbs(videoObjects);
         }
-
-        // Render text lines (skip bare video URLs)
         cleanText.split('\n').forEach(line => {
           const t = line.trim();
           if (!t) return;
-          if (/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)) {
-            playAudio();
-            return;
-          }
-          // Skip lines that are only a video URL
+          if (/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)) { playAudio(); return; }
           if (/^https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+$/.test(t)) return;
           addMsg(t, 'bot');
         });
-
         if (suggestions.length > 0) {
           const suggestDiv = document.createElement('div');
           suggestDiv.className = 'suggestions';
@@ -607,7 +656,6 @@ tabRadio.addEventListener('click', () => {
       }
 
       function playAudio() {
-        radioPanel.style.display = 'block';
         tabRadio.click();
         audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
         audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Playing…'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
@@ -615,8 +663,6 @@ tabRadio.addEventListener('click', () => {
 
       donateBtn?.addEventListener('click', () => { window.open(DONATE_URL, '_blank', 'noopener'); });
 
-      const fanToggleBtn = document.getElementById('fanToggleBtn');
-      const fanPanel     = document.querySelector('.fan-message-panel');
       fanToggleBtn?.addEventListener('click', () => {
         const open = fanPanel.classList.toggle('open');
         fanToggleBtn.classList.toggle('open', open);
