@@ -360,7 +360,7 @@
     const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_sooners/radio.mp3';
     const NOW_PLAYING_URL   = 'https://stream.xsen.fun/api/nowplaying/xsen_sooners';
     const DONATE_URL        = 'https://xsen.fun/nil?school=sooners';
-    const FREE_MESSAGE_LIMIT = 500;
+    const FREE_MESSAGE_LIMIT = 5;
 
     function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
     function getMessageCount() { return parseInt(localStorage.getItem('xsen_message_count') || '0'); }
@@ -829,7 +829,7 @@
 
         localStorage.setItem('xsen_push_subscribed', 'true');
         updateNotifyBtn('subscribed');
-        showToast('🔔 You'll get Sooner alerts! Boomer Sooner!');
+        showToast(`🔔 You'll get Sooner alerts! Boomer Sooner!`);
       } catch (err) {
         console.error('[PWA] Push subscribe error:', err);
         showToast('Could not enable notifications. Try again.');
