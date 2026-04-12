@@ -360,7 +360,7 @@
     const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_sooners/radio.mp3';
     const NOW_PLAYING_URL   = 'https://stream.xsen.fun/api/nowplaying/xsen_sooners';
     const DONATE_URL        = 'https://xsen.fun/nil?school=sooners';
-    const FREE_MESSAGE_LIMIT = 500;
+    const FREE_MESSAGE_LIMIT = 5;
 
     function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
     function getMessageCount() { return parseInt(localStorage.getItem('xsen_message_count') || '0'); }
@@ -752,7 +752,7 @@
     'use strict';
 
     const SCHOOL_ID     = 'sooners';
-    const ORCHESTRATOR  = 'https://xsen-orchestrator-production.up.railway.app';
+    const ORCHESTRATOR  = 'https://glorious-appreciation-production.up.railway.app';
     const notifyBtn     = document.getElementById('notifyBtn');
 
     // ── Register Service Worker ──────────────────────────────────────────────
