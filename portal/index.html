@@ -233,7 +233,7 @@
           <span class="panel-title">Search Queries</span>
           <span class="panel-count" id="query-count">0 active</span>
         </div>
-        <div style="padding:1.25rem 1.5rem;">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
           <p class="queries-note">These queries run on Google News every scrape cycle. Add terms specific to your school, conference, or key players. More specific = better results.</p>
           <div class="add-query-row" style="margin-top:1rem;">
             <input class="query-input" id="new-query-input" type="text" placeholder='e.g. "Oklahoma Sooners NIL deal"' onkeydown="if(event.key==='Enter')addQuery()">
@@ -357,7 +357,7 @@
             <button class="btn-add" onclick="saveLiveStream()">GO LIVE</button>
             <button class="btn-reject" onclick="clearLiveStream()" style="padding:0.6rem 1rem;">END STREAM</button>
           </div>
-          <p class="queries-note">Find your stream ID in YouTube Studio → Go Live. It's the last part of your stream URL: youtube.com/watch?v=<strong style="color:var(--accent);">THIS_PART</strong></p>
+          <p class="queries-note">Find your stream ID in YouTube Studio &rarr; Go Live. It's the last part of your stream URL: youtube.com/watch?v=<strong style="color:var(--accent);">THIS_PART</strong></p>
         </div>
         <div style="padding:1.25rem 1.5rem;">
           <label class="field-label">Preview</label>
@@ -376,7 +376,7 @@
   <div class="modal">
     <div class="modal-header">
       <span class="modal-title">Script Preview</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
     </div>
     <div class="modal-body">
       <div class="modal-ep-title" id="modal-title"></div>
@@ -394,12 +394,34 @@
 <script>
 const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+const ORCHESTRATOR = 'https://glorious-appreciation-production.up.railway.app';
+
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentStation = null;
 let currentEpisodeId = null;
 let currentQueries = [];
+
+// ── PUSH NOTIFICATION HELPER ──────────────────────────────────────────────────
+async function notifySubscribers(schoolId, message, title) {
+  try {
+    // Uses /announcements/notify — no API key needed, validated server-side
+    await fetch(`${ORCHESTRATOR}/announcements/notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        school:  currentStation.school,
+        schoolId: schoolId,
+        message: message,
+        type:    document.getElementById('ann-type')?.value || 'info'
+      })
+    });
+    console.log('✅ Push notification sent');
+  } catch (err) {
+    console.warn('Push notification failed (non-critical):', err.message);
+  }
+}
 
 async function login() {
   const school = document.getElementById('login-school').value.trim().toUpperCase();
@@ -497,9 +519,9 @@ async function loadQueue() {
   if (!data?.length) { container.innerHTML = '<div class="empty">NO EPISODES AWAITING REVIEW</div>'; return; }
   container.innerHTML = data.map(ep => `
     <div class="episode-card" id="ep-${ep.id}">
-      <div class="ep-school-tag">${ep.school} · ${(ep.episode_type||'').replace('_',' ').toUpperCase()}</div>
+      <div class="ep-school-tag">${ep.school} &middot; ${(ep.episode_type||'').replace('_',' ').toUpperCase()}</div>
       <div class="ep-title">${ep.title}</div>
-      <div class="ep-meta"><span>~${Math.round((ep.duration_estimate||0)/60)} min</span><span>Score: ${ep.score||'—'}/10</span></div>
+      <div class="ep-meta"><span>~${Math.round((ep.duration_estimate||0)/60)} min</span><span>Score: ${ep.score||'&mdash;'}/10</span></div>
       <div class="ep-actions">
         <button class="btn-preview" onclick='previewScript("${ep.id}", ${JSON.stringify(ep.title)}, ${JSON.stringify(ep.script||"")})'>PREVIEW</button>
         <button class="btn-approve" onclick="updateEpisode('${ep.id}','approved')">APPROVE</button>
@@ -610,11 +632,11 @@ async function loadAnnouncements() {
     <div class="episode-card" id="ann-${a.id}" style="opacity:${a.active ? 1 : 0.4}">
       <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
         <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:${typeColors[a.type]||'var(--green)'};text-transform:uppercase;">${a.type}</span>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);">→ ${a.school}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);">&rarr; ${a.school}</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-left:auto;">${new Date(a.created_at).toLocaleDateString()}</span>
       </div>
       <div class="ep-title" style="font-size:0.85rem;margin-bottom:0.5rem;">${a.message}</div>
-      ${a.link_text ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:0.5rem;">CTA: ${a.link_text} → ${a.link_url}</div>` : ''}
+      ${a.link_text ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:0.5rem;">CTA: ${a.link_text} &rarr; ${a.link_url}</div>` : ''}
       <div class="ep-actions">
         <button class="btn-${a.active ? 'reject' : 'approve'}" onclick="toggleAnnouncement('${a.id}', ${!a.active})">${a.active ? 'DEACTIVATE' : 'REACTIVATE'}</button>
         <button class="btn-remove" onclick="deleteAnnouncement('${a.id}')" style="margin-left:auto;">DELETE</button>
@@ -625,12 +647,12 @@ async function loadAnnouncements() {
 async function postAnnouncement() {
   const message = document.getElementById('ann-message').value.trim();
   if (!message) { showToast('Enter a message', 'error'); return; }
-  const type    = document.getElementById('ann-type').value;
-  const school  = document.getElementById('ann-school').value;
-  const expires = document.getElementById('ann-expires').value;
+  const type      = document.getElementById('ann-type').value;
+  const school    = document.getElementById('ann-school').value;
+  const expires   = document.getElementById('ann-expires').value;
   const link_text = document.getElementById('ann-link-text').value.trim();
   const link_url  = document.getElementById('ann-link-url').value.trim();
-  let expires_at = null;
+  let expires_at  = null;
   if (expires === '1h')  expires_at = new Date(Date.now() + 3600000).toISOString();
   if (expires === '24h') expires_at = new Date(Date.now() + 86400000).toISOString();
   if (expires === '7d')  expires_at = new Date(Date.now() + 604800000).toISOString();
@@ -643,6 +665,9 @@ async function postAnnouncement() {
   showToast('Announcement posted', 'success');
   loadAnnouncements();
   loadAnnouncementBar();
+  // ── Fire push notification to all school subscribers ──────────────────────
+  const typeLabels = { info: 'ℹ️', warning: '⚠️', critical: '🚨' };
+  await notifySubscribers(targetSchool, message, `${typeLabels[type] || '🏈'} XSEN Sooners`);
 }
 
 async function toggleAnnouncement(id, active) {
@@ -672,7 +697,7 @@ async function loadAnnouncementBar() {
     const c = colors[a.type] || colors.info;
     return `<div style="background:${c.bg};border-bottom:1px solid ${c.border};padding:0.55rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.05em;color:${c.text};">
       <span>${a.message}</span>
-      ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} →</a>` : ''}
+      ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} &rarr;</a>` : ''}
     </div>`;
   }).join('');
 }
@@ -688,9 +713,9 @@ async function loadSocialPosts() {
       <div class="ep-title">${p.xsen_episodes?.title || ''}</div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin:0.5rem 0;line-height:1.6;">${p.caption || ''}</div>
       <div class="ep-actions" style="flex-wrap:wrap;gap:0.5rem;">
-        <a href="${p.video_url}" target="_blank" class="btn-preview" style="text-decoration:none;">▶ PREVIEW</a>
+        <a href="${p.video_url}" target="_blank" class="btn-preview" style="text-decoration:none;">&#9654; PREVIEW</a>
         <button class="btn-approve" onclick="copyCaption('${p.id}', ${JSON.stringify(p.caption || '')})">COPY CAPTION</button>
-        <a href="${p.video_url}" download class="btn-approve" style="text-decoration:none;background:var(--muted);">↓ DOWNLOAD</a>
+        <a href="${p.video_url}" download class="btn-approve" style="text-decoration:none;background:var(--muted);">&#8595; DOWNLOAD</a>
         <button class="btn-reject" onclick="markPosted('${p.id}')">MARK POSTED</button>
       </div>
     </div>`).join('');
@@ -729,6 +754,16 @@ async function saveLiveStream() {
   badge.textContent = '🔴 LIVE';
   badge.style.color = 'var(--red)';
   showToast('Stream is now live for fans', 'success');
+  // ── Notify subscribers that stream is live ────────────────────────────────
+  try {
+    await fetch(`${ORCHESTRATOR}/livestream/notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ school: currentStation.school, streamId: id })
+    });
+  } catch (err) {
+    console.warn('Live stream push failed (non-critical):', err.message);
+  }
 }
 
 async function clearLiveStream() {
@@ -760,3 +795,4 @@ if (saved) { currentStation = JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
