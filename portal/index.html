@@ -497,6 +497,14 @@ async function toggleStation() {
   sessionStorage.setItem('xsen_station', JSON.stringify(currentStation));
   updateOnAirIndicator(active);
   showToast(active ? 'Station is now LIVE' : 'Station paused', active ? 'success' : '');
+  // ── Notify fans when radio broadcast goes live ────────────────────────────
+  if (active) {
+    await notifySubscribers(
+      currentStation.school,
+      `${currentStation.name} Radio is LIVE on XSEN — tune in now!`,
+      '📻 XSEN Radio is Live!'
+    );
+  }
 }
 
 async function loadStats() {
@@ -795,4 +803,5 @@ if (saved) { currentStation = JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
