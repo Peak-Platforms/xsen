@@ -127,8 +127,9 @@
     .radio-label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); }
     #appLiveBadge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: #2a2a2a; color: #9ca3af; border: 1px solid #3a3a3a; transition: all 0.3s; white-space: nowrap; }
     #appLiveBadge.live { background: rgba(75,46,131,0.15); color: #a78bfa; border: 1px solid rgba(75,46,131,0.4); }
-    .radio-coming-soon { text-align: center; padding: 16px 0; color: var(--text-muted); font-size: 13px; line-height: 1.6; }
-    .radio-coming-soon strong { color: var(--gold); display: block; font-family: var(--font-display); font-size: 15px; letter-spacing: 1px; margin-bottom: 4px; }
+    #appStreamerName { display: none; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; text-align: center; margin-bottom: 6px; }
+    #xsenAudio { width: 100%; height: 36px; }
+    .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; letter-spacing: 0.3px; }
 
     /* ── Chat messages ── */
     .chat-messages { flex: 1; padding: 16px 14px; overflow-y: auto; background: var(--ink); background-image: radial-gradient(ellipse 70% 40% at 50% 100%, rgba(75,46,131,0.08) 0%, transparent 70%); min-height: 120px; scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent; }
@@ -179,6 +180,12 @@
     #announcement-bar .xsen-announcement strong { color: #f0ece0; }
     #announcement-bar .xsen-announcement .ann-link { background: var(--purple); color: #fff; border: none; border-radius: 4px; padding: 5px 12px; font-weight: 700; font-size: 11px; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
     #announcement-bar .xsen-announcement .ann-dismiss { background: none; border: none; color: rgba(240,236,224,0.3); font-size: 11px; cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
+
+    #push-optin-banner { display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 998; background: #1a1a1a; border: 1px solid rgba(75,46,131,0.3); border-radius: 8px; padding: 14px 20px; gap: 14px; align-items: center; max-width: 480px; width: calc(100% - 40px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+    .push-optin-text { font-size: 13px; color: rgba(245,245,240,0.65); flex: 1; line-height: 1.5; }
+    .push-optin-text strong { color: #f5f5f0; }
+    #push-optin-yes { background: var(--purple); color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    #push-optin-no { background: none; border: none; color: rgba(245,245,240,0.3); font-size: 12px; cursor: pointer; white-space: nowrap; }
 
     @media (max-width: 520px) {
       .chat-container { margin: 0; border-radius: 0; border: none; min-height: 100vh; box-shadow: none; }
@@ -234,18 +241,19 @@
     <div id="radioPanel">
       <div class="radio-header">
         <div class="radio-label">📻 Cowboys Cast</div>
-        <span id="appLiveBadge">COMING SOON</span>
+        <span id="appLiveBadge">PLAYLIST</span>
       </div>
-      <div class="radio-coming-soon">
-        <strong>Live Radio · Coming Soon</strong>
-        Cowboys Cast is on the way — live play-by-play, coaches shows, and fan programming for Highlands athletics.
-      </div>
+      <div id="appStreamerName"></div>
+      <audio id="xsenAudio" preload="none" playsinline controls>
+        <source src="" type="audio/mpeg" />
+      </audio>
+      <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
     </div>
 
     <div id="paywallCard">
       <h3>👋 You've used your free messages!</h3>
       <p>Start your 3-day free trial to keep chatting with Cowboys Bot — no charge today.</p>
-      <a href="#" class="trial-btn">🚀 Start Free Trial</a>
+      <a href="https://xsen.fun/nmhu" class="trial-btn">🚀 Start Free Trial</a>
       <div class="divider">— Already signed up? Activate below —</div>
       <div id="activateForm">
         <input type="email" id="activateEmail" placeholder="Enter your email to activate" />
@@ -256,7 +264,7 @@
 
     <div id="messages" class="chat-messages">
       <div class="message bot">
-        🤠 Cowboy Nation! Ask me anything about New Mexico Highlands Cowboys and Cowgirls — football, basketball, wrestling, schedules, rosters, or RMAC standings.
+        🤠 Cowboys Nation! Ask me anything about New Mexico Highlands Cowboys and Cowgirls — football, basketball, wrestling, schedules, rosters, or RMAC standings.
       </div>
     </div>
 
@@ -272,6 +280,12 @@
 
   </div>
 
+  <div id="push-optin-banner">
+    <div class="push-optin-text"><strong>Get notified during big moments.</strong> We'll alert you for Cowboys game alerts and big plays.</div>
+    <button id="push-optin-yes">Sure</button>
+    <button id="push-optin-no">No thanks</button>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.supabase = window.supabase.createClient(
@@ -281,11 +295,18 @@
   </script>
 
   <script>
-    const ORCHESTRATOR_URL  = 'https://glorious-appreciation-production.up.railway.app';
-    const CHAT_API_URL      = 'https://glorious-appreciation-production.up.railway.app/chat';
-    const AUTH_SERVICE_URL  = 'https://energetic-joy-production.up.railway.app';
-    const DONATE_URL        = 'https://xsen.fun/nil?school=nmhu';
-    const FREE_MESSAGE_LIMIT = 100;
+    // ── NMHU Cowboys Bot — Configuration ──────────────────────────────
+    const CHAT_SERVER_URL    = 'https://nmhu-chat-production.up.railway.app';
+    const CHAT_API_URL       = 'https://nmhu-chat-production.up.railway.app/chat';
+    const AUTH_SERVICE_URL   = 'https://energetic-joy-production.up.railway.app';
+    const DONATE_URL         = 'https://xsen.fun/nil?school=nmhu';
+    const FREE_MESSAGE_LIMIT = 10;
+
+    // ── Radio — update these once AzuraCast station is created ────────
+    // Replace xsen_highlands with your actual AzuraCast station shortcode
+    const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_highlands/radio.mp3';
+    const NOW_PLAYING_URL   = 'https://stream.xsen.fun/api/nowplaying/xsen_highlands';
+    // ──────────────────────────────────────────────────────────────────
 
     function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
     function getMessageCount() { return parseInt(localStorage.getItem('xsen_nmhu_message_count') || '0'); }
@@ -344,10 +365,14 @@
       const radioPanel       = document.getElementById('radioPanel');
       const liveVideoFrame   = document.getElementById('liveVideoFrame');
       const liveChatFrame    = document.getElementById('liveChatFrame');
+      const audioEl          = document.getElementById('xsenAudio');
+      const audioStatus      = document.getElementById('audioStatus');
+      const appLiveBadge     = document.getElementById('appLiveBadge');
+      const appStreamerName  = document.getElementById('appStreamerName');
 
       let currentVideos = [];
 
-      // ── Helper: hide all panels ──
+      // ── Hide all panels ──
       function hideAll() {
         videoPanel.style.display     = 'none';
         liveVideoPanel.style.display = 'none';
@@ -357,16 +382,18 @@
 
       tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; });
       tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; });
-      tabRadio.addEventListener('click', () => { hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block'; });
+      tabRadio.addEventListener('click', () => {
+        hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block';
+        if (!audioEl.src || audioEl.src === window.location.href) {
+          audioEl.src = LIVE_AUDIO_STREAM + '?ts=' + Date.now();
+        }
+      });
 
-      // ── YouTube Live: check Supabase every 30s ──
+      // ── YouTube Live watcher ──
       async function checkYTLive() {
         try {
           const { data } = await window.supabase
-            .from('xsen_stations')
-            .select('youtube_live_id')
-            .eq('school', 'NMHU')
-            .single();
+            .from('xsen_stations').select('youtube_live_id').eq('school', 'NMHU').single();
           const streamId = data?.youtube_live_id || '';
           if (streamId) {
             tabLiveVideo.style.display = 'block';
@@ -387,23 +414,48 @@
       checkYTLive();
       setInterval(checkYTLive, 30000);
 
-      // ── Load video into main player ──
+      // ── AzuraCast now playing ──
+      async function checkLiveStatus() {
+        try {
+          const res  = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
+          const data = await res.json();
+          const live       = data?.live?.is_live === true;
+          const name       = data?.live?.streamer_name || '';
+          const nowPlaying = data?.now_playing?.song?.title || '';
+          if (live) {
+            appLiveBadge.textContent = '🔴 LIVE';
+            appLiveBadge.className   = 'live';
+            appStreamerName.textContent = name ? `Broadcasting: ${name}` : 'Live broadcast in progress';
+            appStreamerName.style.color   = 'rgba(167,139,250,0.9)';
+            appStreamerName.style.display = 'block';
+          } else {
+            appLiveBadge.textContent = 'PLAYLIST';
+            appLiveBadge.className   = '';
+            appStreamerName.textContent   = nowPlaying ? `Now playing: ${nowPlaying}` : '';
+            appStreamerName.style.color   = 'rgba(240,236,224,0.4)';
+            appStreamerName.style.display = nowPlaying ? 'block' : 'none';
+          }
+        } catch(e) {}
+      }
+      checkLiveStatus();
+      setInterval(checkLiveStatus, 15000);
+
+      // ── Video player ──
       function loadVideoInPanel(videoId, title, thumbIndex) {
-        const src = new URL(`https://player.xsen.fun`);
+        const src = new URL('https://player.xsen.fun');
         src.searchParams.set('v', videoId);
         src.searchParams.set('autoplay', '1');
         src.searchParams.set('muted', '1');
         src.searchParams.set('playsinline', '1');
         mainVideoFrame.src = src.toString();
-        mainVideoFrame.style.display = 'block';
+        mainVideoFrame.style.display   = 'block';
         videoPlaceholder.style.display = 'none';
-        nowPlayingLabel.textContent = title || 'Now playing';
-        nowPlayingLabel.style.display = 'block';
+        nowPlayingLabel.textContent    = title || 'Now playing';
+        nowPlayingLabel.style.display  = 'block';
         document.querySelectorAll('.video-thumb').forEach((t, i) => t.classList.toggle('active', i === thumbIndex));
         tabVideo.click();
       }
 
-      // ── Render thumbnail strip ──
       function renderThumbs(videos) {
         videoThumbs.innerHTML = '';
         if (!videos || videos.length === 0) { videoThumbs.style.display = 'none'; return; }
@@ -424,6 +476,7 @@
         loadVideoInPanel(firstId, videos[0].title, 0);
       }
 
+      // ── Paywall ──
       function checkPaywall() {
         if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) {
           paywallCard.style.display = 'block';
@@ -440,8 +493,8 @@
           const success = await activateWithEmail(email);
           if (success) {
             activateStatus.textContent = '✅ Access activated!';
-            paywallCard.style.display = 'none';
-            form.style.display = 'flex';
+            paywallCard.style.display  = 'none';
+            form.style.display         = 'flex';
             addMsg('🤠 Welcome back, Cowboy! You now have full access.', 'bot');
           } else {
             activateStatus.textContent = '❌ Email not found. Please check or start a free trial.';
@@ -449,12 +502,13 @@
         } catch (err) { activateStatus.textContent = '❌ Could not activate. Please try again.'; }
       });
 
+      // ── Portal ──
       async function openPortal(e) {
         if (e) e.preventDefault();
         const token = localStorage.getItem('xsen_auth_token');
         if (!token) return;
         try {
-          const res = await fetch(`${ORCHESTRATOR_URL}/api/create-portal-session`, {
+          const res  = await fetch(`${CHAT_SERVER_URL}/api/create-portal-session`, {
             method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
           });
           const data = await res.json();
@@ -465,6 +519,7 @@
 
       function sendMessage() { form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true })); }
 
+      // ── Chat submit ──
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const text = input.value.trim();
@@ -496,23 +551,21 @@
         }
       });
 
+      // ── Render response ──
       function renderResponse(text) {
         const suggestedMatch = text.match(/SUGGESTED:\n([\s\S]*?)$/m);
-        let cleanText = text;
+        let cleanText  = text;
         let suggestions = [];
         if (suggestedMatch) {
-          cleanText = text.replace(suggestedMatch[0], '').trim();
+          cleanText   = text.replace(suggestedMatch[0], '').trim();
           suggestions = suggestedMatch[1].split('\n').map(l => l.replace(/^[-•]\s*/, '').trim()).filter(Boolean);
         }
-        const videoUrls = [];
+        const videoUrls  = [];
         const videoRegex = /(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/gi;
         let match;
         while ((match = videoRegex.exec(cleanText)) !== null) videoUrls.push(match[1]);
         if (videoUrls.length > 0) {
-          const videoObjects = videoUrls.map((url, i) => {
-            const vId = url.split('?v=')[1];
-            return { url, title: `Highlight ${i + 1}`, videoId: vId };
-          });
+          const videoObjects = videoUrls.map((url, i) => ({ url, title: `Highlight ${i + 1}`, videoId: url.split('?v=')[1] }));
           currentVideos = videoObjects;
           renderThumbs(videoObjects);
         }
@@ -551,6 +604,7 @@
     });
   </script>
 
+  <!-- ── Announcement banner ── -->
   <script>
     window.XSEN_SCHOOL = 'nmhu';
     (async function initXSENBanner() {
@@ -561,7 +615,7 @@
           .order('created_at', { ascending: false }).limit(1);
         const bar = document.getElementById('announcement-bar');
         if (!bar || !data?.length) return;
-        const now = new Date();
+        const now   = new Date();
         const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
         if (!valid.length) return;
         bar.innerHTML = valid.map(a => `
@@ -574,5 +628,144 @@
     })();
   </script>
 
+  <!-- ── Push Notifications ── -->
+  <script>
+  (function() {
+    'use strict';
+
+    const CHAT_SERVER  = 'https://nmhu-chat-production.up.railway.app';
+    const SCHOOL_ID    = 'nmhu';
+    const notifyBtn    = document.getElementById('notifyBtn');
+    const pushBanner   = document.getElementById('push-optin-banner');
+    const pushYes      = document.getElementById('push-optin-yes');
+    const pushNo       = document.getElementById('push-optin-no');
+
+    async function registerSW() {
+      if (!('serviceWorker' in navigator)) return null;
+      try {
+        const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/nmhu/' });
+        return reg;
+      } catch (err) {
+        console.warn('[PWA] SW registration failed:', err.message);
+        return null;
+      }
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+      const raw     = atob(base64);
+      return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+    }
+
+    async function getVapidKey() {
+      try {
+        const r    = await fetch(`${CHAT_SERVER}/push/vapid-public-key`);
+        const data = await r.json();
+        return data.key;
+      } catch { return null; }
+    }
+
+    async function subscribeToPush() {
+      const reg = await registerSW();
+      if (!reg) { showToast('Push notifications not supported on this browser.'); return; }
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') { showToast('Notifications blocked. Enable in browser settings.'); updateNotifyBtn('blocked'); return; }
+      const vapidKey = await getVapidKey();
+      if (!vapidKey) { showToast('Push service unavailable right now.'); return; }
+      try {
+        const existing = await reg.pushManager.getSubscription();
+        if (existing) await existing.unsubscribe();
+        const subscription = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(vapidKey) });
+        await fetch(`${CHAT_SERVER}/push/subscribe`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subscription, schoolId: SCHOOL_ID })
+        });
+        localStorage.setItem('xsen_nmhu_push_subscribed', 'true');
+        updateNotifyBtn('subscribed');
+        showToast('🔔 You\'ll get Cowboys Nation alerts!');
+      } catch (err) {
+        showToast('Could not enable notifications. Try again.');
+      }
+    }
+
+    async function unsubscribeFromPush() {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          await fetch(`${CHAT_SERVER}/push/unsubscribe`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ endpoint: sub.endpoint })
+          });
+          await sub.unsubscribe();
+        }
+        localStorage.removeItem('xsen_nmhu_push_subscribed');
+        updateNotifyBtn('idle');
+        showToast('Notifications turned off.');
+      } catch (err) { console.error('[PWA] Unsubscribe error:', err); }
+    }
+
+    function updateNotifyBtn(state) {
+      if (!notifyBtn) return;
+      const states = {
+        idle:       { icon: '🔔', title: 'Get Cowboys Alerts',       opacity: '0.7', color: '' },
+        subscribed: { icon: '🔔', title: 'Notifications ON — tap to turn off', opacity: '1', color: '#C9A84C' },
+        blocked:    { icon: '🔕', title: 'Notifications blocked',     opacity: '0.4', color: '' }
+      };
+      const s = states[state] || states.idle;
+      notifyBtn.textContent       = s.icon;
+      notifyBtn.title             = s.title;
+      notifyBtn.style.opacity     = s.opacity;
+      if (s.color) notifyBtn.style.borderColor = s.color;
+    }
+
+    function showToast(msg) {
+      const existing = document.getElementById('pwa-toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.id = 'pwa-toast';
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(30,30,30,0.95);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);white-space:nowrap;max-width:90vw;text-align:center;';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    async function init() {
+      registerSW();
+      if (!notifyBtn) return;
+      if (!('Notification' in window)) { notifyBtn.style.display = 'none'; return; }
+      if (Notification.permission === 'denied') { updateNotifyBtn('blocked'); return; }
+      if (Notification.permission === 'granted' && localStorage.getItem('xsen_nmhu_push_subscribed')) {
+        updateNotifyBtn('subscribed');
+      } else {
+        updateNotifyBtn('idle');
+        // Show soft opt-in banner after 8 seconds on first visit
+        if (!localStorage.getItem('xsen_nmhu_push_seen') && Notification.permission === 'default') {
+          setTimeout(() => {
+            if (pushBanner) {
+              pushBanner.style.display = 'flex';
+              localStorage.setItem('xsen_nmhu_push_seen', '1');
+            }
+          }, 8000);
+        }
+      }
+      notifyBtn.addEventListener('click', async () => {
+        const isSubscribed = localStorage.getItem('xsen_nmhu_push_subscribed');
+        if (isSubscribed) { await unsubscribeFromPush(); } else { await subscribeToPush(); }
+      });
+      if (pushYes) pushYes.addEventListener('click', () => { pushBanner.style.display = 'none'; subscribeToPush(); });
+      if (pushNo)  pushNo.addEventListener('click',  () => { pushBanner.style.display = 'none'; });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+
 </body>
 </html>
+
