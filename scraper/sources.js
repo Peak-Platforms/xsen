@@ -27,6 +27,15 @@ export const RSS_FEEDS = [
   { name: 'The Big Lead CFB',         url: 'https://thebiglead.com/feed/',                                    active: false },
   { name: 'Yardbarker CFB',           url: 'https://www.yardbarker.com/rss/college_football',                 active: false },
   { name: 'Heartland College Sports', url: 'https://heartlandcollegesports.com/feed/',                        active: false },
+// RMAC Conference (New Mexico Highlands + all RMAC schools)
+  { name: 'RMAC Football',          url: 'https://rmacsports.org/rss.aspx?path=football',  active: true },
+  { name: 'RMAC Mens Basketball',   url: 'https://rmacsports.org/rss.aspx?path=mbball',    active: true },
+  { name: 'RMAC Womens Basketball', url: 'https://rmacsports.org/rss.aspx?path=wbball',    active: true },
+  { name: 'RMAC Wrestling',         url: 'https://rmacsports.org/rss.aspx?path=wrestling', active: true },
+  { name: 'RMAC Softball',          url: 'https://rmacsports.org/rss.aspx?path=softball',  active: true },
+  { name: 'RMAC Volleyball',        url: 'https://rmacsports.org/rss.aspx?path=wvball',    active: true },
+  { name: 'RMAC Womens Soccer',     url: 'https://rmacsports.org/rss.aspx?path=wsoc',      active: true },
+  { name: 'RMAC General News',      url: 'https://rmacsports.org/rss.aspx?path=general',   active: true },
 ];
 
 // ─── National Google News Queries ─────────────────────────────────────────────
