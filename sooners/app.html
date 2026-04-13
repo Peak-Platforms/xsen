@@ -470,7 +470,7 @@
           const { data } = await window.supabase
             .from('xsen_stations')
             .select('youtube_live_id')
-            .eq('school', 'sooners')
+            .eq('school', 'OU')
             .single();
           const streamId = data?.youtube_live_id || '';
           if (streamId) {
@@ -478,7 +478,7 @@
             if (liveVideoFrame.getAttribute('data-stream') !== streamId) {
               liveVideoFrame.setAttribute('data-stream', streamId);
               liveVideoFrame.src = `https://www.youtube.com/embed/${streamId}?autoplay=1&mute=0`;
-              liveChatFrame.src  = `https://www.youtube.com/live_chat?v=${streamId}&embed_domain=xsen.fun`;
+              liveChatFrame.src  = `https://www.youtube.com/live_chat?v=${streamId}&embed_domain=boomerbot.fun`;
             }
           } else {
             tabLiveVideo.style.display = 'none';
