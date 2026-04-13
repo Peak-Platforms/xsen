@@ -15,7 +15,6 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_VERSION).then(cache => {
       return cache.addAll(STATIC_ASSETS).catch(err => {
-        // Non-fatal — app still works without cache
         console.warn('[SW] Cache prefill partial:', err.message);
       });
     })
@@ -41,38 +40,57 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// ─── FETCH — Network first, cache fallback ────────────────────────────────────
+// ─── FETCH — NETWORK FIRST, SAFE FALLBACK ─────────────────────────────────────
 self.addEventListener('fetch', event => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
-  // Don't intercept API calls to Railway — always go network
   const url = new URL(event.request.url);
-  if (url.hostname.includes('railway.app') || url.hostname.includes('supabase.co')) {
+
+  // Never cache API calls
+  if (
+    url.hostname.includes('railway.app') ||
+    url.hostname.includes('supabase.co')
+  ) {
     return;
   }
 
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Cache successful responses for static assets
-        if (response.ok && STATIC_ASSETS.some(a => url.pathname.startsWith(a))) {
-          const clone = response.clone();
-          caches.open(CACHE_VERSION).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Network failed — try cache
-        return caches.match(event.request).then(cached => {
-          if (cached) return cached;
-          // Offline fallback for navigation requests
-          if (event.request.mode === 'navigate') {
-            return caches.match('/sooners/app.html');
-          }
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(event.request);
+
+      // Cache static assets only
+      if (
+        response &&
+        response.ok &&
+        STATIC_ASSETS.some(a => url.pathname.startsWith(a))
+      ) {
+        const cache = await caches.open(CACHE_VERSION);
+        cache.put(event.request, response.clone());
+      }
+
+      return response;
+
+    } catch (err) {
+      console.warn('[SW] Network failed:', err.message);
+
+      const cached = await caches.match(event.request);
+      if (cached) return cached;
+
+      // IMPORTANT: ALWAYS return a Response
+      if (event.request.mode === 'navigate') {
+        const fallback = await caches.match('/sooners/app.html');
+        return fallback || new Response('Offline', {
+          status: 200,
+          headers: { 'Content-Type': 'text/html' }
         });
-      })
-  );
+      }
+
+      return new Response('Network error', {
+        status: 408,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+  })());
 });
 
 // ─── PUSH NOTIFICATIONS ───────────────────────────────────────────────────────
@@ -82,17 +100,21 @@ self.addEventListener('push', event => {
   let data = {};
   try {
     data = event.data ? event.data.json() : {};
-  } catch (e) {
-    data = { title: 'XSEN Sooners', body: event.data ? event.data.text() : 'New update!' };
+  } catch {
+    data = {
+      title: 'XSEN Sooners',
+      body: event.data ? event.data.text() : 'New update!'
+    };
   }
 
-  const title   = data.title || '🏈 XSEN Sooners';
+  const title = data.title || '🏈 XSEN Sooners';
+
   const options = {
-    body:    data.body || 'New update from Sooner Nation!',
-    icon:    data.icon || '/icons/icon-192x192.png',
-    badge:   '/icons/badge-72x72.png',
-    image:   data.image || null,
-    tag:     data.tag || 'xsen-sooners',
+    body: data.body || 'New update from Sooner Nation!',
+    icon: data.icon || '/icons/icon-192x192.png',
+    badge: '/icons/badge-72x72.png',
+    image: data.image || null,
+    tag: data.tag || 'xsen-sooners',
     renotify: true,
     vibrate: [200, 100, 200],
     data: {
@@ -100,7 +122,7 @@ self.addEventListener('push', event => {
       timestamp: Date.now()
     },
     actions: [
-      { action: 'open',    title: '🏈 Open App' },
+      { action: 'open', title: '🏈 Open App' },
       { action: 'dismiss', title: 'Dismiss' }
     ]
   };
@@ -116,38 +138,45 @@ self.addEventListener('notificationclick', event => {
 
   if (event.action === 'dismiss') return;
 
-  const targetUrl = event.notification.data?.url || 'https://boomerbot.fun';
+  const targetUrl =
+    event.notification.data?.url || 'https://boomerbot.fun';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-      // Focus existing tab if open
-      for (const client of clientList) {
-        if (client.url.includes('/sooners/') && 'focus' in client) {
-          return client.focus();
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(clientList => {
+        for (const client of clientList) {
+          if (client.url.includes('/sooners/') && 'focus' in client) {
+            return client.focus();
+          }
         }
-      }
-      // Otherwise open new tab
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
+
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
+      })
   );
 });
 
 // ─── PUSH SUBSCRIPTION CHANGE ────────────────────────────────────────────────
 self.addEventListener('pushsubscriptionchange', event => {
   console.log('[SW] Push subscription changed, resubscribing...');
+
   event.waitUntil(
-    self.registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: self.VAPID_PUBLIC_KEY
-    }).then(subscription => {
-      return fetch('/push/resubscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subscription })
-      });
-    })
+    (async () => {
+      try {
+        const subscription = await self.registration.pushManager.subscribe({
+          userVisibleOnly: true
+        });
+
+        await fetch('/push/resubscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subscription })
+        });
+      } catch (err) {
+        console.warn('[SW] Resubscribe failed:', err.message);
+      }
+    })()
   );
 });
 
