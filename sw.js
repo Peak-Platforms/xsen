@@ -3,7 +3,7 @@
 const CACHE_VERSION = 'xsen-sooners-v1';
 
 const STATIC_ASSETS = [
-  '/sooners/',
+  '/',
   '/sooners/app.html',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
@@ -116,7 +116,7 @@ self.addEventListener('notificationclick', event => {
 
   if (event.action === 'dismiss') return;
 
-  const targetUrl = event.notification.data?.url || '/sooners/';
+  const targetUrl = event.notification.data?.url || 'https://boomerbot.fun';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
@@ -150,3 +150,4 @@ self.addEventListener('pushsubscriptionchange', event => {
     })
   );
 });
+
