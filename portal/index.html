@@ -757,6 +757,7 @@ function selectCategory(btn) {
   updateNotifPreview();
   validateNotifForm();
 }
+
 function updateNotifPreview() {
   const title=document.getElementById('notif-title').value, short=document.getElementById('notif-short').value;
   document.getElementById('preview-title').textContent = title || 'Notification title';
@@ -787,18 +788,61 @@ async function sendNotification() {
   const meta   = CATEGORY_META[selectedCategory] || CATEGORY_META.GENERAL;
   const school = currentStation.school;
 
+  // ── Auto-expiry per category ──────────────────────────────────────────────
+  const EXPIRY_HOURS = {
+    GO_LIVE:       4,
+    BREAKING_NEWS: 24,
+    INJURY_REPORT: 48,
+    ROSTER_MOVE:   168,
+    GAME_ALERT:    6,
+    GENERAL:       24
+  };
+  const expiryHours = EXPIRY_HOURS[selectedCategory] || 24;
+  const expires_at  = new Date(Date.now() + expiryHours * 3600000).toISOString();
+
   try {
-    // 1 — Permanent log
-    const { error: logErr } = await sb.from('xsen_push_log').insert({ school, category: selectedCategory, title, short_text: shortTxt, full_text: fullTxt||null, link_url: linkUrl||null, sent_by: school });
+    // 1 — Deactivate all previous active announcements for this school
+    await sb.from('xsen_announcements')
+      .update({ active: false })
+      .eq('school', 'sooners')
+      .eq('active', true);
+
+    // 2 — Permanent log entry
+    const { error: logErr } = await sb.from('xsen_push_log').insert({
+      school,
+      category:   selectedCategory,
+      title,
+      short_text: shortTxt,
+      full_text:  fullTxt  || null,
+      link_url:   linkUrl  || null,
+      sent_by:    school
+    });
     if (logErr) throw new Error('Log write failed: ' + logErr.message);
 
-    // 2 — Banner in app (full detail shown when user opens)
-    await sb.from('xsen_announcements').insert({ message: fullTxt||shortTxt, type: meta.ann_type, school: 'sooners', link_text: linkText||null, link_url: linkUrl||null, expires_at: null, active: true });
+    // 3 — New announcement for app banner (full detail + category + expiry)
+    await sb.from('xsen_announcements').insert({
+      message:    fullTxt || shortTxt,
+      type:       meta.ann_type,
+      school:     'sooners',
+      category:   selectedCategory,
+      link_text:  linkText || null,
+      link_url:   linkUrl  || null,
+      expires_at,
+      active:     true
+    });
 
-    // 3 — Fire push to all subscribers
+    // 4 — Fire push notification to all subscribers
     await fetch(`${ORCHESTRATOR}/announcements/notify`, {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ school, schoolId: school, title, message: shortTxt, url: `https://xsen.fun/sooners/app.html`, tag: selectedCategory.toLowerCase(), type: meta.ann_type })
+      body: JSON.stringify({
+        school,
+        schoolId: school,
+        title,
+        message:  shortTxt,
+        url:      'https://xsen.fun/sooners/app',
+        tag:      selectedCategory.toLowerCase(),
+        type:     meta.ann_type
+      })
     });
 
     showToast('Notification sent!','success');
@@ -980,6 +1024,7 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
 
