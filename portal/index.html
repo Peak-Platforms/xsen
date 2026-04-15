@@ -740,9 +740,23 @@ async function loadAnnouncementBar() {
 // ── NOTIFICATIONS ─────────────────────────────────────────────────────────────
 function selectCategory(btn) {
   document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); selectedCategory=btn.dataset.cat; validateNotifForm();
+  btn.classList.add('selected');
+  selectedCategory = btn.dataset.cat;
+  const titleInput = document.getElementById('notif-title');
+  const defaults = {
+    GO_LIVE:       '🔴 Sooners are Live Now',
+    BREAKING_NEWS: '🚨 Sooners Breaking News',
+    INJURY_REPORT: '🏥 Sooners Injury Report',
+    ROSTER_MOVE:   '📋 Sooners Roster Update',
+    GAME_ALERT:    '🏈 Sooners Game Alert',
+    GENERAL:       '📢 Sooners Update'
+  };
+  if (!titleInput.value.trim()) {
+    titleInput.value = defaults[selectedCategory] || '';
+  }
+  updateNotifPreview();
+  validateNotifForm();
 }
-
 function updateNotifPreview() {
   const title=document.getElementById('notif-title').value, short=document.getElementById('notif-short').value;
   document.getElementById('preview-title').textContent = title || 'Notification title';
