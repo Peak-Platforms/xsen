@@ -1,6 +1,6 @@
 // ─── XSEN Service Worker ──────────────────────────────────────────────────────
 // Version — bump this to force cache refresh on deploy
-const CACHE_VERSION = 'xsen-sooners-v2';
+const CACHE_VERSION = 'xsen-sooners-v3';
 
 const STATIC_ASSETS = [
   '/',
