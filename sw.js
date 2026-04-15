@@ -138,7 +138,7 @@ self.addEventListener('notificationclick', event => {
 
   if (event.action === 'dismiss') return;
 
- const targetUrl = 'https://xsen.fun/sooners/app';
+const targetUrl = 'https://xsen.fun/sooners/app?view=alerts';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
