@@ -4,7 +4,7 @@ const CACHE_VERSION = 'xsen-sooners-v1';
 
 const STATIC_ASSETS = [
   '/',
-  '/sooners/app.html',
+  '/sooners/app',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
 ];
@@ -78,7 +78,7 @@ self.addEventListener('fetch', event => {
 
       // IMPORTANT: ALWAYS return a Response
       if (event.request.mode === 'navigate') {
-        const fallback = await caches.match('/sooners/app.html');
+        const fallback = await caches.match('/sooners/app');
         return fallback || new Response('Offline', {
           status: 200,
           headers: { 'Content-Type': 'text/html' }
