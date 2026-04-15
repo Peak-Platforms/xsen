@@ -1029,8 +1029,16 @@
       document.getElementById('pwa-install-no').addEventListener('click', () => { banner.remove(); localStorage.setItem('xsen_install_dismissed', '1'); });
     }
 
-    async function init() {
+   async function init() {
       registerSW();
+
+      // Force SW to update on every page load
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(reg => {
+          reg.update();
+        });
+      }
+
       if (!notifyBtn) return;
 
       const isIOS        = /iphone|ipad|ipod/i.test(navigator.userAgent);
