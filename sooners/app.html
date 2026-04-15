@@ -56,7 +56,7 @@
       background: var(--ink);
       background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(204,0,0,0.22) 0%, transparent 70%);
       color: var(--text);
-      min-height: 100vh;
+      min-height: 100dvh;
       position: relative;
     }
 
@@ -70,8 +70,8 @@
       background: var(--surface);
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      max-height: 100vh;
+      height: 100dvh;
+      max-height: 100dvh;
       box-shadow: 0 0 0 1px rgba(204,0,0,0.12), 0 24px 80px rgba(0,0,0,0.7), 0 0 60px var(--crimson-glow);
       overflow: hidden;
     }
@@ -98,6 +98,62 @@
     .header-actions { margin-left: auto; display: flex; align-items: center; gap: 6px; position: relative; z-index: 1; }
     #donateBtn { background: var(--gold-dim); border: 1px solid rgba(253,249,216,0.35); color: var(--gold); padding: 5px 10px; border-radius: 6px; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
     #donateBtn:hover { background: rgba(253,249,216,0.26); transform: translateY(-1px); }
+
+    /* ── Slim notification banner ── */
+    .xsen-slim-banner {
+      display: flex; align-items: center; gap: 8px;
+      background: #0d0d0d; border-bottom: 1px solid rgba(204,0,0,0.25);
+      padding: 6px 12px; min-height: 34px; flex-shrink: 0;
+    }
+    .xsen-banner-cat {
+      font-family: var(--font-display); font-size: 9px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 6px;
+      border-radius: 3px; white-space: nowrap; flex-shrink: 0;
+    }
+    .xsen-banner-msg {
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 11px; color: rgba(240,236,224,0.75);
+    }
+    .xsen-banner-history {
+      background: none; border: 1px solid rgba(204,0,0,0.35); color: var(--crimson);
+      font-family: var(--font-display); font-size: 9px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0; border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .xsen-banner-history:hover { background: rgba(204,0,0,0.1); }
+
+    /* ── History drawer ── */
+    .history-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .history-overlay.open { opacity: 1; pointer-events: all; }
+    .history-drawer {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+      width: 100%; max-width: 480px; z-index: 999;
+      background: var(--surface); border-top: 2px solid var(--crimson);
+      border-radius: 14px 14px 0 0; max-height: 72vh;
+      display: flex; flex-direction: column;
+      transition: transform 0.32s cubic-bezier(0.16,1,0.3,1);
+    }
+    .history-drawer.open { transform: translateX(-50%) translateY(0); }
+    .history-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; margin: 10px auto 0; }
+    .history-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .history-header-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text); }
+    .history-close { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .history-list { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent; }
+    .history-item { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .history-item:last-child { border-bottom: none; }
+    .history-item-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .history-item-cat { font-family: var(--font-display); font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; flex-shrink: 0; }
+    .history-item-time { font-size: 10px; color: var(--text-muted); margin-left: auto; white-space: nowrap; }
+    .history-item-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+    .history-item-body { font-size: 12px; color: rgba(240,236,224,0.55); line-height: 1.5; }
+    .history-empty { padding: 2.5rem; text-align: center; font-size: 12px; color: var(--text-muted); }
 
     /* ── Media tabs ── */
     .media-tabs { display: flex; background: #111; border-bottom: 1px solid var(--border); flex-shrink: 0; }
@@ -129,59 +185,23 @@
     #liveVideoFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 
     /* ── Branded Live Chat ── */
-    #liveBrandedChat {
-      display: flex; flex-direction: column;
-      height: 220px; background: #0d0d0d;
-      border-top: 1px solid var(--border);
-    }
-    #liveChatHeader {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 6px 12px 4px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    #liveChatHeader .lc-brand {
-      font-family: var(--font-display); font-size: 10px; font-weight: 600;
-      letter-spacing: 2px; text-transform: uppercase; color: var(--crimson);
-    }
-    #liveChatHeader .lc-live-dot {
-      width: 6px; height: 6px; background: #ff4444; border-radius: 50%;
-      animation: lcPulse 1s infinite; flex-shrink: 0;
-    }
+    #liveBrandedChat { display: flex; flex-direction: column; height: 220px; background: #0d0d0d; border-top: 1px solid var(--border); }
+    #liveChatHeader { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 4px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    #liveChatHeader .lc-brand { font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--crimson); }
+    #liveChatHeader .lc-live-dot { width: 6px; height: 6px; background: #ff4444; border-radius: 50%; animation: lcPulse 1s infinite; flex-shrink: 0; }
     @keyframes lcPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-    #liveChatMessages {
-      flex: 1; overflow-y: auto; padding: 8px 12px;
-      display: flex; flex-direction: column; gap: 5px;
-      scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent;
-    }
+    #liveChatMessages { flex: 1; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 5px; scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent; }
     #liveChatMessages::-webkit-scrollbar { width: 3px; }
     #liveChatMessages::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
     .lc-msg { font-size: 13px; line-height: 1.45; color: var(--text); }
     .lc-msg .lc-name { font-weight: 600; color: var(--crimson); margin-right: 6px; font-family: var(--font-display); letter-spacing: 0.4px; }
     .lc-msg.system { color: var(--text-muted); font-style: italic; font-size: 11px; }
-    #liveChatInputRow {
-      display: flex; gap: 6px; padding: 6px 10px;
-      border-top: 1px solid var(--border); flex-shrink: 0;
-    }
-    #liveChatName {
-      width: 90px; flex-shrink: 0; padding: 8px 10px; font-size: 12px;
-      font-family: var(--font-body); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 7px; background: var(--surface-2); color: var(--text);
-    }
-    #liveChatMsg {
-      flex: 1; padding: 8px 10px; font-size: 13px;
-      font-family: var(--font-body); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 7px; background: var(--surface-2); color: var(--text);
-      transition: border-color 0.2s;
-    }
+    #liveChatInputRow { display: flex; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    #liveChatName { width: 90px; flex-shrink: 0; padding: 8px 10px; font-size: 12px; font-family: var(--font-body); border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; background: var(--surface-2); color: var(--text); }
+    #liveChatMsg { flex: 1; padding: 8px 10px; font-size: 13px; font-family: var(--font-body); border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; background: var(--surface-2); color: var(--text); transition: border-color 0.2s; }
     #liveChatMsg:focus, #liveChatName:focus { outline: none; border-color: rgba(204,0,0,0.5); }
     #liveChatMsg::placeholder, #liveChatName::placeholder { color: var(--text-muted); }
-    #liveChatSend {
-      background: var(--crimson); color: var(--cream); border: none;
-      width: 36px; height: 36px; border-radius: 7px; font-size: 14px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s; flex-shrink: 0;
-    }
+    #liveChatSend { background: var(--crimson); color: var(--cream); border: none; width: 36px; height: 36px; border-radius: 7px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
     #liveChatSend:hover { background: #990000; }
 
     /* ── Radio panel ── */
@@ -252,7 +272,7 @@
     #activateStatus { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
 
     /* ── NIL prompt ── */
-    #nil-prompt-container { display:none; position:fixed; bottom:0; left:0; right:0; z-index:999; padding:0 16px 16px; pointer-events:none; }
+    #nil-prompt-container { display:none; position:fixed; bottom:0; left:0; right:0; z-index:997; padding:0 16px 16px; pointer-events:none; }
     .nil-prompt { pointer-events:all; background:#111111; border:1px solid rgba(204,0,0,0.6); border-radius:10px; overflow:hidden; max-width:480px; margin:0 auto; box-shadow:0 0 0 1px rgba(204,0,0,0.15),0 30px 80px rgba(0,0,0,0.8),0 0 60px rgba(204,0,0,0.3); animation:nilSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
     .nil-prompt-exit { animation:nilSlideDown 0.4s ease forwards !important; }
     @keyframes nilSlideUp { from{opacity:0;transform:translateY(100%);} to{opacity:1;transform:translateY(0);} }
@@ -273,26 +293,20 @@
     .nil-prompt-progress { height:4px; background:rgba(255,255,255,0.04); }
     .nil-prompt-progress-fill { height:100%; width:100%; background:linear-gradient(90deg,#CC0000,#FDF9D8); border-radius:0 2px 2px 0; }
 
-    /* ── Announcement banner ── */
-    #announcement-bar { position:sticky; top:0; z-index:99; }
-    #announcement-bar .xsen-announcement { background: #0d0d0d; border-bottom: 1px solid rgba(204,0,0,0.25); padding: 10px 16px; display: flex; align-items: center; gap: 12px; font-family: var(--font-body); font-size: 12px; color: rgba(240,236,224,0.6); line-height: 1.5; }
-    #announcement-bar .xsen-announcement strong { color: #f0ece0; }
-    #announcement-bar .xsen-announcement .ann-link { background:#CC0000; color:#fff; border:none; border-radius:4px; padding:5px 12px; font-weight:700; font-size:11px; white-space:nowrap; text-decoration:none; flex-shrink:0; }
-    #announcement-bar .xsen-announcement .ann-dismiss { background:none; border:none; color:rgba(240,236,224,0.3); font-size:11px; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-left:auto; }
-
-    #push-optin-banner { display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 998; background: #1a1a1a; border: 1px solid rgba(204,0,0,0.3); border-radius: 8px; padding: 14px 20px; gap: 14px; align-items: center; max-width: 480px; width: calc(100% - 40px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+    #push-optin-banner { display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 996; background: #1a1a1a; border: 1px solid rgba(204,0,0,0.3); border-radius: 8px; padding: 14px 20px; gap: 14px; align-items: center; max-width: 480px; width: calc(100% - 40px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
     .push-optin-text { font-size: 13px; color: rgba(245,245,240,0.65); flex: 1; line-height: 1.5; }
     .push-optin-text strong { color: #f5f5f0; }
     #push-optin-yes { background: #CC0000; color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
     #push-optin-no { background: none; border: none; color: rgba(245,245,240,0.3); font-size: 12px; cursor: pointer; white-space: nowrap; }
 
     @media (max-width: 520px) {
-      .chat-container { margin:0; border-radius:0; border:none; min-height:100vh; box-shadow:none; }
+      .chat-container { margin:0; border-radius:0; border:none; min-height:100dvh; box-shadow:none; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Slim notification banner -->
   <div id="announcement-bar"></div>
 
   <div class="chat-container">
@@ -333,7 +347,6 @@
       <div class="live-video-wrap">
         <iframe id="liveVideoFrame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
-      <!-- Branded XSEN Live Chat (replaces YouTube chat iframe) -->
       <div id="liveBrandedChat">
         <div id="liveChatHeader">
           <span class="lc-brand">⚡ XSEN Live Chat</span>
@@ -342,7 +355,7 @@
         <div id="liveChatMessages"></div>
         <div id="liveChatInputRow">
           <input type="text" id="liveChatName" placeholder="Name (optional)" maxlength="32" />
-          <input type="text" id="liveChatMsg" placeholder="Say something…" maxlength="200" autocomplete="off" />
+          <input type="text" id="liveChatMsg"  placeholder="Say something…" maxlength="200" autocomplete="off" />
           <button id="liveChatSend" type="button">➤</button>
         </div>
       </div>
@@ -401,6 +414,19 @@
       <a href="#" id="manageSubLink">⚙️ Account</a>
     </nav>
 
+  </div><!-- end chat-container -->
+
+  <!-- ── History drawer ── -->
+  <div class="history-overlay" id="historyOverlay" onclick="closeHistoryDrawer()"></div>
+  <div class="history-drawer" id="historyDrawer">
+    <div class="history-handle"></div>
+    <div class="history-header">
+      <span class="history-header-title">📋 Alert History</span>
+      <button class="history-close" onclick="closeHistoryDrawer()">✕</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">Loading…</div>
+    </div>
   </div>
 
   <div id="nil-prompt-container"></div>
@@ -409,8 +435,8 @@
     <button id="push-optin-yes">Sure</button>
     <button id="push-optin-no">No thanks</button>
   </div>
-  <script src="/xsen-nil-notifications.js"></script>
 
+  <script src="/xsen-nil-notifications.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.supabase = window.supabase.createClient(
@@ -465,24 +491,24 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      const form            = document.getElementById('chatForm');
-      const input           = document.getElementById('userInput');
-      const messages        = document.getElementById('messages');
-      const audioEl         = document.getElementById('xsenAudio');
-      const audioStatus     = document.getElementById('audioStatus');
-      const appLiveBadge    = document.getElementById('appLiveBadge');
-      const appStreamerName = document.getElementById('appStreamerName');
-      const donateBtn       = document.getElementById('donateBtn');
-      const fanNameInput    = document.getElementById('fanName');
-      const fanMsgInput     = document.getElementById('fanMessage');
-      const sendFanMsgBtn   = document.getElementById('sendFanMessage');
-      const fanMsgStatus    = document.getElementById('fanMessageStatus');
-      const manageSubLink   = document.getElementById('manageSubLink');
-      const paywallCard     = document.getElementById('paywallCard');
-      const activateEmail   = document.getElementById('activateEmail');
-      const activateBtn     = document.getElementById('activateBtn');
-      const activateStatus  = document.getElementById('activateStatus');
-      const mainVideoFrame  = document.getElementById('mainVideoFrame');
+      const form             = document.getElementById('chatForm');
+      const input            = document.getElementById('userInput');
+      const messages         = document.getElementById('messages');
+      const audioEl          = document.getElementById('xsenAudio');
+      const audioStatus      = document.getElementById('audioStatus');
+      const appLiveBadge     = document.getElementById('appLiveBadge');
+      const appStreamerName  = document.getElementById('appStreamerName');
+      const donateBtn        = document.getElementById('donateBtn');
+      const fanNameInput     = document.getElementById('fanName');
+      const fanMsgInput      = document.getElementById('fanMessage');
+      const sendFanMsgBtn    = document.getElementById('sendFanMessage');
+      const fanMsgStatus     = document.getElementById('fanMessageStatus');
+      const manageSubLink    = document.getElementById('manageSubLink');
+      const paywallCard      = document.getElementById('paywallCard');
+      const activateEmail    = document.getElementById('activateEmail');
+      const activateBtn      = document.getElementById('activateBtn');
+      const activateStatus   = document.getElementById('activateStatus');
+      const mainVideoFrame   = document.getElementById('mainVideoFrame');
       const videoPlaceholder = document.getElementById('videoPlaceholder');
       const nowPlayingLabel  = document.getElementById('nowPlayingLabel');
       const videoThumbs      = document.getElementById('videoThumbs');
@@ -496,48 +522,26 @@
       const fanToggleBtn     = document.getElementById('fanToggleBtn');
       const fanPanel         = document.querySelector('.fan-message-panel');
 
-      let currentVideos = [];
+      let currentVideos    = [];
       let activeThumbIndex = 0;
 
-      // ── Helper: hide all panels ──
       function hideAll() {
-        videoPanel.style.display    = 'none';
+        videoPanel.style.display     = 'none';
         liveVideoPanel.style.display = 'none';
-        radioPanel.style.display    = 'none';
-        fanToggleBtn.style.display  = 'none';
+        radioPanel.style.display     = 'none';
+        fanToggleBtn.style.display   = 'none';
         fanPanel.classList.remove('open');
         fanToggleBtn.classList.remove('open');
         [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
       }
 
-      // ── Tab switching ──
-      tabVideo.addEventListener('click', () => {
-        hideAll();
-        tabVideo.classList.add('active');
-        videoPanel.style.display = 'block';
-      });
+      tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; });
+      tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; });
+      tabRadio.addEventListener('click', () => { hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block'; fanToggleBtn.style.display = 'flex'; });
 
-      tabLiveVideo.addEventListener('click', () => {
-        hideAll();
-        tabLiveVideo.classList.add('active');
-        liveVideoPanel.style.display = 'block';
-      });
-
-      tabRadio.addEventListener('click', () => {
-        hideAll();
-        tabRadio.classList.add('active');
-        radioPanel.style.display = 'block';
-        fanToggleBtn.style.display = 'flex';
-      });
-
-      // ── YouTube Live: check Supabase every 30s ──
       async function checkYTLive() {
         try {
-          const { data } = await window.supabase
-            .from('xsen_stations')
-            .select('youtube_live_id')
-            .eq('school', 'OU')
-            .single();
+          const { data } = await window.supabase.from('xsen_stations').select('youtube_live_id').eq('school', 'OU').single();
           const streamId = data?.youtube_live_id || '';
           if (streamId) {
             tabLiveVideo.style.display = 'block';
@@ -547,9 +551,7 @@
             }
           } else {
             tabLiveVideo.style.display = 'none';
-            if (tabLiveVideo.classList.contains('active')) {
-              tabVideo.click();
-            }
+            if (tabLiveVideo.classList.contains('active')) tabVideo.click();
             liveVideoFrame.removeAttribute('data-stream');
             liveVideoFrame.src = '';
           }
@@ -558,10 +560,9 @@
       checkYTLive();
       setInterval(checkYTLive, 30000);
 
-      // ── Load video into main player ──
       function loadVideoInPanel(videoId, title, thumbIndex) {
         activeThumbIndex = thumbIndex;
-        const src = new URL(`https://player.xsen.fun`);
+        const src = new URL('https://player.xsen.fun');
         src.searchParams.set('v', videoId);
         src.searchParams.set('autoplay', '1');
         src.searchParams.set('muted', '1');
@@ -571,30 +572,23 @@
         videoPlaceholder.style.display = 'none';
         nowPlayingLabel.textContent = title || 'Now playing';
         nowPlayingLabel.style.display = 'block';
-        document.querySelectorAll('.video-thumb').forEach((t, i) => {
-          t.classList.toggle('active', i === thumbIndex);
-        });
+        document.querySelectorAll('.video-thumb').forEach((t, i) => t.classList.toggle('active', i === thumbIndex));
         tabVideo.click();
       }
 
-      // ── Render thumbnail strip ──
       function renderThumbs(videos) {
         videoThumbs.innerHTML = '';
-        if (!videos || videos.length === 0) { videoThumbs.style.display = 'none'; return; }
+        if (!videos || !videos.length) { videoThumbs.style.display = 'none'; return; }
         videoThumbs.style.display = 'flex';
         videos.forEach((v, i) => {
-          const videoId = v.url.includes('v=') ? v.url.split('v=')[1].split('&')[0]
-                        : v.url.includes('youtu.be/') ? v.url.split('youtu.be/')[1]
-                        : v.url.split('?v=').pop();
+          const videoId = v.url.includes('v=') ? v.url.split('v=')[1].split('&')[0] : v.url.includes('youtu.be/') ? v.url.split('youtu.be/')[1] : v.url.split('?v=').pop();
           const thumb = document.createElement('div');
           thumb.className = 'video-thumb' + (i === 0 ? ' active' : '');
           thumb.innerHTML = `<img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" alt="${v.title}" loading="lazy"><div class="video-thumb-title">${v.title}</div>`;
           thumb.addEventListener('click', () => loadVideoInPanel(videoId, v.title, i));
           videoThumbs.appendChild(thumb);
         });
-        const firstId = videos[0].url.includes('v=') ? videos[0].url.split('v=')[1].split('&')[0]
-                       : videos[0].url.includes('youtu.be/') ? videos[0].url.split('youtu.be/')[1]
-                       : videos[0].url.split('?v=').pop();
+        const firstId = videos[0].url.includes('v=') ? videos[0].url.split('v=')[1].split('&')[0] : videos[0].url.includes('youtu.be/') ? videos[0].url.split('youtu.be/')[1] : videos[0].url.split('?v=').pop();
         loadVideoInPanel(firstId, videos[0].title, 0);
       }
 
@@ -628,9 +622,7 @@
         const token = localStorage.getItem('xsen_auth_token');
         if (!token) { window.location.href = 'https://xsen.fun/sooners'; return; }
         try {
-          const res = await fetch(`${ORCHESTRATOR_URL}/api/create-portal-session`, {
-            method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-          });
+          const res = await fetch(`${ORCHESTRATOR_URL}/api/create-portal-session`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } });
           const data = await res.json();
           if (data.url) window.location.href = data.url;
         } catch (e) { alert('Could not open account management. Please try again.'); }
@@ -652,18 +644,13 @@
         const thinking = addMsg('🏈 Boomer is thinking…', 'bot');
         try {
           const userId = await getUserId();
-          const res = await fetch(CHAT_API_URL, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: text, school: 'sooners', userId })
-          });
+          const res = await fetch(CHAT_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, school: 'sooners', userId }) });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const data = await res.json();
           thinking.remove();
           if (!data?.response) { addMsg("Boomer Sooner! I didn't catch that — try again.", 'bot'); return; }
           renderResponse(data.response);
-          if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) {
-            setTimeout(() => checkPaywall(), 1000);
-          }
+          if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) setTimeout(() => checkPaywall(), 1000);
         } catch (err) {
           console.error('Chat error:', err);
           thinking.remove();
@@ -673,8 +660,7 @@
 
       function renderResponse(text) {
         const suggestedMatch = text.match(/SUGGESTED:\n([\s\S]*?)$/m);
-        let cleanText = text;
-        let suggestions = [];
+        let cleanText = text, suggestions = [];
         if (suggestedMatch) {
           cleanText = text.replace(suggestedMatch[0], '').trim();
           suggestions = suggestedMatch[1].split('\n').map(l => l.replace(/^[-•]\s*/, '').trim()).filter(Boolean);
@@ -682,21 +668,12 @@
         const videoUrls = [];
         const videoRegex = /(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/gi;
         let match;
-        while ((match = videoRegex.exec(cleanText)) !== null) {
-          videoUrls.push(match[1]);
-        }
+        while ((match = videoRegex.exec(cleanText)) !== null) videoUrls.push(match[1]);
         if (videoUrls.length > 0) {
-          const videoObjects = videoUrls.map((url, i) => {
-            const vId = url.split('?v=')[1];
-            return { url, title: `Highlight ${i + 1}`, videoId: vId };
-          });
+          const videoObjects = videoUrls.map((url, i) => ({ url, title: `Highlight ${i + 1}`, videoId: url.split('?v=')[1] }));
           cleanText.split('\n').forEach(line => {
             const m = line.match(/(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/);
-            if (m) {
-              const idx = videoUrls.indexOf(m[1]);
-              const title = line.replace(m[1], '').trim();
-              if (title && idx >= 0) videoObjects[idx].title = title;
-            }
+            if (m) { const idx = videoUrls.indexOf(m[1]); const title = line.replace(m[1], '').trim(); if (title && idx >= 0) videoObjects[idx].title = title; }
           });
           currentVideos = videoObjects;
           renderThumbs(videoObjects);
@@ -711,13 +688,7 @@
         if (suggestions.length > 0) {
           const suggestDiv = document.createElement('div');
           suggestDiv.className = 'suggestions';
-          suggestions.forEach(q => {
-            const btn = document.createElement('button');
-            btn.className = 'suggestion-btn';
-            btn.textContent = q;
-            btn.onclick = () => { input.value = q; sendMessage(); };
-            suggestDiv.appendChild(btn);
-          });
+          suggestions.forEach(q => { const btn = document.createElement('button'); btn.className = 'suggestion-btn'; btn.textContent = q; btn.onclick = () => { input.value = q; sendMessage(); }; suggestDiv.appendChild(btn); });
           messages.appendChild(suggestDiv);
           messages.scrollTop = messages.scrollHeight;
         }
@@ -738,7 +709,7 @@
         audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Playing…'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
       }
 
-      donateBtn?.addEventListener('click', () => { window.open(DONATE_URL, '_blank', 'noopener'); });
+      donateBtn?.addEventListener('click', () => window.open(DONATE_URL, '_blank', 'noopener'));
 
       fanToggleBtn?.addEventListener('click', () => {
         const open = fanPanel.classList.toggle('open');
@@ -747,8 +718,7 @@
 
       sendFanMsgBtn?.addEventListener('click', async (e) => {
         e.preventDefault();
-        const name = fanNameInput?.value.trim();
-        const message = fanMsgInput?.value.trim();
+        const name = fanNameInput?.value.trim(), message = fanMsgInput?.value.trim();
         if (!message) { fanMsgStatus.textContent = 'Please enter a message.'; return; }
         fanMsgStatus.textContent = 'Sending…';
         try {
@@ -761,20 +731,15 @@
 
       async function checkLiveStatus() {
         try {
-          const res  = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
+          const res = await fetch(NOW_PLAYING_URL, { cache: 'no-store' });
           const data = await res.json();
-          const live       = data?.live?.is_live === true;
-          const name       = data?.live?.streamer_name || '';
-          const nowPlaying = data?.now_playing?.song?.title || '';
+          const live = data?.live?.is_live === true, name = data?.live?.streamer_name || '', nowPlaying = data?.now_playing?.song?.title || '';
           if (live) {
-            appLiveBadge.textContent = '🔴 LIVE';
-            appLiveBadge.className   = 'live';
+            appLiveBadge.textContent = '🔴 LIVE'; appLiveBadge.className = 'live';
             appStreamerName.textContent = name ? `Broadcasting: ${name}` : 'Live broadcast in progress';
-            appStreamerName.style.color = 'rgba(255,100,100,0.9)';
-            appStreamerName.style.display = 'block';
+            appStreamerName.style.color = 'rgba(255,100,100,0.9)'; appStreamerName.style.display = 'block';
           } else {
-            appLiveBadge.textContent = 'PLAYLIST';
-            appLiveBadge.className   = '';
+            appLiveBadge.textContent = 'PLAYLIST'; appLiveBadge.className = '';
             appStreamerName.textContent = nowPlaying ? `Now playing: ${nowPlaying}` : '';
             appStreamerName.style.color = 'rgba(240,236,224,0.4)';
             appStreamerName.style.display = nowPlaying ? 'block' : 'none';
@@ -784,7 +749,7 @@
       checkLiveStatus();
       setInterval(checkLiveStatus, 15000);
 
-      // ── Branded Live Chat ──────────────────────────────────────────────────
+      // ── Branded Live Chat ──
       const liveChatMessages  = document.getElementById('liveChatMessages');
       const liveChatNameInput = document.getElementById('liveChatName');
       const liveChatMsgInput  = document.getElementById('liveChatMsg');
@@ -793,12 +758,7 @@
       function appendLiveMsg(name, message, isSystem = false) {
         const div = document.createElement('div');
         div.className = 'lc-msg' + (isSystem ? ' system' : '');
-        if (!isSystem) {
-          const nameSpan = document.createElement('span');
-          nameSpan.className = 'lc-name';
-          nameSpan.textContent = name || 'Fan';
-          div.appendChild(nameSpan);
-        }
+        if (!isSystem) { const s = document.createElement('span'); s.className = 'lc-name'; s.textContent = name || 'Fan'; div.appendChild(s); }
         div.appendChild(document.createTextNode(message));
         liveChatMessages.appendChild(div);
         liveChatMessages.scrollTop = liveChatMessages.scrollHeight;
@@ -806,134 +766,151 @@
 
       async function loadLiveChatHistory() {
         try {
-          const { data } = await window.supabase
-            .from('xsen_live_chat')
-            .select('name, message')
-            .eq('school', 'sooners')
-            .order('created_at', { ascending: false })
-            .limit(30);
-          if (data?.length) {
-            data.reverse().forEach(r => appendLiveMsg(r.name, r.message));
-          } else {
-            appendLiveMsg(null, 'Chat is open — say hey! Boomer Sooner! 🏈', true);
-          }
+          const { data } = await window.supabase.from('xsen_live_chat').select('name, message').eq('school', 'sooners').order('created_at', { ascending: false }).limit(30);
+          if (data?.length) { data.reverse().forEach(r => appendLiveMsg(r.name, r.message)); }
+          else { appendLiveMsg(null, 'Chat is open — say hey! Boomer Sooner! 🏈', true); }
         } catch(e) {}
       }
 
       function subscribeLiveChat() {
-        window.supabase
-          .channel('xsen_live_chat_sooners')
-          .on('postgres_changes', {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'xsen_live_chat',
-            filter: 'school=eq.sooners'
-          }, payload => {
-            appendLiveMsg(payload.new.name, payload.new.message);
-          })
+        window.supabase.channel('xsen_live_chat_sooners')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'xsen_live_chat', filter: 'school=eq.sooners' }, payload => appendLiveMsg(payload.new.name, payload.new.message))
           .subscribe();
       }
 
       async function sendLiveChatMsg() {
-        const name    = liveChatNameInput.value.trim().slice(0, 32);
-        const message = liveChatMsgInput.value.trim().slice(0, 200);
+        const name = liveChatNameInput.value.trim().slice(0, 32), message = liveChatMsgInput.value.trim().slice(0, 200);
         if (!message) return;
         liveChatMsgInput.value = '';
         try {
-          await window.supabase
-            .from('xsen_live_chat')
-            .insert([{ school: 'sooners', name: name || 'Fan', message }]);
+          await window.supabase.from('xsen_live_chat').insert([{ school: 'sooners', name: name || 'Fan', message }]);
         } catch(e) { appendLiveMsg(null, 'Could not send — try again.', true); }
       }
 
       liveChatSendBtn?.addEventListener('click', sendLiveChatMsg);
       liveChatMsgInput?.addEventListener('keydown', e => { if (e.key === 'Enter') sendLiveChatMsg(); });
-
       loadLiveChatHistory();
       subscribeLiveChat();
-      // ── End Branded Live Chat ──────────────────────────────────────────────
     });
   </script>
 
+  <!-- ── Slim banner + history drawer ── -->
   <script>
     window.XSEN_SCHOOL = 'sooners';
-    (async function initXSENBanner() {
+
+    const NOTIF_CAT_STYLES = {
+      GO_LIVE:       { label: '🔴 Live',       bg: 'rgba(204,0,0,0.2)',    color: '#ff6666' },
+      BREAKING_NEWS: { label: '🚨 Breaking',   bg: 'rgba(204,0,0,0.2)',    color: '#ff6666' },
+      INJURY_REPORT: { label: '🏥 Injury',     bg: 'rgba(232,200,74,0.2)', color: '#e8c84a' },
+      ROSTER_MOVE:   { label: '📋 Roster',     bg: 'rgba(232,200,74,0.2)', color: '#e8c84a' },
+      GAME_ALERT:    { label: '🏈 Game Alert', bg: 'rgba(0,180,80,0.2)',   color: '#00cc66' },
+      GENERAL:       { label: '📢 Update',     bg: 'rgba(100,100,100,0.2)',color: '#999999' }
+    };
+
+    function esc(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderSlimBanner(ann) {
+      const bar = document.getElementById('announcement-bar');
+      if (!bar) return;
+      const style = NOTIF_CAT_STYLES[ann.category] || NOTIF_CAT_STYLES.GENERAL;
+      bar.innerHTML = `
+        <div class="xsen-slim-banner">
+          <span class="xsen-banner-cat" style="background:${style.bg};color:${style.color};">${style.label}</span>
+          <span class="xsen-banner-msg">${esc(ann.message)}</span>
+          <button class="xsen-banner-history" onclick="openHistoryDrawer()">📋 History</button>
+        </div>`;
+    }
+
+    async function initXSENBanner() {
       try {
         const { data } = await window.supabase
-          .from('xsen_announcements').select('*').eq('active', true)
-          .or('school.eq.ALL,school.eq.sooners')
-          .order('created_at', { ascending: false }).limit(1);
+          .from('xsen_announcements')
+          .select('*')
+          .eq('active', true)
+          .eq('school', 'sooners')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
         const bar = document.getElementById('announcement-bar');
-        if (!bar || !data?.length) return;
-        const now = new Date();
-        const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
-        if (!valid.length) return;
-        bar.innerHTML = valid.map(a => `
-          <div class="xsen-announcement">
-            <span>${a.message}</span>
-            ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" class="ann-link">${a.link_text} →</a>` : ''}
-            <button class="ann-dismiss" onclick="this.closest('.xsen-announcement').remove()">✕ dismiss</button>
-          </div>`).join('');
+        if (!bar) return;
+        const now   = new Date();
+        const valid = (data || []).filter(a => !a.expires_at || new Date(a.expires_at) > now);
+        if (valid.length) { renderSlimBanner(valid[0]); }
+        else { bar.innerHTML = ''; }
       } catch(e) {}
-    })();
+
+      // Realtime: banner updates the moment operator sends a notification
+      window.supabase
+        .channel('app_ann_sooners')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'xsen_announcements', filter: 'school=eq.sooners' },
+          payload => { renderSlimBanner(payload.new); })
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'xsen_announcements', filter: 'school=eq.sooners' },
+          payload => { if (!payload.new.active) document.getElementById('announcement-bar').innerHTML = ''; })
+        .subscribe();
+    }
+
+    async function openHistoryDrawer() {
+      document.getElementById('historyOverlay').classList.add('open');
+      document.getElementById('historyDrawer').classList.add('open');
+      document.getElementById('historyList').innerHTML = '<div class="history-empty">Loading…</div>';
+      try {
+        const { data } = await window.supabase
+          .from('xsen_push_log')
+          .select('*')
+          .eq('school', 'OU')
+          .order('sent_at', { ascending: false })
+          .limit(10);
+
+        const list = document.getElementById('historyList');
+        if (!data?.length) { list.innerHTML = '<div class="history-empty">No previous alerts.</div>'; return; }
+
+        list.innerHTML = data.map(n => {
+          const style = NOTIF_CAT_STYLES[n.category] || NOTIF_CAT_STYLES.GENERAL;
+          const time  = new Date(n.sent_at).toLocaleString([], { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+          return `
+            <div class="history-item">
+              <div class="history-item-top">
+                <span class="history-item-cat" style="background:${style.bg};color:${style.color};">${style.label}</span>
+                <span class="history-item-time">${time}</span>
+              </div>
+              <div class="history-item-title">${esc(n.title)}</div>
+              <div class="history-item-body">${esc(n.full_text || n.short_text)}</div>
+            </div>`;
+        }).join('');
+      } catch(e) {
+        document.getElementById('historyList').innerHTML = '<div class="history-empty">Could not load history.</div>';
+      }
+    }
+
+    function closeHistoryDrawer() {
+      document.getElementById('historyOverlay').classList.remove('open');
+      document.getElementById('historyDrawer').classList.remove('open');
+    }
+
+    // Auto-open history drawer if notification tapped (?view=alerts)
+    if (new URLSearchParams(window.location.search).get('view') === 'alerts') {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(openHistoryDrawer, 600));
+    }
+
+    initXSENBanner();
   </script>
 
   <!-- ── PWA + Push Notifications ── -->
   <script>
   (function() {
     'use strict';
-
-    const SCHOOL_ID     = 'sooners';
-    const ORCHESTRATOR  = 'https://glorious-appreciation-production.up.railway.app';
-    const notifyBtn     = document.getElementById('notifyBtn');
-
-    function showIOSInstallGuide() {
-      const existing = document.getElementById('ios-install-guide');
-      if (existing) { existing.remove(); return; }
-      const panel = document.createElement('div');
-      panel.id = 'ios-install-guide';
-      panel.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <strong style="font-size:14px;color:#f5f5f0;">Get Live Alerts on iPhone</strong>
-          <button onclick="document.getElementById('ios-install-guide').remove()"
-            style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;line-height:1;">✕</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:28px;height:28px;background:#CC0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">1</div>
-            <span style="font-size:13px;color:rgba(245,245,240,0.75);">Tap the <strong style="color:#f5f5f0;">Share</strong> button at the bottom of Safari <span style="font-size:16px;">⬆️</span></span>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:28px;height:28px;background:#CC0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">2</div>
-            <span style="font-size:13px;color:rgba(245,245,240,0.75);">Scroll down and tap <strong style="color:#f5f5f0;">Add to Home Screen</strong> <span style="font-size:16px;">➕</span></span>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:28px;height:28px;background:#CC0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">3</div>
-            <span style="font-size:13px;color:rgba(245,245,240,0.75);">Open the app from your home screen, then tap <strong style="color:#f5f5f0;">🔔</strong> to enable alerts</span>
-          </div>
-        </div>
-      `;
-      panel.style.cssText = `
-        position:fixed; bottom:0; left:0; right:0; z-index:9999;
-        background:#1a1a1a; border-top:1px solid rgba(204,0,0,0.4);
-        padding:20px 18px 32px; max-width:480px;
-        margin:0 auto; left:50%; transform:translateX(-50%);
-        box-shadow:0 -8px 32px rgba(0,0,0,0.6);
-        animation:slideUp 0.3s ease;
-      `;
-      document.body.appendChild(panel);
-    }
+    const SCHOOL_ID    = 'sooners';
+    const ORCHESTRATOR = 'https://glorious-appreciation-production.up.railway.app';
+    const notifyBtn    = document.getElementById('notifyBtn');
 
     async function registerSW() {
       if (!('serviceWorker' in navigator)) return null;
       try {
         const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/sooners/' });
-        console.log('[PWA] Service worker registered:', reg.scope);
         return reg;
-      } catch (err) {
-        console.warn('[PWA] SW registration failed:', err.message);
-        return null;
-      }
+      } catch (err) { console.warn('[PWA] SW registration failed:', err.message); return null; }
     }
 
     function urlBase64ToUint8Array(base64String) {
@@ -944,51 +921,26 @@
     }
 
     async function getVapidKey() {
-      try {
-        const r = await fetch(`${ORCHESTRATOR}/push/vapid-public-key`);
-        const data = await r.json();
-        return data.key;
-      } catch {
-        return null;
-      }
+      try { const r = await fetch(`${ORCHESTRATOR}/push/vapid-public-key`); const data = await r.json(); return data.key; }
+      catch { return null; }
     }
 
     async function subscribeToPush() {
       const reg = await registerSW();
-      if (!reg) {
-        showToast('Push notifications not supported on this browser.');
-        return;
-      }
+      if (!reg) { showToast('Push notifications not supported on this browser.'); return; }
       const permission = await Notification.requestPermission();
-      if (permission !== 'granted') {
-        showToast('Notifications blocked. Enable in browser settings.');
-        updateNotifyBtn('blocked');
-        return;
-      }
+      if (permission !== 'granted') { showToast('Notifications blocked. Enable in browser settings.'); updateNotifyBtn('blocked'); return; }
       const vapidKey = await getVapidKey();
-      if (!vapidKey) {
-        showToast('Push service unavailable right now.');
-        return;
-      }
+      if (!vapidKey) { showToast('Push service unavailable right now.'); return; }
       try {
         const existing = await reg.pushManager.getSubscription();
         if (existing) await existing.unsubscribe();
-        const subscription = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(vapidKey)
-        });
-        await fetch(`${ORCHESTRATOR}/push/subscribe`, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ subscription, schoolId: SCHOOL_ID })
-        });
+        const subscription = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(vapidKey) });
+        await fetch(`${ORCHESTRATOR}/push/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subscription, schoolId: SCHOOL_ID }) });
         localStorage.setItem('xsen_push_subscribed', 'true');
         updateNotifyBtn('subscribed');
         showToast(`🔔 You'll get Sooner alerts! Boomer Sooner!`);
-      } catch (err) {
-        console.error('[PWA] Push subscribe error:', err);
-        showToast('Could not enable notifications. Try again.');
-      }
+      } catch (err) { console.error('[PWA] Push subscribe error:', err); showToast('Could not enable notifications. Try again.'); }
     }
 
     async function unsubscribeFromPush() {
@@ -996,32 +948,24 @@
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
         if (sub) {
-          await fetch(`${ORCHESTRATOR}/push/unsubscribe`, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ endpoint: sub.endpoint })
-          });
+          await fetch(`${ORCHESTRATOR}/push/unsubscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ endpoint: sub.endpoint }) });
           await sub.unsubscribe();
         }
         localStorage.removeItem('xsen_push_subscribed');
         updateNotifyBtn('idle');
         showToast('Notifications turned off.');
-      } catch (err) {
-        console.error('[PWA] Unsubscribe error:', err);
-      }
+      } catch (err) { console.error('[PWA] Unsubscribe error:', err); }
     }
 
     function updateNotifyBtn(state) {
       if (!notifyBtn) return;
       const states = {
-        idle:       { icon: '🔔', title: 'Get OU Alerts',       opacity: '0.7' },
+        idle:       { icon: '🔔', title: 'Get OU Alerts',                    opacity: '0.7' },
         subscribed: { icon: '🔔', title: 'Notifications ON — tap to turn off', opacity: '1', color: '#c8a84b' },
-        blocked:    { icon: '🔕', title: 'Notifications blocked', opacity: '0.4' }
+        blocked:    { icon: '🔕', title: 'Notifications blocked',              opacity: '0.4' }
       };
       const s = states[state] || states.idle;
-      notifyBtn.textContent = s.icon;
-      notifyBtn.title       = s.title;
-      notifyBtn.style.opacity = s.opacity;
+      notifyBtn.textContent = s.icon; notifyBtn.title = s.title; notifyBtn.style.opacity = s.opacity;
       if (s.color) notifyBtn.style.borderColor = s.color;
     }
 
@@ -1029,24 +973,43 @@
       const existing = document.getElementById('pwa-toast');
       if (existing) existing.remove();
       const toast = document.createElement('div');
-      toast.id = 'pwa-toast';
-      toast.textContent = msg;
-      toast.style.cssText = `
-        position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
-        background:rgba(30,30,30,0.95); color:#fff; padding:10px 18px;
-        border-radius:20px; font-size:13px; z-index:9999;
-        box-shadow:0 4px 20px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1);
-        white-space:nowrap; max-width:90vw; text-align:center;
-      `;
+      toast.id = 'pwa-toast'; toast.textContent = msg;
+      toast.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(30,30,30,0.95);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);white-space:nowrap;max-width:90vw;text-align:center;`;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 3500);
     }
 
-    let deferredInstallPrompt = null;
+    function showIOSInstallGuide() {
+      const existing = document.getElementById('ios-install-guide');
+      if (existing) { existing.remove(); return; }
+      const panel = document.createElement('div');
+      panel.id = 'ios-install-guide';
+      panel.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <strong style="font-size:14px;color:#f5f5f0;">Get Live Alerts on iPhone</strong>
+          <button onclick="document.getElementById('ios-install-guide').remove()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;line-height:1;">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;background:#CC0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">1</div>
+            <span style="font-size:13px;color:rgba(245,245,240,0.75);">Tap the <strong style="color:#f5f5f0;">Share</strong> button at the bottom of Safari ⬆️</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;background:#CC0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">2</div>
+            <span style="font-size:13px;color:rgba(245,245,240,0.75);">Scroll down and tap <strong style="color:#f5f5f0;">Add to Home Screen</strong> ➕</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;background:#CC0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">3</div>
+            <span style="font-size:13px;color:rgba(245,245,240,0.75);">Open from your home screen, then tap <strong style="color:#f5f5f0;">🔔</strong> to enable alerts</span>
+          </div>
+        </div>`;
+      panel.style.cssText = `position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a1a1a;border-top:1px solid rgba(204,0,0,0.4);padding:20px 18px 32px;max-width:480px;margin:0 auto;left:50%;transform:translateX(-50%);box-shadow:0 -8px 32px rgba(0,0,0,0.6);`;
+      document.body.appendChild(panel);
+    }
 
+    let deferredInstallPrompt = null;
     window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      deferredInstallPrompt = e;
+      e.preventDefault(); deferredInstallPrompt = e;
       setTimeout(showInstallBanner, 30_000);
     });
 
@@ -1056,37 +1019,21 @@
       if (!deferredInstallPrompt) return;
       const banner = document.createElement('div');
       banner.id = 'pwa-install-banner';
-      banner.innerHTML = `
-        <span>📱 Add XSEN to your home screen</span>
-        <button id="pwa-install-yes" style="background:#841617;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;">Install</button>
-        <button id="pwa-install-no" style="background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:20px;padding:0 4px;">✕</button>
-      `;
-      banner.style.cssText = `
-        position:fixed; bottom:0; left:0; right:0;
-        background:rgba(20,20,20,0.97); color:#fff;
-        padding:12px 16px; display:flex; align-items:center; gap:12px;
-        z-index:9998; border-top:1px solid rgba(132,22,23,0.4);
-        font-size:14px;
-      `;
+      banner.innerHTML = `<span>📱 Add XSEN to your home screen</span><button id="pwa-install-yes" style="background:#841617;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;">Install</button><button id="pwa-install-no" style="background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:20px;padding:0 4px;">✕</button>`;
+      banner.style.cssText = `position:fixed;bottom:0;left:0;right:0;background:rgba(20,20,20,0.97);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;z-index:9998;border-top:1px solid rgba(132,22,23,0.4);font-size:14px;`;
       document.body.appendChild(banner);
       document.getElementById('pwa-install-yes').addEventListener('click', async () => {
-        banner.remove();
-        deferredInstallPrompt.prompt();
-        const result = await deferredInstallPrompt.userChoice;
-        console.log('[PWA] Install result:', result.outcome);
-        deferredInstallPrompt = null;
+        banner.remove(); deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice; deferredInstallPrompt = null;
       });
-      document.getElementById('pwa-install-no').addEventListener('click', () => {
-        banner.remove();
-        localStorage.setItem('xsen_install_dismissed', '1');
-      });
+      document.getElementById('pwa-install-no').addEventListener('click', () => { banner.remove(); localStorage.setItem('xsen_install_dismissed', '1'); });
     }
 
-   async function init() {
+    async function init() {
       registerSW();
       if (!notifyBtn) return;
 
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isIOS        = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
       if (!('Notification' in window)) {
@@ -1094,41 +1041,31 @@
           notifyBtn.style.display = 'block';
           notifyBtn.style.opacity = '0.7';
           notifyBtn.title = 'Add to Home Screen for alerts';
-         notifyBtn.addEventListener('click', () => {
-            showIOSInstallGuide();
-          });
+          notifyBtn.addEventListener('click', () => showIOSInstallGuide());
         } else {
           notifyBtn.style.display = 'none';
         }
         return;
       }
-      if (Notification.permission === 'denied') {
-        updateNotifyBtn('blocked');
-        return;
-      }
+
+      if (Notification.permission === 'denied') { updateNotifyBtn('blocked'); return; }
       if (Notification.permission === 'granted' && localStorage.getItem('xsen_push_subscribed')) {
         updateNotifyBtn('subscribed');
       } else {
         updateNotifyBtn('idle');
       }
+
       notifyBtn.addEventListener('click', async () => {
-        const isSubscribed = localStorage.getItem('xsen_push_subscribed');
-        if (isSubscribed) {
-          await unsubscribeFromPush();
-        } else {
-          await subscribeToPush();
-        }
+        if (localStorage.getItem('xsen_push_subscribed')) { await unsubscribeFromPush(); }
+        else { await subscribeToPush(); }
       });
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
+    else { init(); }
   })();
   </script>
 
 </body>
 </html>
+
