@@ -798,7 +798,7 @@ async function sendNotification() {
     // 3 — Fire push to all subscribers
     await fetch(`${ORCHESTRATOR}/announcements/notify`, {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ school, schoolId: school, title, message: shortTxt, url: `https://xsen.fun/sooners/app`, tag: selectedCategory.toLowerCase(), type: meta.ann_type })
+      body: JSON.stringify({ school, schoolId: school, title, message: shortTxt, url: `https://xsen.fun/sooners/app.html`, tag: selectedCategory.toLowerCase(), type: meta.ann_type })
     });
 
     showToast('Notification sent!','success');
