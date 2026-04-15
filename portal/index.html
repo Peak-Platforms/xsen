@@ -779,7 +779,7 @@ async function sendNotification() {
     if (logErr) throw new Error('Log write failed: ' + logErr.message);
 
     // 2 — Banner in app (full detail shown when user opens)
-    await sb.from('xsen_announcements').insert({ message: fullTxt||shortTxt, type: meta.ann_type, school, link_text: linkText||null, link_url: linkUrl||null, expires_at: null, active: true });
+    await sb.from('xsen_announcements').insert({ message: fullTxt||shortTxt, type: meta.ann_type, school: 'sooners', link_text: linkText||null, link_url: linkUrl||null, expires_at: null, active: true });
 
     // 3 — Fire push to all subscribers
     await fetch(`${ORCHESTRATOR}/announcements/notify`, {
