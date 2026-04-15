@@ -139,7 +139,7 @@ self.addEventListener('notificationclick', event => {
   if (event.action === 'dismiss') return;
 
   const targetUrl =
-    event.notification.data?.url || 'https://boomerbot.fun';
+    event.notification.data?.url || 'https://xsen.fun/sooners/app';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
