@@ -1,6 +1,6 @@
 // ─── XSEN Service Worker ──────────────────────────────────────────────────────
 // Version — bump this to force cache refresh on deploy
-const CACHE_VERSION = 'xsen-sooners-v1';
+const CACHE_VERSION = 'xsen-sooners-v2';
 
 const STATIC_ASSETS = [
   '/',
@@ -138,8 +138,7 @@ self.addEventListener('notificationclick', event => {
 
   if (event.action === 'dismiss') return;
 
-  const targetUrl =
-    event.notification.data?.url || 'https://xsen.fun/sooners/app';
+ const targetUrl = 'https://xsen.fun/sooners/app';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
