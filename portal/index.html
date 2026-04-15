@@ -92,8 +92,6 @@
   .aired-meta{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);white-space:nowrap;text-align:right;}
 
   .queries-panel{margin:1.5rem 2rem 2rem;}
-  .queries-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);}
-  .queries-list{padding:1rem 1.5rem;}
   .query-row{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);}
   .query-row:last-child{border-bottom:none;}
   .query-text{flex:1;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--text);}
@@ -112,117 +110,68 @@
   .btn-save-settings:hover{opacity:0.85;}
   .queries-note{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);line-height:1.6;margin-top:0.5rem;}
 
-  /* ── Live Chat Management ── */
-  .chat-mgmt-toolbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
-    flex-wrap: wrap; gap: 0.75rem;
-  }
-  .chat-mgmt-toolbar-left { display: flex; align-items: center; gap: 1rem; }
-  .chat-live-indicator {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.15em; text-transform: uppercase;
-  }
-  .chat-live-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--green);
-    animation: pulse 1.5s infinite;
-  }
-  .btn-clear-chat {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.4rem 0.9rem; cursor: pointer; transition: opacity 0.2s;
-    background: transparent; color: var(--red); border: 1px solid var(--red);
-  }
-  .btn-clear-chat:hover { opacity: 0.75; }
-  .btn-export-chat {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.4rem 0.9rem; cursor: pointer; transition: opacity 0.2s;
-    background: transparent; color: var(--muted); border: 1px solid var(--border);
-  }
-  .btn-export-chat:hover { color: var(--text); border-color: var(--text); }
-  #chat-log {
-    height: 480px; overflow-y: auto; padding: 0.5rem 0;
-    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-  }
-  .chat-log-row {
-    display: flex; align-items: flex-start; gap: 1rem;
-    padding: 0.65rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.03);
-    transition: background 0.15s;
-  }
-  .chat-log-row:hover { background: rgba(255,255,255,0.02); }
-  .chat-log-row.flagged { background: rgba(204,34,0,0.06); border-left: 2px solid var(--red); }
-  .chat-log-meta {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    color: var(--muted); white-space: nowrap; min-width: 130px; padding-top: 1px;
-  }
-  .chat-log-name {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-    font-weight: 500; color: var(--accent); min-width: 90px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    padding-top: 1px;
-  }
-  .chat-log-message {
-    flex: 1; font-size: 0.85rem; color: var(--text); line-height: 1.4;
-  }
-  .chat-log-actions { display: flex; gap: 0.4rem; flex-shrink: 0; padding-top: 1px; }
-  .btn-delete-msg {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
-    letter-spacing: 0.05em; background: none; border: 1px solid var(--border);
-    color: var(--muted); padding: 0.2rem 0.45rem; cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  .btn-delete-msg:hover { color: var(--red); border-color: var(--red); }
-  .chat-auto-clear-row {
-    display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem;
-    border-top: 1px solid var(--border); flex-wrap: wrap;
-  }
-  .chat-auto-clear-row label {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
-    white-space: nowrap;
-  }
-  #chat-filter-input {
-    flex: 1; min-width: 160px; background: var(--bg); border: 1px solid var(--border);
-    color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    padding: 0.4rem 0.75rem; outline: none; transition: border-color 0.2s;
-  }
-  #chat-filter-input:focus { border-color: var(--accent); }
+  /* ── Notifications tab ── */
+  .notif-category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1.25rem;}
+  @media(max-width:600px){.notif-category-grid{grid-template-columns:repeat(2,1fr);}}
+  .category-btn{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 0.5rem;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--muted);transition:all 0.2s;text-align:center;line-height:1.4;}
+  .category-btn:hover{border-color:var(--accent);color:var(--text);}
+  .category-btn.selected{background:var(--accent);color:#000;border-color:var(--accent);}
+  .notif-char-count{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);text-align:right;margin-top:0.25rem;}
+  .notif-char-count.warn{color:var(--accent);}
+  .notif-char-count.over{color:var(--red);}
+  .notif-preview-box{background:#1a1a1a;border:1px solid var(--border);padding:1rem 1.25rem;margin-top:1rem;}
+  .notif-preview-phone{background:#000;border-radius:12px;padding:1rem;max-width:320px;border:1px solid #333;}
+  .notif-preview-app{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.4rem;}
+  .notif-preview-app-dot{width:14px;height:14px;background:var(--red);border-radius:3px;display:inline-block;}
+  .notif-preview-title{font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:0.2rem;}
+  .notif-preview-body{font-size:0.75rem;color:rgba(255,255,255,0.6);line-height:1.4;}
+  .btn-send-notif{width:100%;background:var(--red);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.15em;padding:0.9rem;cursor:pointer;transition:opacity 0.2s;margin-top:1rem;}
+  .btn-send-notif:hover{opacity:0.85;}
+  .btn-send-notif:disabled{opacity:0.4;cursor:not-allowed;}
+  .notif-log-row{display:flex;align-items:flex-start;gap:1rem;padding:0.85rem 1.5rem;border-bottom:1px solid var(--border);transition:background 0.15s;}
+  .notif-log-row:last-child{border-bottom:none;}
+  .notif-log-row:hover{background:rgba(255,255,255,0.02);}
+  .notif-cat-badge{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+  .notif-log-content{flex:1;min-width:0;}
+  .notif-log-title{font-size:0.85rem;font-weight:500;color:var(--text);margin-bottom:0.25rem;}
+  .notif-log-short{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .notif-log-full{font-size:0.8rem;color:rgba(232,232,232,0.6);line-height:1.4;margin-top:0.35rem;}
+  .notif-log-meta{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);white-space:nowrap;text-align:right;flex-shrink:0;}
 
-  /* ── Confirm overlay ── */
-  .confirm-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index:600;
-    display: none; align-items: center; justify-content: center; padding: 2rem;
-  }
-  .confirm-overlay.open { display: flex; }
-  .confirm-box {
-    background: var(--surface); border: 1px solid var(--red);
-    padding: 2rem; width: 100%; max-width: 380px; text-align: center;
-  }
-  .confirm-title {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
-    letter-spacing: 0.05em; color: var(--red); margin-bottom: 0.75rem;
-  }
-  .confirm-msg {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem;
-  }
-  .confirm-actions { display: flex; gap: 0.75rem; justify-content: center; }
-  .btn-confirm-yes {
-    background: var(--red); color: #fff; border: none;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.6rem 1.25rem; cursor: pointer; transition: opacity 0.2s;
-  }
-  .btn-confirm-yes:hover { opacity: 0.8; }
-  .btn-confirm-no {
-    background: transparent; color: var(--muted); border: 1px solid var(--border);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.6rem 1.25rem; cursor: pointer; transition: color 0.2s;
-  }
-  .btn-confirm-no:hover { color: var(--text); }
+  /* ── Live Chat ── */
+  .chat-mgmt-toolbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.75rem;}
+  .chat-mgmt-toolbar-left{display:flex;align-items:center;gap:1rem;}
+  .chat-live-indicator{display:flex;align-items:center;gap:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;}
+  .chat-live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+  .btn-clear-chat{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 0.9rem;cursor:pointer;transition:opacity 0.2s;background:transparent;color:var(--red);border:1px solid var(--red);}
+  .btn-clear-chat:hover{opacity:0.75;}
+  .btn-export-chat{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 0.9rem;cursor:pointer;transition:opacity 0.2s;background:transparent;color:var(--muted);border:1px solid var(--border);}
+  .btn-export-chat:hover{color:var(--text);border-color:var(--text);}
+  #chat-log{height:480px;overflow-y:auto;padding:0.5rem 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+  .chat-log-row{display:flex;align-items:flex-start;gap:1rem;padding:0.65rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.03);transition:background 0.15s;}
+  .chat-log-row:hover{background:rgba(255,255,255,0.02);}
+  .chat-log-meta{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);white-space:nowrap;min-width:130px;padding-top:1px;}
+  .chat-log-name{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:500;color:var(--accent);min-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:1px;}
+  .chat-log-message{flex:1;font-size:0.85rem;color:var(--text);line-height:1.4;}
+  .chat-log-actions{display:flex;gap:0.4rem;flex-shrink:0;padding-top:1px;}
+  .btn-delete-msg{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;background:none;border:1px solid var(--border);color:var(--muted);padding:0.2rem 0.45rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+  .btn-delete-msg:hover{color:var(--red);border-color:var(--red);}
+  .chat-auto-clear-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+  .chat-auto-clear-row label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  #chat-filter-input{flex:1;min-width:160px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.75rem;padding:0.4rem 0.75rem;outline:none;transition:border-color 0.2s;}
+  #chat-filter-input:focus{border-color:var(--accent);}
+
+  /* ── Confirm ── */
+  .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:600;display:none;align-items:center;justify-content:center;padding:2rem;}
+  .confirm-overlay.open{display:flex;}
+  .confirm-box{background:var(--surface);border:1px solid var(--red);padding:2rem;width:100%;max-width:380px;text-align:center;}
+  .confirm-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.05em;color:var(--red);margin-bottom:0.75rem;}
+  .confirm-msg{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);line-height:1.6;margin-bottom:1.5rem;}
+  .confirm-actions{display:flex;gap:0.75rem;justify-content:center;}
+  .btn-confirm-yes{background:var(--red);color:#fff;border:none;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:opacity 0.2s;}
+  .btn-confirm-yes:hover{opacity:0.8;}
+  .btn-confirm-no{background:transparent;color:var(--muted);border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:color 0.2s;}
+  .btn-confirm-no:hover{color:var(--text);}
 
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:2rem;}
   .modal-overlay.open{display:flex;}
@@ -266,7 +215,6 @@
 
 <!-- DASHBOARD -->
 <div id="dashboard">
-
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-logo">XSEN</div>
@@ -306,34 +254,25 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('episodes', this)">Episodes</button>
-    <button class="nav-tab" onclick="switchTab('queries', this)">Search Queries</button>
-    <button class="nav-tab" onclick="switchTab('announcements', this)">Announcements</button>
-    <button class="nav-tab" onclick="switchTab('social', this)">Social Posts</button>
-    <button class="nav-tab" onclick="switchTab('livestream', this)">Live Stream</button>
-    <button class="nav-tab" onclick="switchTab('livechat', this)">Live Chat</button>
+    <button class="nav-tab active" onclick="switchTab('episodes',this)">Episodes</button>
+    <button class="nav-tab" onclick="switchTab('queries',this)">Search Queries</button>
+    <button class="nav-tab" onclick="switchTab('announcements',this)">Announcements</button>
+    <button class="nav-tab" onclick="switchTab('notifications',this)">🔔 Notifications</button>
+    <button class="nav-tab" onclick="switchTab('social',this)">Social Posts</button>
+    <button class="nav-tab" onclick="switchTab('livestream',this)">Live Stream</button>
+    <button class="nav-tab" onclick="switchTab('livechat',this)">Live Chat</button>
   </div>
 
   <!-- EPISODES TAB -->
   <div class="tab-content active" id="tab-episodes">
     <div class="grid">
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Episode Queue — Awaiting Review</span>
-          <span class="panel-count" id="queue-count">0</span>
-        </div>
-        <div id="episode-queue" class="episode-list">
-          <div class="loading"><div class="spinner"></div>LOADING...</div>
-        </div>
+        <div class="panel-header"><span class="panel-title">Episode Queue — Awaiting Review</span><span class="panel-count" id="queue-count">0</span></div>
+        <div id="episode-queue" class="episode-list"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
       </div>
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Recently Aired</span>
-          <span class="panel-count" id="aired-count">0</span>
-        </div>
-        <div id="aired-list">
-          <div class="loading"><div class="spinner"></div>LOADING...</div>
-        </div>
+        <div class="panel-header"><span class="panel-title">Recently Aired</span><span class="panel-count" id="aired-count">0</span></div>
+        <div id="aired-list"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
       </div>
     </div>
   </div>
@@ -342,10 +281,7 @@
   <div class="tab-content" id="tab-queries">
     <div class="queries-panel">
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Search Queries</span>
-          <span class="panel-count" id="query-count">0 active</span>
-        </div>
+        <div class="panel-header"><span class="panel-title">Search Queries</span><span class="panel-count" id="query-count">0 active</span></div>
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
           <p class="queries-note">These queries run on Google News every scrape cycle. Add terms specific to your school, conference, or key players. More specific = better results.</p>
           <div class="add-query-row" style="margin-top:1rem;">
@@ -353,28 +289,21 @@
             <button class="btn-add" onclick="addQuery()">+ ADD QUERY</button>
           </div>
         </div>
-        <div id="queries-list" style="padding:0 1.5rem 1.5rem;">
-          <div class="loading"><div class="spinner"></div>LOADING...</div>
-        </div>
+        <div id="queries-list" style="padding:0 1.5rem 1.5rem;"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
       </div>
       <div class="settings-row">
         <div class="setting-box">
           <label>Scrape Frequency</label>
           <select class="setting-select" id="scrape-freq">
-            <option value="1">Every hour</option>
-            <option value="2" selected>Every 2 hours</option>
-            <option value="4">Every 4 hours</option>
-            <option value="6">Every 6 hours</option>
-            <option value="12">Every 12 hours</option>
+            <option value="1">Every hour</option><option value="2" selected>Every 2 hours</option>
+            <option value="4">Every 4 hours</option><option value="6">Every 6 hours</option><option value="12">Every 12 hours</option>
           </select>
         </div>
         <div class="setting-box">
           <label>Minimum Story Score</label>
           <select class="setting-select" id="min-score">
-            <option value="6">6+ (more stories)</option>
-            <option value="7" selected>7+ (recommended)</option>
-            <option value="8">8+ (high quality only)</option>
-            <option value="9">9+ (breaking news only)</option>
+            <option value="6">6+ (more stories)</option><option value="7" selected>7+ (recommended)</option>
+            <option value="8">8+ (high quality only)</option><option value="9">9+ (breaking news only)</option>
           </select>
         </div>
       </div>
@@ -386,43 +315,20 @@
   <div class="tab-content" id="tab-announcements">
     <div class="queries-panel">
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Network Announcements</span>
-          <span class="panel-count" id="ann-count">0 active</span>
-        </div>
+        <div class="panel-header"><span class="panel-title">Network Announcements</span><span class="panel-count" id="ann-count">0 active</span></div>
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
-          <p class="queries-note">Post announcements to your operators and fans. Target ALL stations or a specific school. Critical announcements appear in red, warnings in yellow, info in green.</p>
+          <p class="queries-note">Post announcements to your operators and fans. Target ALL stations or a specific school.</p>
         </div>
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
           <label class="field-label" style="margin-bottom:0.5rem;">Message</label>
           <input class="query-input" id="ann-message" type="text" placeholder="Scheduled maintenance tonight 11pm-1am CT..." style="width:100%;margin-bottom:1rem;">
           <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
-            <div style="flex:1;min-width:150px;">
-              <label class="field-label">Type</label>
-              <select class="setting-select" id="ann-type">
-                <option value="info">Info (green)</option>
-                <option value="warning">Warning (yellow)</option>
-                <option value="critical">Critical (red)</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:150px;">
-              <label class="field-label">Target</label>
-              <select class="setting-select" id="ann-school">
-                <option value="ALL">All Stations</option>
-                <option value="OU">OU Only</option>
-                <option value="OSU">OSU Only</option>
-                <option value="TEXAS">Texas Only</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:150px;">
-              <label class="field-label">Expires</label>
-              <select class="setting-select" id="ann-expires">
-                <option value="">Never</option>
-                <option value="1h">In 1 hour</option>
-                <option value="24h">In 24 hours</option>
-                <option value="7d">In 7 days</option>
-              </select>
-            </div>
+            <div style="flex:1;min-width:150px;"><label class="field-label">Type</label>
+              <select class="setting-select" id="ann-type"><option value="info">Info (green)</option><option value="warning">Warning (yellow)</option><option value="critical">Critical (red)</option></select></div>
+            <div style="flex:1;min-width:150px;"><label class="field-label">Target</label>
+              <select class="setting-select" id="ann-school"><option value="ALL">All Stations</option><option value="OU">OU Only</option><option value="OSU">OSU Only</option><option value="TEXAS">Texas Only</option></select></div>
+            <div style="flex:1;min-width:150px;"><label class="field-label">Expires</label>
+              <select class="setting-select" id="ann-expires"><option value="">Never</option><option value="1h">In 1 hour</option><option value="24h">In 24 hours</option><option value="7d">In 7 days</option></select></div>
           </div>
           <div style="display:flex;gap:1rem;margin-bottom:0.75rem;">
             <input class="query-input" id="ann-link-text" type="text" placeholder="CTA button text (optional)" style="flex:1;">
@@ -430,9 +336,68 @@
           </div>
           <button class="btn-add" onclick="postAnnouncement()" style="width:100%;">POST ANNOUNCEMENT</button>
         </div>
-        <div id="announcements-list" style="padding:0.5rem;">
-          <div class="loading"><div class="spinner"></div>LOADING...</div>
+        <div id="announcements-list" style="padding:0.5rem;"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS TAB -->
+  <div class="tab-content" id="tab-notifications">
+    <div class="queries-panel">
+      <div class="grid" style="margin-bottom:0;">
+
+        <!-- Composer -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Send Push Notification</span></div>
+          <div style="padding:1.25rem 1.5rem;">
+
+            <label class="field-label" style="margin-bottom:0.75rem;">Category</label>
+            <div class="notif-category-grid">
+              <button class="category-btn" data-cat="GO_LIVE"       onclick="selectCategory(this)">🔴 Go Live</button>
+              <button class="category-btn" data-cat="BREAKING_NEWS" onclick="selectCategory(this)">🚨 Breaking News</button>
+              <button class="category-btn" data-cat="INJURY_REPORT" onclick="selectCategory(this)">🏥 Injury Report</button>
+              <button class="category-btn" data-cat="ROSTER_MOVE"   onclick="selectCategory(this)">📋 Roster Move</button>
+              <button class="category-btn" data-cat="GAME_ALERT"    onclick="selectCategory(this)">🏈 Game Alert</button>
+              <button class="category-btn" data-cat="GENERAL"       onclick="selectCategory(this)">📢 General</button>
+            </div>
+
+            <label class="field-label">Notification Title <span style="color:var(--muted);font-size:0.6rem;">(lock screen)</span></label>
+            <input class="query-input" id="notif-title" type="text" maxlength="60" placeholder="e.g. 🚨 Sooners Breaking News" oninput="updateNotifPreview()" style="width:100%;margin-bottom:0.25rem;">
+            <div class="notif-char-count" id="notif-title-count">0 / 60</div>
+
+            <label class="field-label" style="margin-top:1rem;">Push Body <span style="color:var(--muted);font-size:0.6rem;">(short — what they see on lock screen)</span></label>
+            <input class="query-input" id="notif-short" type="text" maxlength="100" placeholder="e.g. Jackson Arnold injury update — tap for details" oninput="updateNotifPreview()" style="width:100%;margin-bottom:0.25rem;">
+            <div class="notif-char-count" id="notif-short-count">0 / 100</div>
+
+            <label class="field-label" style="margin-top:1rem;">Full Detail <span style="color:var(--muted);font-size:0.6rem;">(shown in app banner when they tap the notification)</span></label>
+            <textarea class="query-input" id="notif-full" rows="3" maxlength="500" placeholder="e.g. Jackson Arnold left Saturday's game with a reported shoulder injury. Status is day-to-day..." oninput="updateNotifPreview()" style="width:100%;resize:vertical;"></textarea>
+
+            <label class="field-label" style="margin-top:1rem;">Banner Link <span style="color:var(--muted);font-size:0.6rem;">(optional CTA in the app banner)</span></label>
+            <div style="display:flex;gap:0.5rem;">
+              <input class="query-input" id="notif-link-text" type="text" placeholder="Read more" style="width:120px;flex-shrink:0;">
+              <input class="query-input" id="notif-link-url"  type="text" placeholder="https://..." style="flex:1;">
+            </div>
+
+            <!-- Lock screen preview -->
+            <div class="notif-preview-box">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Lock Screen Preview</div>
+              <div class="notif-preview-phone">
+                <div class="notif-preview-app"><span class="notif-preview-app-dot"></span>XSEN SOONERS · NOW</div>
+                <div class="notif-preview-title" id="preview-title">Notification title</div>
+                <div class="notif-preview-body"  id="preview-body">Push body text will appear here…</div>
+              </div>
+            </div>
+
+            <button class="btn-send-notif" id="btn-send-notif" onclick="sendNotification()" disabled>SEND TO ALL SUBSCRIBERS</button>
+          </div>
         </div>
+
+        <!-- Recent log -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Recently Sent</span><span class="panel-count" id="notif-log-count">0</span></div>
+          <div id="notif-log"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -441,13 +406,8 @@
   <div class="tab-content" id="tab-social">
     <div class="queries-panel">
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Audiograms Ready to Post</span>
-          <span class="panel-count" id="social-count">0</span>
-        </div>
-        <div id="social-list" style="padding:0.5rem;">
-          <div class="loading"><div class="spinner"></div>LOADING...</div>
-        </div>
+        <div class="panel-header"><span class="panel-title">Audiograms Ready to Post</span><span class="panel-count" id="social-count">0</span></div>
+        <div id="social-list" style="padding:0.5rem;"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
       </div>
     </div>
   </div>
@@ -456,12 +416,9 @@
   <div class="tab-content" id="tab-livestream">
     <div class="queries-panel">
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">YouTube Live Stream</span>
-          <span class="panel-count" id="live-status-badge">OFFLINE</span>
-        </div>
+        <div class="panel-header"><span class="panel-title">YouTube Live Stream</span><span class="panel-count" id="live-status-badge">OFFLINE</span></div>
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
-          <p class="queries-note">Paste your YouTube Live stream ID below before going live. Fans will see a Live tab appear on the bot page automatically. Clear it when the broadcast ends.</p>
+          <p class="queries-note">Paste your YouTube Live stream ID below before going live. Fans will see a Live tab appear automatically. Clear it when the broadcast ends.</p>
         </div>
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
           <label class="field-label">YouTube Stream ID</label>
@@ -486,44 +443,27 @@
   <div class="tab-content" id="tab-livechat">
     <div class="queries-panel">
       <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Live Chat Supervision</span>
-          <span class="panel-count" id="chat-msg-count">0 messages</span>
-        </div>
-
-        <!-- Toolbar: filter, actions -->
+        <div class="panel-header"><span class="panel-title">Live Chat Supervision</span><span class="panel-count" id="chat-msg-count">0 messages</span></div>
         <div class="chat-mgmt-toolbar">
           <div class="chat-mgmt-toolbar-left">
-            <div class="chat-live-indicator">
-              <div class="chat-live-dot"></div>
-              <span style="color:var(--green);">LIVE</span>
-            </div>
+            <div class="chat-live-indicator"><div class="chat-live-dot"></div><span style="color:var(--green);">LIVE</span></div>
             <input id="chat-filter-input" type="text" placeholder="Filter by name or keyword…" oninput="filterChatLog()" />
           </div>
           <div style="display:flex;gap:0.5rem;align-items:center;">
             <button class="btn-export-chat" onclick="exportChat()">&#8595; EXPORT</button>
-            <button class="btn-clear-chat" onclick="confirmClearChat()">CLEAR ALL</button>
+            <button class="btn-clear-chat"  onclick="confirmClearChat()">CLEAR ALL</button>
           </div>
         </div>
-
-        <!-- Message log -->
-        <div id="chat-log">
-          <div class="loading"><div class="spinner"></div>LOADING...</div>
-        </div>
-
-        <!-- Auto-clear setting -->
+        <div id="chat-log"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
         <div class="chat-auto-clear-row">
           <label>Auto-clear after stream ends:</label>
           <select class="setting-select" id="chat-autoclear" style="width:auto;min-width:180px;">
-            <option value="">Never (manual only)</option>
-            <option value="1">After 1 hour</option>
-            <option value="6">After 6 hours</option>
-            <option value="24">After 24 hours</option>
+            <option value="">Never (manual only)</option><option value="1">After 1 hour</option>
+            <option value="6">After 6 hours</option><option value="24">After 24 hours</option>
           </select>
           <button class="btn-save-settings" onclick="saveChatSettings()" style="margin-top:0;">SAVE</button>
           <span id="chat-settings-status" style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);"></span>
         </div>
-
       </div>
     </div>
   </div>
@@ -533,14 +473,8 @@
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Script Preview</span>
-      <button class="modal-close" onclick="closeModal()">&#10005;</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-ep-title" id="modal-title"></div>
-      <div class="script-text" id="modal-script"></div>
-    </div>
+    <div class="modal-header"><span class="modal-title">Script Preview</span><button class="modal-close" onclick="closeModal()">&#10005;</button></div>
+    <div class="modal-body"><div class="modal-ep-title" id="modal-title"></div><div class="script-text" id="modal-script"></div></div>
     <div class="modal-footer">
       <button class="btn-reject" onclick="modalAction('rejected')">REJECT</button>
       <button class="btn-approve" onclick="modalAction('approved')">APPROVE &amp; QUEUE</button>
@@ -548,11 +482,11 @@
   </div>
 </div>
 
-<!-- CONFIRM CLEAR -->
+<!-- CONFIRM -->
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-box">
     <div class="confirm-title">Clear All Chat?</div>
-    <div class="confirm-msg" id="confirm-msg">This will permanently delete all chat messages for this school. This cannot be undone.</div>
+    <div class="confirm-msg" id="confirm-msg">This will permanently delete all chat messages for this school.</div>
     <div class="confirm-actions">
       <button class="btn-confirm-no" onclick="closeConfirm()">CANCEL</button>
       <button class="btn-confirm-yes" id="confirm-yes-btn">DELETE ALL</button>
@@ -563,36 +497,28 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL = 'https://hvqzrdlbtfezwuveincs.supabase.co';
+const SUPABASE_URL     = 'https://hvqzrdlbtfezwuveincs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
-const ORCHESTRATOR = 'https://glorious-appreciation-production.up.railway.app';
+const ORCHESTRATOR     = 'https://glorious-appreciation-production.up.railway.app';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentStation = null;
-let currentEpisodeId = null;
-let currentQueries = [];
-let chatMessages = [];        // full unfiltered cache
+let currentStation     = null;
+let currentEpisodeId   = null;
+let currentQueries     = [];
+let chatMessages       = [];
 let chatRealtimeChannel = null;
+let selectedCategory   = null;
 
-// ── PUSH NOTIFICATION HELPER ──────────────────────────────────────────────────
-async function notifySubscribers(schoolId, message, title) {
-  try {
-    await fetch(`${ORCHESTRATOR}/announcements/notify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        school:  currentStation.school,
-        schoolId: schoolId,
-        message: message,
-        type:    document.getElementById('ann-type')?.value || 'info'
-      })
-    });
-  } catch (err) {
-    console.warn('Push notification failed (non-critical):', err.message);
-  }
-}
+const CATEGORY_META = {
+  GO_LIVE:       { label: '🔴 Go Live',       color: '#cc2200', ann_type: 'critical' },
+  BREAKING_NEWS: { label: '🚨 Breaking News',  color: '#cc2200', ann_type: 'critical' },
+  INJURY_REPORT: { label: '🏥 Injury Report',  color: '#e8c84a', ann_type: 'warning'  },
+  ROSTER_MOVE:   { label: '📋 Roster Move',    color: '#e8c84a', ann_type: 'warning'  },
+  GAME_ALERT:    { label: '🏈 Game Alert',     color: '#00cc66', ann_type: 'info'     },
+  GENERAL:       { label: '📢 General',        color: '#666666', ann_type: 'info'     }
+};
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 async function login() {
@@ -606,15 +532,10 @@ async function login() {
   sessionStorage.setItem('xsen_station', JSON.stringify(data));
   showDashboard();
 }
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login(); });
 
 function logout() {
-  currentStation = null;
-  sessionStorage.removeItem('xsen_station');
-  unsubscribeChat();
+  currentStation = null; sessionStorage.removeItem('xsen_station'); unsubscribeChat();
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-password').value = '';
@@ -628,6 +549,7 @@ function switchTab(tab, el) {
   if (el) el.classList.add('active');
   if (tab === 'queries')       loadQueries();
   if (tab === 'announcements') loadAnnouncements();
+  if (tab === 'notifications') loadNotifLog();
   if (tab === 'social')        loadSocialPosts();
   if (tab === 'livestream')    loadLiveStream();
   if (tab === 'livechat')      loadLiveChatTab();
@@ -638,47 +560,32 @@ async function showDashboard() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   const s = currentStation;
-  document.getElementById('school-badge').textContent = s.school;
-  document.getElementById('station-name').textContent = s.name;
+  document.getElementById('school-badge').textContent   = s.school;
+  document.getElementById('station-name').textContent   = s.name;
   document.getElementById('station-stream').textContent = s.stream_url || '';
-  document.documentElement.style.setProperty('--school-primary', s.color_primary || '#cc2200');
+  document.documentElement.style.setProperty('--school-primary',   s.color_primary   || '#cc2200');
   document.documentElement.style.setProperty('--school-secondary', s.color_secondary || '#ffffff');
-  const toggle = document.getElementById('station-toggle');
-  toggle.checked = s.active;
+  document.getElementById('station-toggle').checked = s.active;
   updateOnAirIndicator(s.active);
-  await loadStats();
-  await loadQueue();
-  await loadAired();
-  await loadAnnouncementBar();
+  await loadStats(); await loadQueue(); await loadAired(); await loadAnnouncementBar();
 }
 
 function updateOnAirIndicator(active) {
-  const dot  = document.getElementById('on-air-dot');
-  const text = document.getElementById('on-air-text');
-  const label = document.getElementById('toggle-status-text');
-  if (active) {
-    dot.classList.add('active'); text.style.display = 'block';
-    label.textContent = 'LIVE'; label.style.color = 'var(--green)';
-  } else {
-    dot.classList.remove('active'); text.style.display = 'none';
-    label.textContent = 'OFFLINE'; label.style.color = 'var(--muted)';
-  }
+  const dot = document.getElementById('on-air-dot'), text = document.getElementById('on-air-text'), label = document.getElementById('toggle-status-text');
+  if (active) { dot.classList.add('active'); text.style.display = 'block'; label.textContent = 'LIVE'; label.style.color = 'var(--green)'; }
+  else { dot.classList.remove('active'); text.style.display = 'none'; label.textContent = 'OFFLINE'; label.style.color = 'var(--muted)'; }
 }
 
 async function toggleStation() {
   const active = document.getElementById('station-toggle').checked;
   const { error } = await sb.from('xsen_stations').update({ active, updated_at: new Date().toISOString() }).eq('school', currentStation.school);
   if (error) { showToast('Failed to update station', 'error'); document.getElementById('station-toggle').checked = !active; return; }
-  currentStation.active = active;
-  sessionStorage.setItem('xsen_station', JSON.stringify(currentStation));
+  currentStation.active = active; sessionStorage.setItem('xsen_station', JSON.stringify(currentStation));
   updateOnAirIndicator(active);
   showToast(active ? 'Station is now LIVE' : 'Station paused', active ? 'success' : '');
   if (active) {
-    await notifySubscribers(
-      currentStation.school,
-      `${currentStation.name} Radio is LIVE on XSEN — tune in now!`,
-      '📻 XSEN Radio is Live!'
-    );
+    await fetch(`${ORCHESTRATOR}/announcements/notify`, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ school: currentStation.school, schoolId: currentStation.school, message: `${currentStation.name} Radio is LIVE on XSEN — tune in now!`, type: 'info' }) }).catch(() => {});
   }
 }
 
@@ -686,11 +593,11 @@ async function toggleStation() {
 async function loadStats() {
   const school = currentStation.school;
   const [{ count: aired }, { count: pending }, { data: airedEps }] = await Promise.all([
-    sb.from('xsen_episodes').select('*', { count: 'exact', head: true }).eq('school', school).eq('status', 'aired'),
-    sb.from('xsen_episodes').select('*', { count: 'exact', head: true }).eq('school', school).eq('status', 'script_ready'),
-    sb.from('xsen_episodes').select('duration_estimate').eq('school', school).eq('status', 'aired')
+    sb.from('xsen_episodes').select('*', { count:'exact', head:true }).eq('school', school).eq('status','aired'),
+    sb.from('xsen_episodes').select('*', { count:'exact', head:true }).eq('school', school).eq('status','script_ready'),
+    sb.from('xsen_episodes').select('duration_estimate').eq('school', school).eq('status','aired')
   ]);
-  const totalSecs = airedEps?.reduce((sum, e) => sum + (e.duration_estimate || 0), 0) || 0;
+  const totalSecs = airedEps?.reduce((s, e) => s + (e.duration_estimate || 0), 0) || 0;
   document.getElementById('stat-aired').textContent   = aired || 0;
   document.getElementById('stat-pending').textContent = pending || 0;
   document.getElementById('stat-hours').textContent   = (totalSecs / 3600).toFixed(1);
@@ -698,7 +605,7 @@ async function loadStats() {
 
 // ── EPISODES ──────────────────────────────────────────────────────────────────
 async function loadQueue() {
-  const { data } = await sb.from('xsen_episodes').select('id, title, school, episode_type, duration_estimate, score, script').eq('school', currentStation.school).eq('status', 'script_ready').order('score', { ascending: false }).limit(20);
+  const { data } = await sb.from('xsen_episodes').select('id,title,school,episode_type,duration_estimate,score,script').eq('school',currentStation.school).eq('status','script_ready').order('score',{ascending:false}).limit(20);
   const container = document.getElementById('episode-queue');
   document.getElementById('queue-count').textContent = data?.length || 0;
   if (!data?.length) { container.innerHTML = '<div class="empty">NO EPISODES AWAITING REVIEW</div>'; return; }
@@ -708,7 +615,7 @@ async function loadQueue() {
       <div class="ep-title">${ep.title}</div>
       <div class="ep-meta"><span>~${Math.round((ep.duration_estimate||0)/60)} min</span><span>Score: ${ep.score||'&mdash;'}/10</span></div>
       <div class="ep-actions">
-        <button class="btn-preview" onclick='previewScript("${ep.id}", ${JSON.stringify(ep.title)}, ${JSON.stringify(ep.script||"")})'>PREVIEW</button>
+        <button class="btn-preview" onclick='previewScript("${ep.id}",${JSON.stringify(ep.title)},${JSON.stringify(ep.script||"")})'>PREVIEW</button>
         <button class="btn-approve" onclick="updateEpisode('${ep.id}','approved')">APPROVE</button>
         <button class="btn-reject"  onclick="updateEpisode('${ep.id}','rejected')">REJECT</button>
       </div>
@@ -717,7 +624,7 @@ async function loadQueue() {
 
 async function updateEpisode(id, status) {
   const { error } = await sb.from('xsen_episodes').update({ status, approved_at: new Date().toISOString() }).eq('id', id);
-  if (error) { showToast('Update failed', 'error'); return; }
+  if (error) { showToast('Update failed','error'); return; }
   document.getElementById(`ep-${id}`)?.remove();
   const count = document.getElementById('queue-count');
   count.textContent = Math.max(0, parseInt(count.textContent) - 1);
@@ -726,108 +633,75 @@ async function updateEpisode(id, status) {
 }
 
 async function loadAired() {
-  const { data } = await sb.from('xsen_episodes').select('id, title, duration_estimate, approved_at').eq('school', currentStation.school).eq('status', 'aired').order('approved_at', { ascending: false }).limit(15);
+  const { data } = await sb.from('xsen_episodes').select('id,title,duration_estimate,approved_at').eq('school',currentStation.school).eq('status','aired').order('approved_at',{ascending:false}).limit(15);
   const container = document.getElementById('aired-list');
   document.getElementById('aired-count').textContent = data?.length || 0;
   if (!data?.length) { container.innerHTML = '<div class="empty">NO AIRED EPISODES YET</div>'; return; }
   container.innerHTML = data.map(ep => `
     <div class="aired-item">
       <div class="aired-title">${ep.title}</div>
-      <div class="aired-meta">~${Math.round((ep.duration_estimate||0)/60)}m<br>${ep.approved_at?new Date(ep.approved_at).toLocaleDateString():''}</div>
+      <div class="aired-meta">~${Math.round((ep.duration_estimate||0)/60)}m<br>${ep.approved_at ? new Date(ep.approved_at).toLocaleDateString() : ''}</div>
     </div>`).join('');
 }
 
 // ── QUERIES ───────────────────────────────────────────────────────────────────
 async function loadQueries() {
-  const { data, error } = await sb.from('xsen_stations').select('queries, scrape_frequency, min_score').eq('school', currentStation.school).single();
+  const { data, error } = await sb.from('xsen_stations').select('queries,scrape_frequency,min_score').eq('school',currentStation.school).single();
   if (error || !data) { document.getElementById('queries-list').innerHTML = '<div class="empty">COULD NOT LOAD QUERIES</div>'; return; }
-  currentQueries = data.queries || [];
-  renderQueries();
+  currentQueries = data.queries || []; renderQueries();
   if (data.scrape_frequency) document.getElementById('scrape-freq').value = data.scrape_frequency;
-  if (data.min_score) document.getElementById('min-score').value = data.min_score;
+  if (data.min_score)        document.getElementById('min-score').value   = data.min_score;
 }
-
 function renderQueries() {
   document.getElementById('query-count').textContent = `${currentQueries.length} active`;
-  const container = document.getElementById('queries-list');
-  if (!currentQueries.length) { container.innerHTML = '<div class="empty" style="padding:1.5rem 0">NO QUERIES YET — ADD ONE ABOVE</div>'; return; }
-  container.innerHTML = currentQueries.map((q, i) => `
-    <div class="query-row">
-      <div class="query-text">${q}</div>
-      <button class="btn-remove" onclick="removeQuery(${i})">REMOVE</button>
-    </div>`).join('');
+  const c = document.getElementById('queries-list');
+  if (!currentQueries.length) { c.innerHTML = '<div class="empty" style="padding:1.5rem 0">NO QUERIES YET — ADD ONE ABOVE</div>'; return; }
+  c.innerHTML = currentQueries.map((q,i) => `<div class="query-row"><div class="query-text">${q}</div><button class="btn-remove" onclick="removeQuery(${i})">REMOVE</button></div>`).join('');
 }
-
 async function addQuery() {
-  const input = document.getElementById('new-query-input');
-  const query = input.value.trim();
+  const input = document.getElementById('new-query-input'), query = input.value.trim();
   if (!query) return;
-  if (currentQueries.includes(query)) { showToast('Query already exists', 'error'); return; }
-  currentQueries.push(query);
-  await saveQueries();
-  input.value = '';
-  renderQueries();
-  showToast('Query added', 'success');
+  if (currentQueries.includes(query)) { showToast('Query already exists','error'); return; }
+  currentQueries.push(query); await saveQueries(); input.value = ''; renderQueries(); showToast('Query added','success');
 }
-
-async function removeQuery(index) {
-  currentQueries.splice(index, 1);
-  await saveQueries();
-  renderQueries();
-  showToast('Query removed', '');
-}
-
+async function removeQuery(index) { currentQueries.splice(index,1); await saveQueries(); renderQueries(); showToast('Query removed',''); }
 async function saveQueries() {
-  const { error } = await sb.from('xsen_stations').update({ queries: currentQueries, updated_at: new Date().toISOString() }).eq('school', currentStation.school);
-  if (error) showToast('Failed to save queries', 'error');
+  const { error } = await sb.from('xsen_stations').update({ queries: currentQueries, updated_at: new Date().toISOString() }).eq('school',currentStation.school);
+  if (error) showToast('Failed to save queries','error');
 }
-
 async function saveSettings() {
-  const scrape_frequency = parseInt(document.getElementById('scrape-freq').value);
-  const min_score = parseInt(document.getElementById('min-score').value);
-  const { error } = await sb.from('xsen_stations').update({ scrape_frequency, min_score, updated_at: new Date().toISOString() }).eq('school', currentStation.school);
-  if (error) { showToast('Failed to save settings', 'error'); return; }
-  showToast('Settings saved', 'success');
+  const { error } = await sb.from('xsen_stations').update({ scrape_frequency: parseInt(document.getElementById('scrape-freq').value), min_score: parseInt(document.getElementById('min-score').value), updated_at: new Date().toISOString() }).eq('school',currentStation.school);
+  if (error) { showToast('Failed to save settings','error'); return; }
+  showToast('Settings saved','success');
 }
 
-// ── EPISODE MODAL ─────────────────────────────────────────────────────────────
-function previewScript(id, title, script) {
-  currentEpisodeId = id;
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-script').textContent = script || 'No script available.';
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal() { document.getElementById('modal').classList.remove('open'); currentEpisodeId = null; }
-async function modalAction(status) { if (!currentEpisodeId) return; await updateEpisode(currentEpisodeId, status); closeModal(); }
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function previewScript(id,title,script) { currentEpisodeId=id; document.getElementById('modal-title').textContent=title; document.getElementById('modal-script').textContent=script||'No script available.'; document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); currentEpisodeId=null; }
+async function modalAction(status) { if (!currentEpisodeId) return; await updateEpisode(currentEpisodeId,status); closeModal(); }
 
 // ── TOAST ─────────────────────────────────────────────────────────────────────
 let toastTimer;
-function showToast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = `toast show ${type}`;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.className = 'toast'; }, 3000);
-}
+function showToast(msg,type='') { const el=document.getElementById('toast'); el.textContent=msg; el.className=`toast show ${type}`; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{el.className='toast';},3000); }
 
 // ── ANNOUNCEMENTS ─────────────────────────────────────────────────────────────
 async function loadAnnouncements() {
-  const { data } = await sb.from('xsen_announcements').select('*').order('created_at', { ascending: false }).limit(20);
+  const { data } = await sb.from('xsen_announcements').select('*').order('created_at',{ascending:false}).limit(20);
   const container = document.getElementById('announcements-list');
-  const activeCount = data?.filter(a => a.active).length || 0;
-  document.getElementById('ann-count').textContent = `${activeCount} active`;
+  document.getElementById('ann-count').textContent = `${data?.filter(a=>a.active).length||0} active`;
   if (!data?.length) { container.innerHTML = '<div class="empty">NO ANNOUNCEMENTS YET</div>'; return; }
-  const typeColors = { info: 'var(--green)', warning: 'var(--accent)', critical: 'var(--red)' };
+  const typeColors = { info:'var(--green)', warning:'var(--accent)', critical:'var(--red)' };
   container.innerHTML = data.map(a => `
-    <div class="episode-card" id="ann-${a.id}" style="opacity:${a.active ? 1 : 0.4}">
+    <div class="episode-card" id="ann-${a.id}" style="opacity:${a.active?1:0.4}">
       <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
         <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:${typeColors[a.type]||'var(--green)'};text-transform:uppercase;">${a.type}</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);">&rarr; ${a.school}</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-left:auto;">${new Date(a.created_at).toLocaleDateString()}</span>
       </div>
       <div class="ep-title" style="font-size:0.85rem;margin-bottom:0.5rem;">${a.message}</div>
-      ${a.link_text ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:0.5rem;">CTA: ${a.link_text} &rarr; ${a.link_url}</div>` : ''}
+      ${a.link_text?`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:0.5rem;">CTA: ${a.link_text} &rarr; ${a.link_url}</div>`:''}
       <div class="ep-actions">
-        <button class="btn-${a.active ? 'reject' : 'approve'}" onclick="toggleAnnouncement('${a.id}', ${!a.active})">${a.active ? 'DEACTIVATE' : 'REACTIVATE'}</button>
+        <button class="btn-${a.active?'reject':'approve'}" onclick="toggleAnnouncement('${a.id}',${!a.active})">${a.active?'DEACTIVATE':'REACTIVATE'}</button>
         <button class="btn-remove" onclick="deleteAnnouncement('${a.id}')" style="margin-left:auto;">DELETE</button>
       </div>
     </div>`).join('');
@@ -835,339 +709,263 @@ async function loadAnnouncements() {
 
 async function postAnnouncement() {
   const message = document.getElementById('ann-message').value.trim();
-  if (!message) { showToast('Enter a message', 'error'); return; }
-  const type      = document.getElementById('ann-type').value;
-  const school    = document.getElementById('ann-school').value;
-  const expires   = document.getElementById('ann-expires').value;
-  const link_text = document.getElementById('ann-link-text').value.trim();
-  const link_url  = document.getElementById('ann-link-url').value.trim();
-  let expires_at  = null;
-  if (expires === '1h')  expires_at = new Date(Date.now() + 3600000).toISOString();
-  if (expires === '24h') expires_at = new Date(Date.now() + 86400000).toISOString();
-  if (expires === '7d')  expires_at = new Date(Date.now() + 604800000).toISOString();
-  const targetSchool = currentStation.school === 'MASTER' ? school : currentStation.school;
-  const { error } = await sb.from('xsen_announcements').insert({ message, type, school: targetSchool, link_text: link_text || null, link_url: link_url || null, expires_at, active: true });
-  if (error) { showToast('Failed to post announcement', 'error'); return; }
-  document.getElementById('ann-message').value = '';
-  document.getElementById('ann-link-text').value = '';
-  document.getElementById('ann-link-url').value = '';
-  showToast('Announcement posted', 'success');
-  loadAnnouncements();
-  loadAnnouncementBar();
-  const typeLabels = { info: 'ℹ️', warning: '⚠️', critical: '🚨' };
-  await notifySubscribers(targetSchool, message, `${typeLabels[type] || '🏈'} XSEN Sooners`);
+  if (!message) { showToast('Enter a message','error'); return; }
+  const type=document.getElementById('ann-type').value, school=document.getElementById('ann-school').value, expires=document.getElementById('ann-expires').value;
+  const link_text=document.getElementById('ann-link-text').value.trim(), link_url=document.getElementById('ann-link-url').value.trim();
+  let expires_at=null;
+  if (expires==='1h')  expires_at=new Date(Date.now()+3600000).toISOString();
+  if (expires==='24h') expires_at=new Date(Date.now()+86400000).toISOString();
+  if (expires==='7d')  expires_at=new Date(Date.now()+604800000).toISOString();
+  const targetSchool = currentStation.school==='MASTER' ? school : currentStation.school;
+  const { error } = await sb.from('xsen_announcements').insert({ message, type, school:targetSchool, link_text:link_text||null, link_url:link_url||null, expires_at, active:true });
+  if (error) { showToast('Failed to post announcement','error'); return; }
+  document.getElementById('ann-message').value=document.getElementById('ann-link-text').value=document.getElementById('ann-link-url').value='';
+  showToast('Announcement posted','success'); loadAnnouncements(); loadAnnouncementBar();
+  const typeLabels={info:'ℹ️',warning:'⚠️',critical:'🚨'};
+  await fetch(`${ORCHESTRATOR}/announcements/notify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({school:targetSchool,schoolId:targetSchool,message,type,title:`${typeLabels[type]||'🏈'} XSEN Sooners`})}).catch(()=>{});
 }
-
-async function toggleAnnouncement(id, active) {
-  await sb.from('xsen_announcements').update({ active }).eq('id', id);
-  showToast(active ? 'Announcement reactivated' : 'Announcement deactivated', '');
-  loadAnnouncements();
-  loadAnnouncementBar();
-}
-
-async function deleteAnnouncement(id) {
-  await sb.from('xsen_announcements').delete().eq('id', id);
-  document.getElementById(`ann-${id}`)?.remove();
-  showToast('Announcement deleted', '');
-  loadAnnouncementBar();
-}
+async function toggleAnnouncement(id,active) { await sb.from('xsen_announcements').update({active}).eq('id',id); showToast(active?'Reactivated':'Deactivated',''); loadAnnouncements(); loadAnnouncementBar(); }
+async function deleteAnnouncement(id) { await sb.from('xsen_announcements').delete().eq('id',id); document.getElementById(`ann-${id}`)?.remove(); showToast('Deleted',''); loadAnnouncementBar(); }
 
 async function loadAnnouncementBar() {
-  const school = currentStation?.school || 'ALL';
-  const { data } = await sb.from('xsen_announcements').select('*').eq('active', true).or(`school.eq.ALL,school.eq.${school}`).order('created_at', { ascending: false }).limit(1);
-  const bar = document.getElementById('announcement-bar');
-  if (!bar) return;
-  if (!data?.length) { bar.innerHTML = ''; return; }
-  const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > new Date());
-  if (!valid.length) { bar.innerHTML = ''; return; }
-  const colors = { info: { bg: '#0d1a0d', border: '#00cc66', text: '#00cc66' }, warning: { bg: '#1a1500', border: '#e8c84a', text: '#e8c84a' }, critical: { bg: '#1a0500', border: '#cc2200', text: '#cc2200' } };
-  bar.innerHTML = valid.map(a => {
-    const c = colors[a.type] || colors.info;
-    return `<div style="background:${c.bg};border-bottom:1px solid ${c.border};padding:0.55rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.05em;color:${c.text};">
-      <span>${a.message}</span>
-      ${a.link_text && a.link_url ? `<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} &rarr;</a>` : ''}
+  const school = currentStation?.school||'ALL';
+  const { data } = await sb.from('xsen_announcements').select('*').eq('active',true).or(`school.eq.ALL,school.eq.${school}`).order('created_at',{ascending:false}).limit(1);
+  const bar = document.getElementById('announcement-bar'); if (!bar) return;
+  if (!data?.length) { bar.innerHTML=''; return; }
+  const valid = data.filter(a=>!a.expires_at||new Date(a.expires_at)>new Date()); if (!valid.length) { bar.innerHTML=''; return; }
+  const colors={info:{bg:'#0d1a0d',border:'#00cc66',text:'#00cc66'},warning:{bg:'#1a1500',border:'#e8c84a',text:'#e8c84a'},critical:{bg:'#1a0500',border:'#cc2200',text:'#cc2200'}};
+  bar.innerHTML=valid.map(a=>{const c=colors[a.type]||colors.info;return`<div style="background:${c.bg};border-bottom:1px solid ${c.border};padding:0.55rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.05em;color:${c.text};"><span>${a.message}</span>${a.link_text&&a.link_url?`<a href="${a.link_url}" target="_blank" style="color:${c.text};border:1px solid ${c.border};padding:0.2rem 0.6rem;text-decoration:none;white-space:nowrap;">${a.link_text} &rarr;</a>`:''}</div>`;}).join('');
+}
+
+// ── NOTIFICATIONS ─────────────────────────────────────────────────────────────
+function selectCategory(btn) {
+  document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); selectedCategory=btn.dataset.cat; validateNotifForm();
+}
+
+function updateNotifPreview() {
+  const title=document.getElementById('notif-title').value, short=document.getElementById('notif-short').value;
+  document.getElementById('preview-title').textContent = title || 'Notification title';
+  document.getElementById('preview-body').textContent  = short || 'Push body text will appear here…';
+  const tc=title.length, sc=short.length;
+  const tcEl=document.getElementById('notif-title-count'), scEl=document.getElementById('notif-short-count');
+  tcEl.textContent=`${tc} / 60`; tcEl.className=`notif-char-count${tc>50?(tc>=60?' over':' warn'):''}`;
+  scEl.textContent=`${sc} / 100`; scEl.className=`notif-char-count${sc>80?(sc>=100?' over':' warn'):''}`;
+  validateNotifForm();
+}
+
+function validateNotifForm() {
+  const title=document.getElementById('notif-title').value.trim(), short=document.getElementById('notif-short').value.trim();
+  document.getElementById('btn-send-notif').disabled = !(selectedCategory && title && short);
+}
+
+async function sendNotification() {
+  const title    = document.getElementById('notif-title').value.trim();
+  const shortTxt = document.getElementById('notif-short').value.trim();
+  const fullTxt  = document.getElementById('notif-full').value.trim();
+  const linkText = document.getElementById('notif-link-text').value.trim();
+  const linkUrl  = document.getElementById('notif-link-url').value.trim();
+  if (!selectedCategory || !title || !shortTxt) { showToast('Select a category and fill in title + push body','error'); return; }
+
+  const btn = document.getElementById('btn-send-notif');
+  btn.disabled=true; btn.textContent='SENDING…';
+
+  const meta   = CATEGORY_META[selectedCategory] || CATEGORY_META.GENERAL;
+  const school = currentStation.school;
+
+  try {
+    // 1 — Permanent log
+    const { error: logErr } = await sb.from('xsen_push_log').insert({ school, category: selectedCategory, title, short_text: shortTxt, full_text: fullTxt||null, link_url: linkUrl||null, sent_by: school });
+    if (logErr) throw new Error('Log write failed: ' + logErr.message);
+
+    // 2 — Banner in app (full detail shown when user opens)
+    await sb.from('xsen_announcements').insert({ message: fullTxt||shortTxt, type: meta.ann_type, school, link_text: linkText||null, link_url: linkUrl||null, expires_at: null, active: true });
+
+    // 3 — Fire push to all subscribers
+    await fetch(`${ORCHESTRATOR}/announcements/notify`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ school, schoolId: school, title, message: shortTxt, url: `https://boomerbot.fun/sooners/?view=alerts`, tag: selectedCategory.toLowerCase(), type: meta.ann_type })
+    });
+
+    showToast('Notification sent!','success');
+    loadAnnouncementBar(); loadNotifLog();
+
+    // Reset form
+    ['notif-title','notif-short','notif-full','notif-link-text','notif-link-url'].forEach(id => { document.getElementById(id).value=''; });
+    document.getElementById('preview-title').textContent='Notification title';
+    document.getElementById('preview-body').textContent='Push body text will appear here…';
+    document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('selected'));
+    selectedCategory=null;
+
+  } catch(err) {
+    console.error('Send notification error:',err);
+    showToast('Send failed — '+err.message,'error');
+  } finally {
+    btn.disabled=false; btn.textContent='SEND TO ALL SUBSCRIBERS'; validateNotifForm();
+  }
+}
+
+async function loadNotifLog() {
+  const { data } = await sb.from('xsen_push_log').select('*').eq('school',currentStation.school).order('sent_at',{ascending:false}).limit(20);
+  const container = document.getElementById('notif-log');
+  document.getElementById('notif-log-count').textContent = data?.length||0;
+  if (!data?.length) { container.innerHTML='<div class="empty">NO NOTIFICATIONS SENT YET</div>'; return; }
+  container.innerHTML = data.map(n => {
+    const meta = CATEGORY_META[n.category]||CATEGORY_META.GENERAL;
+    const time = new Date(n.sent_at).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="notif-log-row">
+      <span class="notif-cat-badge" style="background:${meta.color}22;color:${meta.color};border:1px solid ${meta.color}44;">${meta.label}</span>
+      <div class="notif-log-content">
+        <div class="notif-log-title">${escapeHtml(n.title)}</div>
+        <div class="notif-log-short">${escapeHtml(n.short_text)}</div>
+        ${n.full_text?`<div class="notif-log-full">${escapeHtml(n.full_text)}</div>`:''}
+      </div>
+      <div class="notif-log-meta">${time}</div>
     </div>`;
   }).join('');
 }
 
-// ── SOCIAL POSTS ──────────────────────────────────────────────────────────────
+// ── SOCIAL ────────────────────────────────────────────────────────────────────
 async function loadSocialPosts() {
-  const { data } = await sb.from('xsen_social_posts').select('*, xsen_episodes(title, school)').eq('status', 'ready').order('created_at', { ascending: false }).limit(20);
+  const { data } = await sb.from('xsen_social_posts').select('*,xsen_episodes(title,school)').eq('status','ready').order('created_at',{ascending:false}).limit(20);
   const container = document.getElementById('social-list');
-  document.getElementById('social-count').textContent = data?.length || 0;
-  if (!data?.length) { container.innerHTML = '<div class="empty">NO AUDIOGRAMS READY YET — CHECK BACK AFTER NEXT PIPELINE RUN</div>'; return; }
-  container.innerHTML = data.map(p => `
+  document.getElementById('social-count').textContent = data?.length||0;
+  if (!data?.length) { container.innerHTML='<div class="empty">NO AUDIOGRAMS READY YET</div>'; return; }
+  container.innerHTML = data.map(p=>`
     <div class="episode-card" id="social-${p.id}">
-      <div class="ep-school-tag">${p.xsen_episodes?.school || ''}</div>
-      <div class="ep-title">${p.xsen_episodes?.title || ''}</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin:0.5rem 0;line-height:1.6;">${p.caption || ''}</div>
+      <div class="ep-school-tag">${p.xsen_episodes?.school||''}</div>
+      <div class="ep-title">${p.xsen_episodes?.title||''}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin:0.5rem 0;line-height:1.6;">${p.caption||''}</div>
       <div class="ep-actions" style="flex-wrap:wrap;gap:0.5rem;">
         <a href="${p.video_url}" target="_blank" class="btn-preview" style="text-decoration:none;">&#9654; PREVIEW</a>
-        <button class="btn-approve" onclick="copyCaption('${p.id}', ${JSON.stringify(p.caption || '')})">COPY CAPTION</button>
+        <button class="btn-approve" onclick="copyCaption('${p.id}',${JSON.stringify(p.caption||'')})">COPY CAPTION</button>
         <a href="${p.video_url}" download class="btn-approve" style="text-decoration:none;background:var(--muted);">&#8595; DOWNLOAD</a>
         <button class="btn-reject" onclick="markPosted('${p.id}')">MARK POSTED</button>
       </div>
     </div>`).join('');
 }
-
-async function markPosted(id) {
-  await sb.from('xsen_social_posts').update({ status: 'posted', posted_at: new Date().toISOString() }).eq('id', id);
-  document.getElementById(`social-${id}`)?.remove();
-  showToast('Marked as posted', 'success');
-}
-
-function copyCaption(id, caption) {
-  navigator.clipboard.writeText(caption).then(() => { showToast('Caption copied to clipboard', 'success'); });
-}
+async function markPosted(id) { await sb.from('xsen_social_posts').update({status:'posted',posted_at:new Date().toISOString()}).eq('id',id); document.getElementById(`social-${id}`)?.remove(); showToast('Marked as posted','success'); }
+function copyCaption(id,caption) { navigator.clipboard.writeText(caption).then(()=>{showToast('Caption copied','success');}); }
 
 // ── LIVE STREAM ───────────────────────────────────────────────────────────────
 async function loadLiveStream() {
-  const { data } = await sb.from('xsen_stations').select('youtube_live_id').eq('school', currentStation.school).single();
-  const id = data?.youtube_live_id || '';
-  document.getElementById('yt-stream-id').value = id;
-  updateLivePreview(id);
-  const badge = document.getElementById('live-status-badge');
-  badge.textContent = id ? '🔴 LIVE' : 'OFFLINE';
-  badge.style.color = id ? 'var(--red)' : 'var(--muted)';
+  const { data } = await sb.from('xsen_stations').select('youtube_live_id').eq('school',currentStation.school).single();
+  const id=data?.youtube_live_id||'';
+  document.getElementById('yt-stream-id').value=id; updateLivePreview(id);
+  const badge=document.getElementById('live-status-badge'); badge.textContent=id?'🔴 LIVE':'OFFLINE'; badge.style.color=id?'var(--red)':'var(--muted)';
 }
-
 async function saveLiveStream() {
-  const id = document.getElementById('yt-stream-id').value.trim();
-  if (!id) { showToast('Enter a YouTube stream ID', 'error'); return; }
-  const { error } = await sb.from('xsen_stations').update({ youtube_live_id: id, updated_at: new Date().toISOString() }).eq('school', currentStation.school);
-  if (error) { showToast('Failed to save stream ID', 'error'); return; }
-  currentStation.youtube_live_id = id;
-  sessionStorage.setItem('xsen_station', JSON.stringify(currentStation));
+  const id=document.getElementById('yt-stream-id').value.trim();
+  if (!id) { showToast('Enter a YouTube stream ID','error'); return; }
+  const { error }=await sb.from('xsen_stations').update({youtube_live_id:id,updated_at:new Date().toISOString()}).eq('school',currentStation.school);
+  if (error) { showToast('Failed to save stream ID','error'); return; }
+  currentStation.youtube_live_id=id; sessionStorage.setItem('xsen_station',JSON.stringify(currentStation));
   updateLivePreview(id);
-  const badge = document.getElementById('live-status-badge');
-  badge.textContent = '🔴 LIVE';
-  badge.style.color = 'var(--red)';
-  showToast('Stream is now live for fans', 'success');
-  try {
-    await fetch(`${ORCHESTRATOR}/livestream/notify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ school: currentStation.school, streamId: id })
-    });
-  } catch (err) {
-    console.warn('Live stream push failed (non-critical):', err.message);
-  }
+  const badge=document.getElementById('live-status-badge'); badge.textContent='🔴 LIVE'; badge.style.color='var(--red)';
+  showToast('Stream is now live for fans','success');
+  await fetch(`${ORCHESTRATOR}/livestream/notify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({school:currentStation.school,streamId:id})}).catch(()=>{});
 }
-
 async function clearLiveStream() {
-  const { error } = await sb.from('xsen_stations').update({ youtube_live_id: null, updated_at: new Date().toISOString() }).eq('school', currentStation.school);
-  if (error) { showToast('Failed to clear stream', 'error'); return; }
-  currentStation.youtube_live_id = null;
-  sessionStorage.setItem('xsen_station', JSON.stringify(currentStation));
-  document.getElementById('yt-stream-id').value = '';
-  updateLivePreview('');
-  const badge = document.getElementById('live-status-badge');
-  badge.textContent = 'OFFLINE';
-  badge.style.color = 'var(--muted)';
-  showToast('Stream ended — Live tab hidden from fans', '');
+  const { error }=await sb.from('xsen_stations').update({youtube_live_id:null,updated_at:new Date().toISOString()}).eq('school',currentStation.school);
+  if (error) { showToast('Failed to clear stream','error'); return; }
+  currentStation.youtube_live_id=null; sessionStorage.setItem('xsen_station',JSON.stringify(currentStation));
+  document.getElementById('yt-stream-id').value=''; updateLivePreview('');
+  const badge=document.getElementById('live-status-badge'); badge.textContent='OFFLINE'; badge.style.color='var(--muted)';
+  showToast('Stream ended — Live tab hidden from fans','');
 }
-
 function updateLivePreview(id) {
-  const preview = document.getElementById('yt-preview');
-  if (!preview) return;
-  if (id) {
-    preview.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=0" frameborder="0" allow="encrypted-media" allowfullscreen style="border:none;aspect-ratio:16/9;"></iframe>`;
-  } else {
-    preview.innerHTML = `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);">No stream active</span>`;
-  }
+  const preview=document.getElementById('yt-preview'); if (!preview) return;
+  preview.innerHTML = id ? `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=0" frameborder="0" allow="encrypted-media" allowfullscreen style="border:none;aspect-ratio:16/9;"></iframe>`
+                         : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);">No stream active</span>`;
 }
 
-// ── LIVE CHAT MANAGEMENT ──────────────────────────────────────────────────────
+// ── LIVE CHAT ─────────────────────────────────────────────────────────────────
 async function loadLiveChatTab() {
-  document.getElementById('chat-log').innerHTML = '<div class="loading"><div class="spinner"></div>LOADING...</div>';
-
-  // Load existing messages
-  const { data, error } = await sb
-    .from('xsen_live_chat')
-    .select('id, name, message, created_at')
-    .eq('school', currentStation.school)
-    .order('created_at', { ascending: false })
-    .limit(200);
-
-  if (error) {
-    document.getElementById('chat-log').innerHTML = '<div class="empty">COULD NOT LOAD CHAT</div>';
-    return;
-  }
-
-  chatMessages = (data || []).reverse(); // oldest first for display
-  renderChatLog(chatMessages);
-  updateChatCount(chatMessages.length);
-
-  // Subscribe realtime
-  subscribeChatRealtime();
-
-  // Load auto-clear setting
-  const { data: stData } = await sb.from('xsen_stations').select('chat_autoclear_hours').eq('school', currentStation.school).single();
-  if (stData?.chat_autoclear_hours) {
-    document.getElementById('chat-autoclear').value = stData.chat_autoclear_hours;
-  }
+  document.getElementById('chat-log').innerHTML='<div class="loading"><div class="spinner"></div>LOADING...</div>';
+  const { data,error }=await sb.from('xsen_live_chat').select('id,name,message,created_at').eq('school',currentStation.school).order('created_at',{ascending:false}).limit(200);
+  if (error) { document.getElementById('chat-log').innerHTML='<div class="empty">COULD NOT LOAD CHAT</div>'; return; }
+  chatMessages=(data||[]).reverse(); renderChatLog(chatMessages); updateChatCount(chatMessages.length); subscribeChatRealtime();
+  const { data:stData }=await sb.from('xsen_stations').select('chat_autoclear_hours').eq('school',currentStation.school).single();
+  if (stData?.chat_autoclear_hours) document.getElementById('chat-autoclear').value=stData.chat_autoclear_hours;
 }
-
 function renderChatLog(messages) {
-  const container = document.getElementById('chat-log');
-  if (!messages.length) {
-    container.innerHTML = '<div class="empty">NO CHAT MESSAGES YET</div>';
-    return;
-  }
-  container.innerHTML = messages.map(m => {
-    const time = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const date = new Date(m.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
-    return `
-      <div class="chat-log-row" id="chat-row-${m.id}">
-        <div class="chat-log-meta">${date} ${time}</div>
-        <div class="chat-log-name">${escapeHtml(m.name || 'Fan')}</div>
-        <div class="chat-log-message">${escapeHtml(m.message)}</div>
-        <div class="chat-log-actions">
-          <button class="btn-delete-msg" onclick="deleteChatMessage('${m.id}')">DEL</button>
-        </div>
-      </div>`;
+  const container=document.getElementById('chat-log');
+  if (!messages.length) { container.innerHTML='<div class="empty">NO CHAT MESSAGES YET</div>'; return; }
+  container.innerHTML=messages.map(m=>{
+    const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const date=new Date(m.created_at).toLocaleDateString([],{month:'short',day:'numeric'});
+    return `<div class="chat-log-row" id="chat-row-${m.id}"><div class="chat-log-meta">${date} ${time}</div><div class="chat-log-name">${escapeHtml(m.name||'Fan')}</div><div class="chat-log-message">${escapeHtml(m.message)}</div><div class="chat-log-actions"><button class="btn-delete-msg" onclick="deleteChatMessage('${m.id}')">DEL</button></div></div>`;
   }).join('');
-  container.scrollTop = container.scrollHeight;
+  container.scrollTop=container.scrollHeight;
 }
-
-function updateChatCount(n) {
-  document.getElementById('chat-msg-count').textContent = `${n} message${n !== 1 ? 's' : ''}`;
-}
-
+function updateChatCount(n) { document.getElementById('chat-msg-count').textContent=`${n} message${n!==1?'s':''}`; }
 function filterChatLog() {
-  const term = document.getElementById('chat-filter-input').value.trim().toLowerCase();
+  const term=document.getElementById('chat-filter-input').value.trim().toLowerCase();
   if (!term) { renderChatLog(chatMessages); return; }
-  const filtered = chatMessages.filter(m =>
-    (m.name || '').toLowerCase().includes(term) ||
-    (m.message || '').toLowerCase().includes(term)
-  );
-  renderChatLog(filtered);
+  renderChatLog(chatMessages.filter(m=>(m.name||'').toLowerCase().includes(term)||(m.message||'').toLowerCase().includes(term)));
 }
-
 function subscribeChatRealtime() {
   unsubscribeChat();
-  chatRealtimeChannel = sb
-    .channel(`portal_live_chat_${currentStation.school}`)
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'xsen_live_chat',
-      filter: `school=eq.${currentStation.school}`
-    }, payload => {
-      chatMessages.push(payload.new);
-      updateChatCount(chatMessages.length);
-      // Append row to log if not filtered
-      const term = document.getElementById('chat-filter-input')?.value.trim().toLowerCase() || '';
-      const m = payload.new;
-      if (!term || (m.name || '').toLowerCase().includes(term) || (m.message || '').toLowerCase().includes(term)) {
-        const container = document.getElementById('chat-log');
-        const emptyEl = container.querySelector('.empty');
-        if (emptyEl) emptyEl.remove();
-        const time = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const date = new Date(m.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
-        const row = document.createElement('div');
-        row.className = 'chat-log-row';
-        row.id = `chat-row-${m.id}`;
-        row.innerHTML = `
-          <div class="chat-log-meta">${date} ${time}</div>
-          <div class="chat-log-name">${escapeHtml(m.name || 'Fan')}</div>
-          <div class="chat-log-message">${escapeHtml(m.message)}</div>
-          <div class="chat-log-actions">
-            <button class="btn-delete-msg" onclick="deleteChatMessage('${m.id}')">DEL</button>
-          </div>`;
-        container.appendChild(row);
-        container.scrollTop = container.scrollHeight;
+  chatRealtimeChannel=sb.channel(`portal_live_chat_${currentStation.school}`)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'xsen_live_chat',filter:`school=eq.${currentStation.school}`},payload=>{
+      chatMessages.push(payload.new); updateChatCount(chatMessages.length);
+      const term=document.getElementById('chat-filter-input')?.value.trim().toLowerCase()||'', m=payload.new;
+      if (!term||(m.name||'').toLowerCase().includes(term)||(m.message||'').toLowerCase().includes(term)) {
+        const container=document.getElementById('chat-log'); container.querySelector('.empty')?.remove();
+        const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        const date=new Date(m.created_at).toLocaleDateString([],{month:'short',day:'numeric'});
+        const row=document.createElement('div'); row.className='chat-log-row'; row.id=`chat-row-${m.id}`;
+        row.innerHTML=`<div class="chat-log-meta">${date} ${time}</div><div class="chat-log-name">${escapeHtml(m.name||'Fan')}</div><div class="chat-log-message">${escapeHtml(m.message)}</div><div class="chat-log-actions"><button class="btn-delete-msg" onclick="deleteChatMessage('${m.id}')">DEL</button></div>`;
+        container.appendChild(row); container.scrollTop=container.scrollHeight;
       }
-    })
-    .subscribe();
+    }).subscribe();
 }
-
-function unsubscribeChat() {
-  if (chatRealtimeChannel) {
-    sb.removeChannel(chatRealtimeChannel);
-    chatRealtimeChannel = null;
-  }
-}
-
+function unsubscribeChat() { if (chatRealtimeChannel) { sb.removeChannel(chatRealtimeChannel); chatRealtimeChannel=null; } }
 async function deleteChatMessage(id) {
-  const { error } = await sb.from('xsen_live_chat').delete().eq('id', id);
-  if (error) { showToast('Could not delete message', 'error'); return; }
-  chatMessages = chatMessages.filter(m => String(m.id) !== String(id));
-  document.getElementById(`chat-row-${id}`)?.remove();
+  const { error }=await sb.from('xsen_live_chat').delete().eq('id',id);
+  if (error) { showToast('Could not delete message','error'); return; }
+  chatMessages=chatMessages.filter(m=>String(m.id)!==String(id)); document.getElementById(`chat-row-${id}`)?.remove();
   updateChatCount(chatMessages.length);
-  if (!chatMessages.length) {
-    document.getElementById('chat-log').innerHTML = '<div class="empty">NO CHAT MESSAGES YET</div>';
-  }
-  showToast('Message deleted', '');
+  if (!chatMessages.length) document.getElementById('chat-log').innerHTML='<div class="empty">NO CHAT MESSAGES YET</div>';
+  showToast('Message deleted','');
 }
-
-// ── Confirm clear ──
 function confirmClearChat() {
-  document.getElementById('confirm-msg').textContent =
-    `This will permanently delete all ${chatMessages.length} chat messages for ${currentStation.school}. This cannot be undone.`;
-  document.getElementById('confirm-yes-btn').onclick = executeClearchat;
+  document.getElementById('confirm-msg').textContent=`This will permanently delete all ${chatMessages.length} chat messages for ${currentStation.school}. This cannot be undone.`;
+  document.getElementById('confirm-yes-btn').onclick=executeClearchat;
   document.getElementById('confirm-overlay').classList.add('open');
 }
-
-function closeConfirm() {
-  document.getElementById('confirm-overlay').classList.remove('open');
-}
-
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); }
 async function executeClearchat() {
   closeConfirm();
-  const { error } = await sb.from('xsen_live_chat').delete().eq('school', currentStation.school);
-  if (error) { showToast('Clear failed', 'error'); return; }
-  chatMessages = [];
-  document.getElementById('chat-log').innerHTML = '<div class="empty">CHAT CLEARED</div>';
-  updateChatCount(0);
-  showToast('All chat messages cleared', 'success');
+  const { error }=await sb.from('xsen_live_chat').delete().eq('school',currentStation.school);
+  if (error) { showToast('Clear failed','error'); return; }
+  chatMessages=[]; document.getElementById('chat-log').innerHTML='<div class="empty">CHAT CLEARED</div>'; updateChatCount(0); showToast('All chat messages cleared','success');
 }
-
-// ── Export chat as CSV ──
 function exportChat() {
-  if (!chatMessages.length) { showToast('No messages to export', 'error'); return; }
-  const header = 'timestamp,name,message\n';
-  const rows = chatMessages.map(m =>
-    `"${m.created_at}","${(m.name || 'Fan').replace(/"/g, '""')}","${(m.message || '').replace(/"/g, '""')}"`
-  ).join('\n');
-  const blob = new Blob([header + rows], { type: 'text/csv' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `xsen-chat-${currentStation.school}-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Chat exported', 'success');
+  if (!chatMessages.length) { showToast('No messages to export','error'); return; }
+  const rows=chatMessages.map(m=>`"${m.created_at}","${(m.name||'Fan').replace(/"/g,'""')}","${(m.message||'').replace(/"/g,'""')}"`).join('\n');
+  const blob=new Blob(['timestamp,name,message\n'+rows],{type:'text/csv'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=`xsen-chat-${currentStation.school}-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+  showToast('Chat exported','success');
 }
-
-// ── Save auto-clear setting ──
 async function saveChatSettings() {
-  const hours = document.getElementById('chat-autoclear').value;
-  const { error } = await sb.from('xsen_stations').update({
-    chat_autoclear_hours: hours ? parseInt(hours) : null,
-    updated_at: new Date().toISOString()
-  }).eq('school', currentStation.school);
-  const status = document.getElementById('chat-settings-status');
-  if (error) { showToast('Save failed', 'error'); return; }
-  status.textContent = 'Saved ✓';
-  setTimeout(() => { status.textContent = ''; }, 2500);
-  showToast('Chat settings saved', 'success');
+  const hours=document.getElementById('chat-autoclear').value;
+  const { error }=await sb.from('xsen_stations').update({chat_autoclear_hours:hours?parseInt(hours):null,updated_at:new Date().toISOString()}).eq('school',currentStation.school);
+  const status=document.getElementById('chat-settings-status');
+  if (error) { showToast('Save failed','error'); return; }
+  status.textContent='Saved ✓'; setTimeout(()=>{status.textContent='';},2500); showToast('Chat settings saved','success');
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-const saved = sessionStorage.getItem('xsen_station');
-if (saved) { currentStation = JSON.parse(saved); showDashboard(); }
+const saved=sessionStorage.getItem('xsen_station');
+if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
