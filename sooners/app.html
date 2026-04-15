@@ -121,8 +121,15 @@
       cursor: pointer; white-space: nowrap; flex-shrink: 0; border-radius: 3px;
       transition: background 0.2s;
     }
-    .xsen-banner-history:hover { background: rgba(204,0,0,0.1); }
-
+   .xsen-banner-history:hover { background: rgba(204,0,0,0.1); }
+    .xsen-banner-cta {
+      background: var(--crimson); color: var(--cream);
+      font-family: var(--font-display); font-size: 9px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px;
+      border-radius: 3px; white-space: nowrap; flex-shrink: 0;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .xsen-banner-cta:hover { opacity: 0.85; }
     /* ── History drawer ── */
     .history-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998;
@@ -811,14 +818,18 @@
       return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    function renderSlimBanner(ann) {
+   function renderSlimBanner(ann) {
       const bar = document.getElementById('announcement-bar');
       if (!bar) return;
-      const style = NOTIF_CAT_STYLES[ann.category] || NOTIF_CAT_STYLES.GENERAL;
+      const style  = NOTIF_CAT_STYLES[ann.category] || NOTIF_CAT_STYLES.GENERAL;
+      const ctaHtml = ann.link_text && ann.link_url
+        ? `<a href="${ann.link_url}" target="_blank" rel="noopener" class="xsen-banner-cta">${esc(ann.link_text)} →</a>`
+        : '';
       bar.innerHTML = `
         <div class="xsen-slim-banner">
           <span class="xsen-banner-cat" style="background:${style.bg};color:${style.color};">${style.label}</span>
           <span class="xsen-banner-msg">${esc(ann.message)}</span>
+          ${ctaHtml}
           <button class="xsen-banner-history" onclick="openHistoryDrawer()">📋 History</button>
         </div>`;
     }
