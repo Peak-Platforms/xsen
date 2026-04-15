@@ -1057,8 +1057,8 @@
           notifyBtn.style.display = 'block';
           notifyBtn.style.opacity = '0.7';
           notifyBtn.title = 'Add to Home Screen for alerts';
-          notifyBtn.addEventListener('click', () => {
-            showToast('📱 Tap Share → Add to Home Screen to enable alerts');
+         notifyBtn.addEventListener('click', () => {
+            showIOSInstallGuide();
           });
         } else {
           notifyBtn.style.display = 'none';
