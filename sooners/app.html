@@ -1045,11 +1045,24 @@
       });
     }
 
-    async function init() {
+   async function init() {
       registerSW();
       if (!notifyBtn) return;
+
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
       if (!('Notification' in window)) {
-        notifyBtn.style.display = 'none';
+        if (isIOS && !isStandalone) {
+          notifyBtn.style.display = 'block';
+          notifyBtn.style.opacity = '0.7';
+          notifyBtn.title = 'Add to Home Screen for alerts';
+          notifyBtn.addEventListener('click', () => {
+            showToast('📱 Tap Share → Add to Home Screen to enable alerts');
+          });
+        } else {
+          notifyBtn.style.display = 'none';
+        }
         return;
       }
       if (Notification.permission === 'denied') {
