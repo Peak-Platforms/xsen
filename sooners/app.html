@@ -542,7 +542,16 @@
 
       tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; });
       tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; });
-      tabRadio.addEventListener('click', () => { hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block'; fanToggleBtn.style.display = 'flex'; });
+     tabRadio.addEventListener('click', () => {
+  hideAll();
+  tabRadio.classList.add('active');
+  radioPanel.style.display = 'block';
+  fanToggleBtn.style.display = 'flex';
+  if (!audioEl.src || audioEl.src === window.location.href) {
+    audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
+    audioEl.load();
+  }
+});
 
       async function checkYTLive() {
         try {
