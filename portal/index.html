@@ -744,12 +744,12 @@ function selectCategory(btn) {
   selectedCategory = btn.dataset.cat;
   const titleInput = document.getElementById('notif-title');
   const defaults = {
-    GO_LIVE:       '🔴 Sooners are Live Now',
-    BREAKING_NEWS: '🚨 Sooners Breaking News',
-    INJURY_REPORT: '🏥 Sooners Injury Report',
-    ROSTER_MOVE:   '📋 Sooners Roster Update',
-    GAME_ALERT:    '🏈 Sooners Game Alert',
-    GENERAL:       '📢 Sooners Update'
+  GO_LIVE:       `🔴 ${currentStation.name} Live Now`,
+    BREAKING_NEWS: `🚨 ${currentStation.name} Breaking News`,
+    INJURY_REPORT: `🏥 ${currentStation.name} Injury Report`,
+    ROSTER_MOVE:   `📋 ${currentStation.name} Roster Update`,
+    GAME_ALERT:    `🏈 ${currentStation.name} Game Alert`,
+    GENERAL:       `📢 ${currentStation.name} Update`
   };
   if (!titleInput.value.trim()) {
     titleInput.value = defaults[selectedCategory] || '';
