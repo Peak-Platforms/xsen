@@ -823,7 +823,7 @@ async function sendNotification() {
     await sb.from('xsen_announcements').insert({
       message:    fullTxt || shortTxt,
       type:       meta.ann_type,
-      school:     'sooners',
+     school:     currentStation.school.toLowerCase(),
       category:   selectedCategory,
       link_text:  linkText || null,
       link_url:   linkUrl  || null,
