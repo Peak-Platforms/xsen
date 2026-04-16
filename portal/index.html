@@ -722,7 +722,7 @@ async function postAnnouncement() {
   document.getElementById('ann-message').value=document.getElementById('ann-link-text').value=document.getElementById('ann-link-url').value='';
   showToast('Announcement posted','success'); loadAnnouncements(); loadAnnouncementBar();
   const typeLabels={info:'ℹ️',warning:'⚠️',critical:'🚨'};
-  await fetch(`${ORCHESTRATOR}/announcements/notify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({school:targetSchool,schoolId:targetSchool,message,type,title:`${typeLabels[type]||'🏈'} XSEN Sooners`})}).catch(()=>{});
+  await fetch(`${ORCHESTRATOR}/announcements/notify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({school:targetSchool,schoolId:targetSchool,message,type,title:`${typeLabels[type]||'🏈'} XSEN ${currentStation.name}`})}).catch(()=>{});
 }
 async function toggleAnnouncement(id,active) { await sb.from('xsen_announcements').update({active}).eq('id',id); showToast(active?'Reactivated':'Deactivated',''); loadAnnouncements(); loadAnnouncementBar(); }
 async function deleteAnnouncement(id) { await sb.from('xsen_announcements').delete().eq('id',id); document.getElementById(`ann-${id}`)?.remove(); showToast('Deleted',''); loadAnnouncementBar(); }
