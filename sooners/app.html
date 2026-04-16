@@ -711,10 +711,11 @@
       }
 
       function playAudio() {
-        tabRadio.click();
-        audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
-        audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Playing…'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
-      }
+       tabRadio.click();
+       audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
+       audioEl.load();
+       audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Playing…'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
+    }
 
       donateBtn?.addEventListener('click', () => window.open(DONATE_URL, '_blank', 'noopener'));
 
