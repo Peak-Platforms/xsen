@@ -839,7 +839,7 @@ async function sendNotification() {
         schoolId: school,
         title,
         message:  shortTxt,
-        url:     'https://xsen.fun/sooners/app?view=alerts',
+       url:     `https://xsen.fun/${currentStation.school.toLowerCase()}/app?view=alerts`,
         tag:      selectedCategory.toLowerCase(),
         type:     meta.ann_type
       })
