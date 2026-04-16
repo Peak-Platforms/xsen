@@ -804,8 +804,8 @@ async function sendNotification() {
     // 1 — Deactivate all previous active announcements for this school
     await sb.from('xsen_announcements')
       .update({ active: false })
-      .eq('school', 'sooners')
-      .eq('active', true);
+     .eq('school', currentStation.school.toLowerCase())
+     .eq('active', true);
 
     // 2 — Permanent log entry
     const { error: logErr } = await sb.from('xsen_push_log').insert({
