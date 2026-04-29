@@ -600,8 +600,43 @@
           }
         } catch(e) {}
       }
-      checkYTLive();
-      setInterval(checkYTLive, 30000);
+    checkYTLive();
+setInterval(checkYTLive, 30000);
+
+// Supabase Realtime — instant feed switch when director changes stream
+window.supabase
+  .channel('director_switch_sooners')
+  .on('postgres_changes', {
+    event: 'UPDATE',
+    schema: 'public',
+    table: 'xsen_stations',
+    filter: 'school=eq.OU'
+  }, payload => {
+    const newUrl = payload.new.hls_stream_url;
+    if (newUrl) {
+      tabLiveVideo.style.display = 'block';
+      if (liveVideoFrame.getAttribute('data-stream') !== newUrl) {
+        liveVideoFrame.setAttribute('data-stream', newUrl);
+        if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+        if (window.Hls && Hls.isSupported()) {
+          hlsPlayer = new Hls({ lowLatencyMode: true });
+          hlsPlayer.loadSource(newUrl);
+          hlsPlayer.attachMedia(liveVideoFrame);
+          hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => liveVideoFrame.play());
+        } else if (liveVideoFrame.canPlayType('application/vnd.apple.mpegurl')) {
+          liveVideoFrame.src = newUrl;
+          liveVideoFrame.play();
+        }
+      }
+    } else {
+      tabLiveVideo.style.display = 'none';
+      if (tabLiveVideo.classList.contains('active')) tabVideo.click();
+      if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+      liveVideoFrame.removeAttribute('data-stream');
+      liveVideoFrame.removeAttribute('src');
+    }
+  })
+  .subscribe();
 
       function loadVideoInPanel(videoId, title, thumbIndex) {
         activeThumbIndex = thumbIndex;
