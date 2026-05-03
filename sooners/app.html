@@ -249,18 +249,6 @@
         ⛶ Fullscreen
       </button>
     </div>
-    <div id="liveBrandedChat">
-      <div id="liveChatHeader">
-        <span class="lc-brand" id="liveChatBrand">⚡ Live Chat</span>
-        <span class="lc-live-dot"></span>
-      </div>
-      <div id="liveChatMessages"></div>
-      <div id="liveChatInputRow">
-        <input type="text" id="liveChatName" placeholder="Name (optional)" maxlength="32" />
-        <input type="text" id="liveChatMsg" placeholder="Say something…" maxlength="200" autocomplete="off" />
-        <button id="liveChatSend" type="button">➤</button>
-      </div>
-    </div>
   </div>
 
   <div id="radioPanel">
@@ -271,6 +259,20 @@
     <div id="appStreamerName"></div>
     <audio id="xsenAudio" preload="none" playsinline controls></audio>
     <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
+  </div>
+
+  <!-- Live Chat — shown on Live and Radio tabs -->
+  <div id="liveBrandedChat" style="display:none;">
+    <div id="liveChatHeader">
+      <span class="lc-brand" id="liveChatBrand">⚡ Live Chat</span>
+      <span class="lc-live-dot"></span>
+    </div>
+    <div id="liveChatMessages"></div>
+    <div id="liveChatInputRow">
+      <input type="text" id="liveChatName" placeholder="Name (optional)" maxlength="32" />
+      <input type="text" id="liveChatMsg" placeholder="Say something…" maxlength="200" autocomplete="off" />
+      <button id="liveChatSend" type="button">➤</button>
+    </div>
   </div>
 
   <button id="fanToggleBtn" type="button" style="display:none;">
@@ -337,6 +339,7 @@ const CHAT_API_URL    = 'https://glorious-appreciation-production.up.railway.app
 const AUTH_SERVICE    = 'https://energetic-joy-production.up.railway.app';
 const FAN_MSG_API     = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
 const FREE_MSG_LIMIT  = 500;
+let isSP = false; // set after config loads
 
 window.supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
@@ -417,12 +420,13 @@ function applyConfig(cfg) {
 
   // Plan - explicitly show or hide both ways
   const plan = cfg.plan || 'broadcastpal';
-  const isSP = plan === 'streampal';
+  isSP = plan === 'streampal';
   document.getElementById('messages').style.display           = isSP ? 'none' : 'block';
   document.getElementById('chatForm').style.display            = isSP ? 'none' : 'flex';
   document.getElementById('donateBtn').style.display           = isSP ? 'none' : 'inline-block';
   document.getElementById('notifyBtn').style.display           = isSP ? 'none' : 'inline-block';
-  document.getElementById('liveBrandedChat').style.display     = isSP ? 'none' : 'flex';
+  document.getElementById('liveBrandedChat').style.display     = 'flex'; // chat available on all plans
+  document.getElementById('fanToggleBtn').style.display        = isSP ? 'none' : 'flex';
 
   // Logo (if set)
   if (cfg.logo_url) {
@@ -534,15 +538,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     liveVideoPanel.style.display = 'none';
     radioPanel.style.display     = 'none';
     fanToggleBtn.style.display   = 'none';
+    document.getElementById('liveBrandedChat').style.display = 'none';
     fanPanel.classList.remove('open');
     fanToggleBtn.classList.remove('open');
     [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
   }
-  tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; });
-  tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; });
+  tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'none'; });
+  tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'flex'; });
   tabRadio.addEventListener('click', () => {
     hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block';
-    fanToggleBtn.style.display = 'flex';
+    document.getElementById('liveBrandedChat').style.display = 'flex';
+    if (!isSP) fanToggleBtn.style.display = 'flex';
     if (!audioEl.src || audioEl.src === window.location.href) {
       audioEl.src = `${LIVE_AUDIO}?ts=${Date.now()}`; audioEl.load();
     }
@@ -878,4 +884,5 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
