@@ -415,18 +415,14 @@ function applyConfig(cfg) {
   // Nav home
   document.getElementById('navHome').href = `https://xsen.fun/${school.toLowerCase()}`;
 
-  // Plan — hide features for streampal
+  // Plan - explicitly show or hide both ways
   const plan = cfg.plan || 'broadcastpal';
-  if (plan === 'streampal') {
-    // Hide bot chat
-    document.getElementById('messages').style.display   = 'none';
-    document.getElementById('chatForm').style.display    = 'none';
-    // Hide NIL
-    document.getElementById('donateBtn').style.display   = 'none';
-    document.getElementById('notifyBtn').style.display   = 'none';
-    // Hide live chat
-    document.getElementById('liveBrandedChat').style.display = 'none';
-  }
+  const isSP = plan === 'streampal';
+  document.getElementById('messages').style.display           = isSP ? 'none' : 'block';
+  document.getElementById('chatForm').style.display            = isSP ? 'none' : 'flex';
+  document.getElementById('donateBtn').style.display           = isSP ? 'none' : 'inline-block';
+  document.getElementById('notifyBtn').style.display           = isSP ? 'none' : 'inline-block';
+  document.getElementById('liveBrandedChat').style.display     = isSP ? 'none' : 'flex';
 
   // Logo (if set)
   if (cfg.logo_url) {
@@ -882,3 +878,4 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
