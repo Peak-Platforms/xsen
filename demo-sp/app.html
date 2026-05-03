@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title id="pageTitle">Loading…</title>
+  <link id="manifestLink" rel="manifest" href="" />
+  <meta name="theme-color" id="themeColor" content="#111111" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" id="appTitle" content="" />
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary:      #CC0000;
+      --primary-deep: #990000;
+      --primary-glow: rgba(204,0,0,0.45);
+      --secondary:    #FDF9D8;
+      --secondary-dim:rgba(253,249,216,0.18);
+      --ink:          #080808;
+      --surface:      #111111;
+      --surface-2:    #1a1a1a;
+      --surface-3:    #222222;
+      --border:       rgba(204,0,0,0.22);
+      --text:         #f0ece0;
+      --text-muted:   rgba(240,236,224,0.45);
+      --font-display: 'Oswald', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --radius:       12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    a { text-decoration: none; }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px; opacity: 0.55;
+    }
+    body {
+      font-family: var(--font-body); background: var(--ink);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, var(--primary-glow) 0%, transparent 70%);
+      color: var(--text); min-height: 100dvh; position: relative;
+    }
+    /* Loading screen */
+    #loadingScreen {
+      position: fixed; inset: 0; background: var(--ink); z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 14px; letter-spacing: .2em;
+      color: var(--text-muted); text-transform: uppercase;
+    }
+    .chat-container {
+      position: relative; z-index: 1; width: 100%; max-width: 480px;
+      margin: 0 auto; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); display: flex; flex-direction: column;
+      height: 100dvh; max-height: 100dvh;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.12), 0 24px 80px rgba(0,0,0,0.7), 0 0 60px var(--primary-glow);
+      overflow: hidden;
+    }
+    /* Header */
+    .chat-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; height: 62px; position: relative; overflow: hidden; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary) 50%, color-mix(in srgb, var(--primary) 70%, white) 100%);
+    }
+    .chat-header::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(0,0,0,0.08) 8px, rgba(0,0,0,0.08) 10px);
+      pointer-events: none;
+    }
+    .chat-header::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(253,249,216,0.6), transparent);
+    }
+    .header-wordmark { display: flex; flex-direction: column; line-height: 1; position: relative; z-index: 1; }
+    .header-wordmark .bot-name { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--secondary); letter-spacing: 1.5px; text-transform: uppercase; }
+    .header-wordmark .bot-sub { font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(253,249,216,0.8); margin-top: 2px; }
+    .header-actions { margin-left: auto; display: flex; align-items: center; gap: 6px; position: relative; z-index: 1; }
+    #notifyBtn { background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; }
+    #donateBtn { background: var(--secondary-dim); border: 1px solid rgba(253,249,216,0.35); color: var(--secondary); padding: 5px 10px; border-radius: 6px; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    #donateBtn:hover { background: rgba(253,249,216,0.26); }
+    /* Slim banner */
+    .xsen-slim-banner { display: flex; align-items: center; gap: 8px; background: #0d0d0d; border-bottom: 1px solid rgba(204,0,0,0.25); padding: 6px 12px; min-height: 34px; flex-shrink: 0; }
+    .xsen-banner-cat { font-family: var(--font-display); font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
+    .xsen-banner-msg { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: rgba(240,236,224,0.75); }
+    .xsen-banner-history { background: none; border: 1px solid rgba(204,0,0,0.35); color: var(--primary); font-family: var(--font-display); font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; cursor: pointer; white-space: nowrap; flex-shrink: 0; border-radius: 3px; }
+    .xsen-banner-cta { background: var(--primary); color: var(--secondary); font-family: var(--font-display); font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
+    /* History drawer */
+    .history-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    .history-overlay.open { opacity: 1; pointer-events: all; }
+    .history-drawer { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: 100%; max-width: 480px; z-index: 999; background: var(--surface); border-top: 2px solid var(--primary); border-radius: 14px 14px 0 0; max-height: 72vh; display: flex; flex-direction: column; transition: transform 0.32s cubic-bezier(0.16,1,0.3,1); }
+    .history-drawer.open { transform: translateX(-50%) translateY(0); }
+    .history-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; margin: 10px auto 0; }
+    .history-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .history-header-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
+    .history-close { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+    .history-list { overflow-y: auto; flex: 1; scrollbar-width: thin; }
+    .history-item { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .history-item-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .history-item-cat { font-family: var(--font-display); font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; }
+    .history-item-time { font-size: 10px; color: var(--text-muted); margin-left: auto; }
+    .history-item-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .history-item-body { font-size: 12px; color: rgba(240,236,224,0.55); line-height: 1.5; }
+    .history-empty { padding: 2.5rem; text-align: center; font-size: 12px; color: var(--text-muted); }
+    /* Tabs */
+    .media-tabs { display: flex; background: #111; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .media-tab { flex: 1; text-align: center; padding: 9px; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; color: var(--text-muted); }
+    .media-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    #tabLiveVideo { display: none; }
+    /* Video */
+    #videoPanel { background: #000; flex-shrink: 0; }
+    .video-player-wrap { position: relative; aspect-ratio: 16/9; background: #111; display: flex; align-items: center; justify-content: center; }
+    #mainVideoFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; display: none; }
+    .video-placeholder { text-align: center; pointer-events: none; }
+    .video-placeholder .play-icon { width: 48px; height: 48px; background: rgba(204,0,0,0.2); border: 1px solid rgba(204,0,0,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; }
+    .video-placeholder .play-triangle { width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 16px solid var(--primary); margin-left: 3px; }
+    .video-placeholder p { font-size: 12px; color: var(--text-muted); }
+    .video-now-playing { position: absolute; bottom: 8px; left: 10px; background: rgba(0,0,0,0.75); padding: 3px 10px; border-radius: 4px; font-size: 11px; color: rgba(240,236,224,0.7); max-width: 80%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: none; }
+    #videoThumbs { display: none; gap: 6px; padding: 8px 10px; background: #0d0d0d; border-bottom: 1px solid var(--border); }
+    .video-thumb { flex: 1; position: relative; cursor: pointer; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); transition: border-color 0.2s; }
+    .video-thumb:hover, .video-thumb.active { border-color: var(--primary); }
+    .video-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .video-thumb-title { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); font-size: 9px; color: rgba(240,236,224,0.85); padding: 3px 5px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    /* Live */
+    #liveVideoPanel { display: none; background: #000; flex-shrink: 0; }
+    #liveVideoPanel .live-video-wrap { position: relative; aspect-ratio: 16/9; background: #111; }
+    #liveVideoFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: #000; }
+    /* Live Chat */
+    #liveBrandedChat { display: flex; flex-direction: column; height: 220px; background: #0d0d0d; border-top: 1px solid var(--border); }
+    #liveChatHeader { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 4px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    #liveChatHeader .lc-brand { font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); }
+    #liveChatHeader .lc-live-dot { width: 6px; height: 6px; background: #ff4444; border-radius: 50%; animation: lcPulse 1s infinite; }
+    @keyframes lcPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    #liveChatMessages { flex: 1; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 5px; scrollbar-width: thin; }
+    .lc-msg { font-size: 13px; line-height: 1.45; }
+    .lc-msg .lc-name { font-weight: 600; color: var(--primary); margin-right: 6px; font-family: var(--font-display); }
+    .lc-msg.system { color: var(--text-muted); font-style: italic; font-size: 11px; }
+    #liveChatInputRow { display: flex; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    #liveChatName { width: 90px; flex-shrink: 0; padding: 8px 10px; font-size: 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; background: var(--surface-2); color: var(--text); font-family: var(--font-body); }
+    #liveChatMsg { flex: 1; padding: 8px 10px; font-size: 13px; border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; background: var(--surface-2); color: var(--text); font-family: var(--font-body); }
+    #liveChatMsg:focus, #liveChatName:focus { outline: none; border-color: rgba(204,0,0,0.5); }
+    #liveChatMsg::placeholder, #liveChatName::placeholder { color: var(--text-muted); }
+    #liveChatSend { background: var(--primary); color: var(--secondary); border: none; width: 36px; height: 36px; border-radius: 7px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    /* Radio */
+    #radioPanel { display: none; background: #111; padding: 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .radio-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .radio-label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #ff4444; }
+    #appLiveBadge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: #2a2a2a; color: #9ca3af; border: 1px solid #3a3a3a; transition: all 0.3s; white-space: nowrap; }
+    #appLiveBadge.live { background: rgba(220,38,38,0.15); color: #f87171; border: 1px solid rgba(220,38,38,0.4); }
+    #appStreamerName { display: none; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; text-align: center; margin-bottom: 6px; }
+    #xsenAudio { width: 100%; height: 36px; }
+    .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; }
+    /* Fan message */
+    #fanToggleBtn { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 28px); margin: 0 14px 8px; padding: 9px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; color: var(--secondary); font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    #fanToggleBtn .fan-toggle-arrow { transition: transform 0.25s; font-style: normal; }
+    #fanToggleBtn.open .fan-toggle-arrow { transform: rotate(180deg); }
+    .fan-message-panel { margin: 0 14px 8px; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; display: none; }
+    .fan-message-panel.open { display: block; }
+    .fan-message-panel input, .fan-message-panel textarea { width: 100%; margin: 6px 0; padding: 10px 13px; font-size: 13px; font-family: var(--font-body); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: var(--surface-3); color: var(--text); }
+    .fan-message-panel input::placeholder, .fan-message-panel textarea::placeholder { color: var(--text-muted); }
+    .fan-message-panel input:focus, .fan-message-panel textarea:focus { outline: none; border-color: var(--primary); }
+    #sendFanMessage { width: 100%; margin-top: 10px; padding: 11px; background: var(--primary); color: var(--secondary); border: none; border-radius: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
+    .fan-message-status { text-align: center; font-size: 12px; margin-top: 8px; min-height: 16px; color: var(--text-muted); }
+    /* Chat */
+    .chat-messages { flex: 1; padding: 16px 14px; overflow-y: auto; background: var(--ink); background-image: radial-gradient(ellipse 70% 40% at 50% 100%, rgba(204,0,0,0.08) 0%, transparent 70%); min-height: 120px; scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent; }
+    .message { margin-bottom: 10px; padding: 10px 14px; border-radius: 10px; max-width: 100%; line-height: 1.55; font-size: 14px; animation: msgIn 0.22s ease both; }
+    @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .message.bot { background: var(--surface-2); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px 10px 10px 10px; }
+    .message.user { background: linear-gradient(135deg, var(--primary), var(--primary-deep)); color: var(--secondary); margin-left: auto; border-radius: 10px 4px 10px 10px; }
+    .suggestions { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 10px 8px; animation: msgIn 0.22s ease both; }
+    .suggestion-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 16px; padding: 6px 14px; font-size: 0.85rem; font-family: var(--font-body); text-align: left; cursor: pointer; transition: background 0.2s, color 0.2s; width: fit-content; max-width: 90%; }
+    .suggestion-btn:hover { background: var(--primary); color: #fff; }
+    .chat-input { display: flex; border-top: 1px solid var(--border); background: var(--surface); padding: 6px 8px; gap: 8px; align-items: center; }
+    .chat-input input { flex: 1; padding: 11px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 14px; font-family: var(--font-body); background: var(--surface-2); color: var(--text); }
+    .chat-input input::placeholder { color: var(--text-muted); }
+    .chat-input input:focus { outline: none; border-color: rgba(204,0,0,0.45); }
+    .chat-input button { background: var(--primary); color: var(--secondary); border: none; width: 42px; height: 42px; border-radius: 8px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    /* Paywall */
+    #paywallCard { display: none; margin: 12px 14px; padding: 22px; background: var(--surface-2); border: 1px solid rgba(204,0,0,0.3); border-radius: var(--radius); text-align: center; }
+    #paywallCard h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--secondary); margin-bottom: 8px; }
+    #paywallCard p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6; }
+    .trial-btn { display: block; background: linear-gradient(135deg, var(--primary), var(--primary-deep)); color: var(--secondary); padding: 13px; border-radius: 8px; font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+    .divider { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+    #activateForm input { width: 100%; padding: 10px 13px; font-size: 13px; font-family: var(--font-body); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: var(--surface-3); color: var(--text); margin-bottom: 8px; }
+    #activateForm input:focus { outline: none; border-color: var(--primary); }
+    #activateBtn { width: 100%; padding: 10px; background: var(--surface-3); color: var(--text); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; }
+    #activateStatus { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
+    /* Nav */
+    .nav-bar { display: flex; justify-content: space-around; padding: 10px 8px; border-top: 1px solid var(--border); background: var(--surface-2); }
+    .nav-bar a { font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); cursor: pointer; }
+    .nav-bar a:hover { color: var(--primary); }
+    /* NIL prompt */
+    #nil-prompt-container { display:none; position:fixed; bottom:0; left:0; right:0; z-index:997; padding:0 16px 16px; pointer-events:none; }
+    .nil-prompt { pointer-events:all; background:#111; border:1px solid rgba(204,0,0,0.6); border-radius:10px; overflow:hidden; max-width:480px; margin:0 auto; box-shadow:0 0 60px rgba(204,0,0,0.3); animation:nilSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+    @keyframes nilSlideUp { from{opacity:0;transform:translateY(100%);} to{opacity:1;transform:translateY(0);} }
+    .nil-prompt-accent { height:4px; background:linear-gradient(90deg,var(--primary),var(--secondary),var(--primary)); }
+    .nil-prompt-inner { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 24px; flex-wrap:wrap; }
+    .nil-dot { width:8px; height:8px; background:#ff4444; border-radius:50%; animation:nilPulse 1s infinite; }
+    @keyframes nilPulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.4);} }
+    .nil-prompt-message { font-size:22px; font-weight:700; color:#f5f5f0; margin-bottom:6px; line-height:1.2; }
+    .nil-prompt-btn { background:var(--primary); color:#fff; padding:14px 28px; border-radius:5px; font-weight:700; font-size:15px; white-space:nowrap; }
+    .nil-prompt-dismiss { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50%; width:32px; height:32px; color:rgba(245,245,240,0.4); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    @media (max-width: 520px) {
+      .chat-container { margin:0; border-radius:0; border:none; min-height:100dvh; box-shadow:none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loadingScreen">Loading…</div>
+<div id="announcement-bar"></div>
+
+<div class="chat-container">
+  <header class="chat-header">
+    <div class="header-wordmark">
+      <span class="bot-name" id="headerBotName">…</span>
+      <span class="bot-sub">The Fans' Network</span>
+    </div>
+    <div class="header-actions">
+      <button id="notifyBtn" type="button" title="Get Notifications">🔔</button>
+      <button id="donateBtn" type="button">❤️ NIL</button>
+    </div>
+  </header>
+
+  <div class="media-tabs">
+    <div class="media-tab active" id="tabVideo">🎬 Video</div>
+    <div class="media-tab" id="tabLiveVideo">🔴 Live</div>
+    <div class="media-tab" id="tabRadio">📻 Radio</div>
+  </div>
+
+  <div id="videoPanel">
+    <div class="video-player-wrap">
+      <iframe id="mainVideoFrame" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="play-icon"><div class="play-triangle"></div></div>
+        <p id="videoPlaceholderText">Ask for a highlight</p>
+      </div>
+      <div class="video-now-playing" id="nowPlayingLabel"></div>
+    </div>
+    <div id="videoThumbs"></div>
+  </div>
+
+  <div id="liveVideoPanel">
+    <div class="live-video-wrap">
+      <video id="liveVideoFrame" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000;"></video>
+      <button onclick="document.getElementById('liveVideoFrame').requestFullscreen()"
+        style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;z-index:10;">
+        ⛶ Fullscreen
+      </button>
+    </div>
+  </div>
+
+  <div id="radioPanel">
+    <div class="radio-header">
+      <div class="radio-label">📻 Fan Cast</div>
+      <span id="appLiveBadge">PLAYLIST</span>
+    </div>
+    <div id="appStreamerName"></div>
+    <audio id="xsenAudio" preload="none" playsinline controls></audio>
+    <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
+  </div>
+
+  <!-- Live Chat — shown on Live and Radio tabs -->
+  <div id="liveBrandedChat" style="display:none;">
+    <div id="liveChatHeader">
+      <span class="lc-brand" id="liveChatBrand">⚡ Live Chat</span>
+      <span class="lc-live-dot"></span>
+    </div>
+    <div id="liveChatMessages"></div>
+    <div id="liveChatInputRow">
+      <input type="text" id="liveChatName" placeholder="Name (optional)" maxlength="32" />
+      <input type="text" id="liveChatMsg" placeholder="Say something…" maxlength="200" autocomplete="off" />
+      <button id="liveChatSend" type="button">➤</button>
+    </div>
+  </div>
+
+  <button id="fanToggleBtn" type="button" style="display:none;">
+    📣 Message the Broadcaster <i class="fan-toggle-arrow">▾</i>
+  </button>
+  <div class="fan-message-panel">
+    <input type="text" id="fanName" placeholder="Your name (optional)" />
+    <textarea id="fanMessage" rows="2" placeholder="Send a message to the broadcaster…"></textarea>
+    <button id="sendFanMessage" type="button">Send Message</button>
+    <div id="fanMessageStatus" class="fan-message-status"></div>
+  </div>
+
+  <div id="paywallCard">
+    <h3>👋 You've used your free messages!</h3>
+    <p>Start your 3-day free trial to keep chatting — no charge today.</p>
+    <a id="paywallStripeLink" href="#" class="trial-btn">🚀 Start Free Trial</a>
+    <div class="divider">— Already signed up? Activate below —</div>
+    <div id="activateForm">
+      <input type="email" id="activateEmail" placeholder="Enter your email to activate" />
+      <button id="activateBtn" type="button">Activate Access</button>
+      <div id="activateStatus"></div>
+    </div>
+  </div>
+
+  <div id="messages" class="chat-messages">
+    <div class="message bot" id="welcomeMsg">👋 Loading…</div>
+  </div>
+
+  <form id="chatForm" class="chat-input">
+    <input type="text" id="userInput" placeholder="Ask a question…" autocomplete="off" required />
+    <button type="submit">➤</button>
+  </form>
+
+  <nav class="nav-bar">
+    <a id="navHome" href="#">← Home</a>
+    <a href="https://xsen.fun">XSEN</a>
+    <a id="navSubscribe" href="#">Subscribe</a>
+    <a href="#" id="manageSubLink">⚙️ Account</a>
+  </nav>
+</div>
+
+<div class="history-overlay" id="historyOverlay" onclick="closeHistoryDrawer()"></div>
+<div class="history-drawer" id="historyDrawer">
+  <div class="history-handle"></div>
+  <div class="history-header">
+    <span class="history-header-title">📋 Alert History</span>
+    <button class="history-close" onclick="closeHistoryDrawer()">✕</button>
+  </div>
+  <div class="history-list" id="historyList">
+    <div class="history-empty">Loading…</div>
+  </div>
+</div>
+
+<div id="nil-prompt-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+<script>
+// ── PLATFORM CONFIG (stays constant across all clients) ──────────────────────
+const SUPA_URL        = 'https://hvqzrdlbtfezwuveincs.supabase.co';
+const SUPA_KEY        = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+const ORCHESTRATOR    = 'https://glorious-appreciation-production.up.railway.app';
+const CHAT_API_URL    = 'https://glorious-appreciation-production.up.railway.app/chat';
+const AUTH_SERVICE    = 'https://energetic-joy-production.up.railway.app';
+const FAN_MSG_API     = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
+const FREE_MSG_LIMIT  = 500;
+let isSP = false; // set after config loads
+
+window.supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── DERIVE SCHOOL SLUG FROM URL PATH ────────────────────────────────────────
+// URL: /sooners/app  →  slug = 'sooners'
+// Also supports ?school=sooners override
+function getSchoolSlug() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('school')) return params.get('school').toLowerCase();
+  const parts = window.location.pathname.split('/').filter(Boolean);
+  return parts[0] || 'sooners';
+}
+
+// ── STREAM URL OVERRIDE ──────────────────────────────────────────────────────
+// ?stream=camera1 bypasses director console
+function getStreamOverride() {
+  return new URLSearchParams(window.location.search).get('stream');
+}
+
+// ── LOAD CONFIG FROM SUPABASE ────────────────────────────────────────────────
+async function loadConfig(slug) {
+  // Try matching by fanbase (case-insensitive), fallback to school key
+  let { data } = await window.supabase
+    .from('xsen_stations')
+    .select('*')
+    .ilike('fanbase', slug)
+    .single();
+
+  if (!data) {
+    // Fallback: match by school key (uppercase)
+    const res = await window.supabase
+      .from('xsen_stations')
+      .select('*')
+      .ilike('school', slug)
+      .single();
+    data = res.data;
+  }
+  return data;
+}
+
+// ── APPLY CONFIG TO PAGE ──────────────────────────────────────────────────────
+function applyConfig(cfg) {
+  // Colors
+  if (cfg.color_primary) {
+    const hex = cfg.color_primary;
+    document.documentElement.style.setProperty('--primary', hex);
+    document.documentElement.style.setProperty('--primary-deep', shadeColor(hex, -20));
+    document.documentElement.style.setProperty('--primary-glow', hexToRgba(hex, 0.45));
+    document.documentElement.style.setProperty('--border', hexToRgba(hex, 0.22));
+    document.getElementById('themeColor').content = hex;
+  }
+  if (cfg.color_secondary) {
+    document.documentElement.style.setProperty('--secondary', cfg.color_secondary);
+    document.documentElement.style.setProperty('--secondary-dim', hexToRgba(cfg.color_secondary, 0.18));
+  }
+
+  // Branding
+  const botName   = cfg.name || cfg.fanbase || 'Fan Bot';
+  const fanbase   = cfg.fanbase || '';
+  const school    = cfg.school || '';
+  document.title  = `${botName} — XSEN ${fanbase}`;
+  document.getElementById('pageTitle').textContent      = `${botName} — XSEN ${fanbase}`;
+  document.getElementById('appTitle').content            = `XSEN ${fanbase}`;
+  document.getElementById('headerBotName').textContent   = botName;
+  document.getElementById('welcomeMsg').textContent      = `👋 Welcome! Ask me anything about ${fanbase} sports — history, stats, highlights, schedules, or players.`;
+  document.getElementById('videoPlaceholderText').textContent = `Ask ${botName} for a highlight`;
+  document.getElementById('liveChatBrand').textContent   = `⚡ ${fanbase} Live Chat`;
+  document.querySelector('.chat-input input').placeholder = `Ask ${botName}…`;
+
+  // Stripe
+  if (cfg.stripe_link) {
+    document.getElementById('paywallStripeLink').href = cfg.stripe_link;
+    document.getElementById('navSubscribe').href      = cfg.stripe_link;
+  }
+
+  // Nav home
+  document.getElementById('navHome').href = `https://xsen.fun/${school.toLowerCase()}`;
+
+  // Plan - explicitly show or hide both ways
+  const plan = cfg.plan || 'broadcastpal';
+  isSP = plan === 'streampal';
+  document.getElementById('messages').style.display           = isSP ? 'none' : 'block';
+  document.getElementById('chatForm').style.display            = isSP ? 'none' : 'flex';
+  document.getElementById('donateBtn').style.display           = isSP ? 'none' : 'inline-block';
+  document.getElementById('notifyBtn').style.display           = isSP ? 'none' : 'inline-block';
+  document.getElementById('liveBrandedChat').style.display     = 'flex'; // chat available on all plans
+  document.getElementById('fanToggleBtn').style.display        = isSP ? 'none' : 'flex';
+
+  // Logo (if set)
+  if (cfg.logo_url) {
+    const logoImg = document.createElement('img');
+    logoImg.src = cfg.logo_url;
+    logoImg.style.cssText = 'height:36px;width:auto;object-fit:contain;position:relative;z-index:1;border-radius:4px;';
+    document.querySelector('.chat-header').insertBefore(logoImg, document.querySelector('.header-wordmark'));
+  }
+}
+
+// ── COLOR UTILITIES ──────────────────────────────────────────────────────────
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function shadeColor(hex, pct) {
+  const num = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + pct));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + pct));
+  const b = Math.min(255, Math.max(0, (num & 0xff) + pct));
+  return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
+function getMessageCount() { return parseInt(localStorage.getItem('xsen_message_count') || '0'); }
+function incrementMessageCount() { const c = getMessageCount()+1; localStorage.setItem('xsen_message_count', c); return c; }
+function resetMessageCount() { localStorage.setItem('xsen_message_count', '0'); }
+
+async function activateWithEmail(email) {
+  const res = await fetch(`${AUTH_SERVICE}/api/exchange-email`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email: email.trim().toLowerCase() })
+  });
+  const data = await res.json();
+  if (data.token) { localStorage.setItem('xsen_auth_token', data.token); localStorage.setItem('xsen_user_email', data.email); resetMessageCount(); return true; }
+  return false;
+}
+
+async function getUserId() {
+  try { const token = localStorage.getItem('xsen_auth_token'); if (token) { const p = JSON.parse(atob(token.split('.')[1])); if (p.email||p.sub) return p.email||p.sub; } } catch(e){}
+  try { const { data:{session} } = await window.supabase.auth.getSession(); if (session?.user) return session.user.email||session.user.id; } catch(e){}
+  return 'anonymous';
+}
+
+// ── MAIN INIT ─────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  const slug   = getSchoolSlug();
+  const config = await loadConfig(slug);
+
+  if (!config) {
+    document.getElementById('loadingScreen').textContent = 'School not found.';
+    return;
+  }
+
+  applyConfig(config);
+  document.getElementById('loadingScreen').style.display = 'none';
+
+  // Derive runtime values from config
+  const SCHOOL         = config.school;           // 'OU'
+  const SCHOOL_LOWER   = slug;                    // 'sooners'
+  const DONATE_URL     = `https://xsen.fun/nil?school=${SCHOOL_LOWER}`;
+  const LIVE_AUDIO     = config.azuracast_station
+    ? `https://stream.xsen.fun/listen/${config.azuracast_station}/radio.mp3`
+    : '';
+  const NOW_PLAYING_URL = config.azuracast_station
+    ? `https://stream.xsen.fun/api/nowplaying/${config.azuracast_station}`
+    : '';
+
+  // DOM refs
+  const form            = document.getElementById('chatForm');
+  const input           = document.getElementById('userInput');
+  const messages        = document.getElementById('messages');
+  const audioEl         = document.getElementById('xsenAudio');
+  const audioStatus     = document.getElementById('audioStatus');
+  const appLiveBadge    = document.getElementById('appLiveBadge');
+  const appStreamerName = document.getElementById('appStreamerName');
+  const donateBtn       = document.getElementById('donateBtn');
+  const fanNameInput    = document.getElementById('fanName');
+  const fanMsgInput     = document.getElementById('fanMessage');
+  const sendFanMsgBtn   = document.getElementById('sendFanMessage');
+  const fanMsgStatus    = document.getElementById('fanMessageStatus');
+  const paywallCard     = document.getElementById('paywallCard');
+  const activateEmail   = document.getElementById('activateEmail');
+  const activateBtn     = document.getElementById('activateBtn');
+  const activateStatus  = document.getElementById('activateStatus');
+  const mainVideoFrame  = document.getElementById('mainVideoFrame');
+  const videoPlaceholder= document.getElementById('videoPlaceholder');
+  const nowPlayingLabel = document.getElementById('nowPlayingLabel');
+  const videoThumbs     = document.getElementById('videoThumbs');
+  const tabVideo        = document.getElementById('tabVideo');
+  const tabLiveVideo    = document.getElementById('tabLiveVideo');
+  const tabRadio        = document.getElementById('tabRadio');
+  const videoPanel      = document.getElementById('videoPanel');
+  const liveVideoPanel  = document.getElementById('liveVideoPanel');
+  const radioPanel      = document.getElementById('radioPanel');
+  const liveVideoFrame  = document.getElementById('liveVideoFrame');
+  const fanToggleBtn    = document.getElementById('fanToggleBtn');
+  const fanPanel        = document.querySelector('.fan-message-panel');
+  const manageSubLink   = document.getElementById('manageSubLink');
+
+  let currentVideos    = [];
+  let activeThumbIndex = 0;
+  let hlsPlayer        = null;
+
+  // ── TABS ──────────────────────────────────────────────────────────────────
+  function hideAll() {
+    videoPanel.style.display     = 'none';
+    liveVideoPanel.style.display = 'none';
+    radioPanel.style.display     = 'none';
+    fanToggleBtn.style.display   = 'none';
+    document.getElementById('liveBrandedChat').style.display = 'none';
+    fanPanel.classList.remove('open');
+    fanToggleBtn.classList.remove('open');
+    [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
+  }
+  tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'none'; });
+  tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'flex'; });
+  tabRadio.addEventListener('click', () => {
+    hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block';
+    document.getElementById('liveBrandedChat').style.display = 'flex';
+    if (!isSP) fanToggleBtn.style.display = 'flex';
+    if (!audioEl.src || audioEl.src === window.location.href) {
+      audioEl.src = `${LIVE_AUDIO}?ts=${Date.now()}`; audioEl.load();
+    }
+  });
+
+  // ── HLS LIVE STREAM ───────────────────────────────────────────────────────
+  function loadHlsStream(streamUrl) {
+    if (!streamUrl) return;
+    if (liveVideoFrame.getAttribute('data-stream') === streamUrl) return;
+    liveVideoFrame.setAttribute('data-stream', streamUrl);
+    if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+    if (window.Hls && Hls.isSupported()) {
+      hlsPlayer = new Hls({ lowLatencyMode: false, maxBufferLength: 30 });
+      hlsPlayer.loadSource(streamUrl);
+      hlsPlayer.attachMedia(liveVideoFrame);
+      hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => liveVideoFrame.play().catch(()=>{}));
+    } else if (liveVideoFrame.canPlayType('application/vnd.apple.mpegurl')) {
+      liveVideoFrame.src = streamUrl; liveVideoFrame.play().catch(()=>{});
+    }
+  }
+
+  function clearHlsStream() {
+    tabLiveVideo.style.display = 'none';
+    if (tabLiveVideo.classList.contains('active')) tabVideo.click();
+    if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+    liveVideoFrame.removeAttribute('data-stream');
+    liveVideoFrame.removeAttribute('src');
+  }
+
+  // Check for stream override in URL
+  const streamOverride = getStreamOverride();
+
+  async function checkLiveStream() {
+    if (streamOverride) {
+      // Direct stream — bypass Supabase
+      tabLiveVideo.style.display = 'block';
+      loadHlsStream(`https://live.xsen.fun:8443/hls/${streamOverride}/index.m3u8`);
+      return;
+    }
+    try {
+      const { data } = await window.supabase
+        .from('xsen_stations')
+        .select('hls_stream_url')
+        .eq('school', SCHOOL)
+        .single();
+      const url = data?.hls_stream_url || '';
+      if (url) { tabLiveVideo.style.display = 'block'; loadHlsStream(url); }
+      else { clearHlsStream(); }
+    } catch(e) {}
+  }
+  checkLiveStream();
+  setInterval(checkLiveStream, 30000);
+
+  // Supabase Realtime — instant switch from director
+  if (!streamOverride) {
+    window.supabase
+      .channel(`director_switch_${SCHOOL_LOWER}`)
+      .on('postgres_changes', {
+        event: 'UPDATE', schema: 'public', table: 'xsen_stations',
+        filter: `school=eq.${SCHOOL}`
+      }, payload => {
+        const url = payload.new.hls_stream_url;
+        if (url) { tabLiveVideo.style.display = 'block'; loadHlsStream(url); }
+        else { clearHlsStream(); }
+      })
+      .subscribe();
+  }
+
+  // ── VIDEO PANEL ──────────────────────────────────────────────────────────
+  function loadVideoInPanel(videoId, title, thumbIndex) {
+    activeThumbIndex = thumbIndex;
+    const src = new URL('https://player.xsen.fun');
+    src.searchParams.set('v', videoId); src.searchParams.set('autoplay', '1');
+    src.searchParams.set('muted', '1'); src.searchParams.set('playsinline', '1');
+    mainVideoFrame.src = src.toString();
+    mainVideoFrame.style.display = 'block';
+    videoPlaceholder.style.display = 'none';
+    nowPlayingLabel.textContent = title || 'Now playing';
+    nowPlayingLabel.style.display = 'block';
+    document.querySelectorAll('.video-thumb').forEach((t,i) => t.classList.toggle('active', i === thumbIndex));
+    tabVideo.click();
+  }
+
+  function renderThumbs(videos) {
+    videoThumbs.innerHTML = '';
+    if (!videos?.length) { videoThumbs.style.display = 'none'; return; }
+    videoThumbs.style.display = 'flex';
+    videos.forEach((v, i) => {
+      const videoId = v.url.includes('v=') ? v.url.split('v=')[1].split('&')[0] : v.url.includes('youtu.be/') ? v.url.split('youtu.be/')[1] : v.url.split('?v=').pop();
+      const thumb = document.createElement('div');
+      thumb.className = 'video-thumb' + (i===0 ? ' active' : '');
+      thumb.innerHTML = `<img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" alt="${v.title}" loading="lazy"><div class="video-thumb-title">${v.title}</div>`;
+      thumb.addEventListener('click', () => loadVideoInPanel(videoId, v.title, i));
+      videoThumbs.appendChild(thumb);
+    });
+    const firstId = videos[0].url.includes('v=') ? videos[0].url.split('v=')[1].split('&')[0] : videos[0].url.includes('youtu.be/') ? videos[0].url.split('youtu.be/')[1] : videos[0].url.split('?v=').pop();
+    loadVideoInPanel(firstId, videos[0].title, 0);
+  }
+
+  // ── PAYWALL ───────────────────────────────────────────────────────────────
+  function checkPaywall() {
+    if (!isAuthenticated() && getMessageCount() >= FREE_MSG_LIMIT) {
+      paywallCard.style.display = 'block'; form.style.display = 'none';
+    }
+  }
+  checkPaywall();
+
+  activateBtn?.addEventListener('click', async () => {
+    const email = activateEmail?.value.trim();
+    if (!email) { activateStatus.textContent = 'Please enter your email.'; return; }
+    activateStatus.textContent = 'Activating…';
+    try {
+      const ok = await activateWithEmail(email);
+      if (ok) { activateStatus.textContent = '✅ Access activated!'; paywallCard.style.display = 'none'; form.style.display = 'flex'; addMsg('🏈 Welcome back! You now have full access.', 'bot'); }
+      else { activateStatus.textContent = '❌ Email not found. Check or start a free trial.'; }
+    } catch(e) { activateStatus.textContent = '❌ Could not activate. Please try again.'; }
+  });
+
+  // ── ACCOUNT PORTAL ───────────────────────────────────────────────────────
+  manageSubLink?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('xsen_auth_token');
+    if (!token) { window.location.href = `https://xsen.fun/${SCHOOL_LOWER}`; return; }
+    try {
+      const res = await fetch(`${ORCHESTRATOR}/api/create-portal-session`, { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'} });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch(e) { alert('Could not open account management.'); }
+  });
+
+  // ── BOT CHAT ─────────────────────────────────────────────────────────────
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = input.value.trim(); if (!text) return;
+    if (!isAuthenticated()) { const c = incrementMessageCount(); if (c > FREE_MSG_LIMIT) { checkPaywall(); return; } }
+    addMsg(text, 'user'); input.value = '';
+    const thinking = addMsg('🏈 Thinking…', 'bot');
+    try {
+      const userId = await getUserId();
+      const res = await fetch(CHAT_API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message:text, school:SCHOOL_LOWER, userId }) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      thinking.remove();
+      if (!data?.response) { addMsg("I didn't catch that — try again.", 'bot'); return; }
+      renderResponse(data.response);
+      if (!isAuthenticated() && getMessageCount() >= FREE_MSG_LIMIT) setTimeout(checkPaywall, 1000);
+    } catch(err) { thinking.remove(); addMsg("Couldn't reach the bot right now.", 'bot'); }
+  });
+
+  function renderResponse(text) {
+    const sugMatch = text.match(/SUGGESTED:\n([\s\S]*?)$/m);
+    let cleanText = text, suggestions = [];
+    if (sugMatch) { cleanText = text.replace(sugMatch[0],'').trim(); suggestions = sugMatch[1].split('\n').map(l=>l.replace(/^[-•]\s*/,'').trim()).filter(Boolean); }
+    const videoUrls = []; const vReg = /(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/gi; let m;
+    while ((m=vReg.exec(cleanText))!==null) videoUrls.push(m[1]);
+    if (videoUrls.length>0) {
+      const vObjs = videoUrls.map((url,i)=>({url, title:`Highlight ${i+1}`, videoId:url.split('?v=')[1]}));
+      cleanText.split('\n').forEach(line=>{ const lm=line.match(/(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/); if(lm){const idx=videoUrls.indexOf(lm[1]);const t=line.replace(lm[1],'').trim();if(t&&idx>=0)vObjs[idx].title=t;} });
+      currentVideos=vObjs; renderThumbs(vObjs);
+    }
+    cleanText.split('\n').forEach(line=>{
+      const t=line.trim(); if(!t) return;
+      if(/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)){playAudio();return;}
+      if(/^https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+$/.test(t)) return;
+      addMsg(t,'bot');
+    });
+    if (suggestions.length>0) {
+      const sd=document.createElement('div'); sd.className='suggestions';
+      suggestions.forEach(q=>{const b=document.createElement('button');b.className='suggestion-btn';b.textContent=q;b.onclick=()=>{input.value=q;form.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}));};sd.appendChild(b);});
+      messages.appendChild(sd); messages.scrollTop=messages.scrollHeight;
+    }
+  }
+
+  function addMsg(text, sender) {
+    const div=document.createElement('div'); div.className=`message ${sender}`;
+    div.innerHTML=text.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener" style="color:var(--primary);text-decoration:underline;">$1</a>');
+    messages.appendChild(div); messages.scrollTop=messages.scrollHeight; return div;
+  }
+
+  function playAudio() {
+    tabRadio.click(); audioEl.src=`${LIVE_AUDIO}?ts=${Date.now()}`; audioEl.load();
+    audioEl.play().then(()=>{if(audioStatus)audioStatus.textContent='🔊 Playing…';}).catch(()=>{if(audioStatus)audioStatus.textContent='Tap ▶ to start audio';});
+  }
+
+  // ── NIL / DONATE ─────────────────────────────────────────────────────────
+  donateBtn?.addEventListener('click', ()=>window.open(DONATE_URL,'_blank','noopener'));
+
+  // ── FAN MESSAGE ───────────────────────────────────────────────────────────
+  fanToggleBtn?.addEventListener('click', ()=>{
+    const open=fanPanel.classList.toggle('open');
+    fanToggleBtn.classList.toggle('open',open);
+  });
+  sendFanMsgBtn?.addEventListener('click', async(e)=>{
+    e.preventDefault();
+    const name=fanNameInput?.value.trim(), message=fanMsgInput?.value.trim();
+    if(!message){fanMsgStatus.textContent='Please enter a message.';return;}
+    fanMsgStatus.textContent='Sending…';
+    try {
+      const res=await fetch(FAN_MSG_API,{method:'POST',body:new URLSearchParams({name:name||'Anonymous Fan',message,source:`${config.name} Live`})});
+      if(!res.ok) throw new Error();
+      fanMsgStatus.textContent='✅ Message sent to the broadcaster!'; fanMsgInput.value='';
+    } catch(e){fanMsgStatus.textContent='❌ Could not send message.';}
+  });
+
+  // ── RADIO STATUS ─────────────────────────────────────────────────────────
+  async function checkLiveStatus() {
+    if (!NOW_PLAYING_URL) return;
+    try {
+      const res=await fetch(NOW_PLAYING_URL,{cache:'no-store'});
+      const data=await res.json();
+      const live=data?.live?.is_live===true, name=data?.live?.streamer_name||'', nowPlaying=data?.now_playing?.song?.title||'';
+      if(live){appLiveBadge.textContent='🔴 LIVE';appLiveBadge.className='live';appStreamerName.textContent=name?`Broadcasting: ${name}`:'Live broadcast in progress';appStreamerName.style.color='rgba(255,100,100,0.9)';appStreamerName.style.display='block';}
+      else{appLiveBadge.textContent='PLAYLIST';appLiveBadge.className='';appStreamerName.textContent=nowPlaying?`Now playing: ${nowPlaying}`:'';appStreamerName.style.display=nowPlaying?'block':'none';}
+    } catch(e){}
+  }
+  checkLiveStatus(); setInterval(checkLiveStatus, 15000);
+
+  // ── LIVE CHAT ─────────────────────────────────────────────────────────────
+  const liveChatMessages  = document.getElementById('liveChatMessages');
+  const liveChatNameInput = document.getElementById('liveChatName');
+  const liveChatMsgInput  = document.getElementById('liveChatMsg');
+  const liveChatSendBtn   = document.getElementById('liveChatSend');
+
+  function appendLiveMsg(name, message, isSystem=false) {
+    const div=document.createElement('div'); div.className='lc-msg'+(isSystem?' system':'');
+    if(!isSystem){const s=document.createElement('span');s.className='lc-name';s.textContent=name||'Fan';div.appendChild(s);}
+    div.appendChild(document.createTextNode(message));
+    liveChatMessages.appendChild(div); liveChatMessages.scrollTop=liveChatMessages.scrollHeight;
+  }
+  async function loadLiveChatHistory() {
+    try {
+      const {data}=await window.supabase.from('xsen_live_chat').select('name,message').eq('school',SCHOOL_LOWER).order('created_at',{ascending:false}).limit(30);
+      if(data?.length){data.reverse().forEach(r=>appendLiveMsg(r.name,r.message));}
+      else{appendLiveMsg(null,'Chat is open — say hey! 🏈',true);}
+    } catch(e){}
+  }
+  window.supabase.channel(`xsen_live_chat_${SCHOOL_LOWER}`)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'xsen_live_chat',filter:`school=eq.${SCHOOL_LOWER}`},
+      payload=>appendLiveMsg(payload.new.name,payload.new.message))
+    .subscribe();
+  async function sendLiveChatMsg() {
+    const name=liveChatNameInput.value.trim().slice(0,32), message=liveChatMsgInput.value.trim().slice(0,200);
+    if(!message) return; liveChatMsgInput.value='';
+    try { await window.supabase.from('xsen_live_chat').insert([{school:SCHOOL_LOWER,name:name||'Fan',message}]); }
+    catch(e){appendLiveMsg(null,'Could not send — try again.',true);}
+  }
+  liveChatSendBtn?.addEventListener('click', sendLiveChatMsg);
+  liveChatMsgInput?.addEventListener('keydown', e=>{if(e.key==='Enter')sendLiveChatMsg();});
+  loadLiveChatHistory();
+
+  // ── NIL NOTIFICATIONS (BroadcastPal only) ─────────────────────────────────
+  if ((config.plan||'broadcastpal') === 'broadcastpal') {
+    const nilScript = document.createElement('script');
+    nilScript.src = '/xsen-nil-notifications.js';
+    document.body.appendChild(nilScript);
+    window.XSEN_SCHOOL = SCHOOL_LOWER;
+  }
+
+}); // end DOMContentLoaded
+
+// ── BANNER + HISTORY (defined globally for onclick) ──────────────────────────
+const NOTIF_CAT_STYLES = {
+  GO_LIVE:       {label:'🔴 Live',       bg:'rgba(204,0,0,0.2)',    color:'#ff6666'},
+  BREAKING_NEWS: {label:'🚨 Breaking',   bg:'rgba(204,0,0,0.2)',    color:'#ff6666'},
+  INJURY_REPORT: {label:'🏥 Injury',     bg:'rgba(232,200,74,0.2)', color:'#e8c84a'},
+  ROSTER_MOVE:   {label:'📋 Roster',     bg:'rgba(232,200,74,0.2)', color:'#e8c84a'},
+  GAME_ALERT:    {label:'🏈 Game Alert', bg:'rgba(0,180,80,0.2)',   color:'#00cc66'},
+  GENERAL:       {label:'📢 Update',     bg:'rgba(100,100,100,0.2)',color:'#999999'}
+};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function renderSlimBanner(ann) {
+  const bar=document.getElementById('announcement-bar'); if(!bar) return;
+  const style=NOTIF_CAT_STYLES[ann.category]||NOTIF_CAT_STYLES.GENERAL;
+  const ctaHtml=ann.link_text&&ann.link_url?`<a href="${ann.link_url}" target="_blank" rel="noopener" class="xsen-banner-cta">${esc(ann.link_text)} →</a>`:'';
+  bar.innerHTML=`<div class="xsen-slim-banner"><span class="xsen-banner-cat" style="background:${style.bg};color:${style.color};">${style.label}</span><span class="xsen-banner-msg">${esc(ann.message)}</span>${ctaHtml}<button class="xsen-banner-history" onclick="openHistoryDrawer()">📋 History</button></div>`;
+}
+
+async function initBanner(school, schoolLower) {
+  try {
+    const {data}=await window.supabase.from('xsen_announcements').select('*').eq('active',true).eq('school',schoolLower).order('created_at',{ascending:false}).limit(1);
+    const now=new Date(), valid=(data||[]).filter(a=>!a.expires_at||new Date(a.expires_at)>now);
+    const bar=document.getElementById('announcement-bar');
+    if(valid.length) renderSlimBanner(valid[0]); else if(bar) bar.innerHTML='';
+  } catch(e){}
+  window.supabase.channel(`app_ann_${schoolLower}`)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'xsen_announcements',filter:`school=eq.${schoolLower}`},p=>renderSlimBanner(p.new))
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'xsen_announcements',filter:`school=eq.${schoolLower}`},p=>{if(!p.new.active){const b=document.getElementById('announcement-bar');if(b)b.innerHTML='';}})
+    .subscribe();
+}
+
+async function openHistoryDrawer() {
+  document.getElementById('historyOverlay').classList.add('open');
+  document.getElementById('historyDrawer').classList.add('open');
+  document.getElementById('historyList').innerHTML='<div class="history-empty">Loading…</div>';
+  const slug=getSchoolSlug();
+  try {
+    const {data}=await window.supabase.from('xsen_push_log').select('*').eq('school',slug.toUpperCase()).order('sent_at',{ascending:false}).limit(10);
+    const list=document.getElementById('historyList');
+    if(!data?.length){list.innerHTML='<div class="history-empty">No previous alerts.</div>';return;}
+    list.innerHTML=data.map(n=>{
+      const style=NOTIF_CAT_STYLES[n.category]||NOTIF_CAT_STYLES.GENERAL;
+      const time=new Date(n.sent_at).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      return `<div class="history-item"><div class="history-item-top"><span class="history-item-cat" style="background:${style.bg};color:${style.color};">${style.label}</span><span class="history-item-time">${time}</span></div><div class="history-item-title">${esc(n.title)}</div><div class="history-item-body">${esc(n.full_text||n.short_text)}</div>${n.link_url?`<a href="${n.link_url}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;background:var(--primary);color:var(--secondary);font-family:var(--font-display);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:3px;text-decoration:none;">${esc(n.link_text||'Read more')} →</a>`:''}</div>`;
+    }).join('');
+  } catch(e){document.getElementById('historyList').innerHTML='<div class="history-empty">Could not load history.</div>';}
+}
+
+function closeHistoryDrawer() {
+  document.getElementById('historyOverlay').classList.remove('open');
+  document.getElementById('historyDrawer').classList.remove('open');
+}
+
+// Init banner after config loads
+document.addEventListener('DOMContentLoaded', async () => {
+  const slug=getSchoolSlug();
+  const cfg=await loadConfig(slug);
+  if(cfg) initBanner(cfg.school, slug);
+  if(new URLSearchParams(window.location.search).get('view')==='alerts') setTimeout(openHistoryDrawer,600);
+});
+
+function getSchoolSlug() {
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('school')) return params.get('school').toLowerCase();
+  const parts=window.location.pathname.split('/').filter(Boolean);
+  return parts[0]||'sooners';
+}
+async function loadConfig(slug) {
+  let {data}=await window.supabase.from('xsen_stations').select('*').eq('slug',slug).single();
+  if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('school',slug.toUpperCase()).single();data=r.data;}
+  return data;
+}
+</script>
+</body>
+</html>
