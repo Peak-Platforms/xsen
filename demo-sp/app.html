@@ -244,6 +244,12 @@
   <div id="liveVideoPanel">
     <div class="live-video-wrap">
       <video id="liveVideoFrame" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000;"></video>
+      <div id="tapToPlay" onclick="startLiveVideo()" style="position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,0.6);cursor:pointer;z-index:10;">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;">
+          <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid #fff;margin-left:4px;"></div>
+        </div>
+        <p style="font-family:var(--font-display);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Tap to Watch Live</p>
+      </div>
       <button onclick="document.getElementById('liveVideoFrame').requestFullscreen()"
         style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;z-index:10;">
         ⛶ Fullscreen
@@ -559,15 +565,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!streamUrl) return;
     if (liveVideoFrame.getAttribute('data-stream') === streamUrl) return;
     liveVideoFrame.setAttribute('data-stream', streamUrl);
+    const tapOverlay = document.getElementById('tapToPlay');
+    if (tapOverlay) tapOverlay.style.display = 'flex';
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     if (window.Hls && Hls.isSupported()) {
       hlsPlayer = new Hls({ lowLatencyMode: false, maxBufferLength: 30 });
       hlsPlayer.loadSource(streamUrl);
       hlsPlayer.attachMedia(liveVideoFrame);
-      hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => liveVideoFrame.play().catch(()=>{}));
+      hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => {
+        const o = document.getElementById('tapToPlay');
+        liveVideoFrame.play().then(()=>{ if(o) o.style.display='none'; }).catch(()=>{ if(o){ o.style.display='flex'; } });
+      });
     } else if (liveVideoFrame.canPlayType('application/vnd.apple.mpegurl')) {
       liveVideoFrame.src = streamUrl; liveVideoFrame.play().catch(()=>{});
     }
+  }
+
+  function startLiveVideo() {
+    const o = document.getElementById('tapToPlay');
+    if (o) o.style.display = 'none';
+    liveVideoFrame.play().catch(()=>{});
   }
 
   function clearHlsStream() {
@@ -884,4 +901,5 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
