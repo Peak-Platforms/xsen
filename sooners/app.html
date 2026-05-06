@@ -569,7 +569,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (tapOverlay) tapOverlay.style.display = 'flex';
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     if (window.Hls && Hls.isSupported()) {
-      hlsPlayer = new Hls({ lowLatencyMode: false, maxBufferLength: 30 });
+      hlsPlayer = new Hls({ 
+  lowLatencyMode: true, 
+  maxBufferLength: 10,
+  maxMaxBufferLength: 20,
+  liveSyncDurationCount: 3,
+  liveMaxLatencyDurationCount: 6
+});
       hlsPlayer.loadSource(streamUrl);
       hlsPlayer.attachMedia(liveVideoFrame);
       hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => {
