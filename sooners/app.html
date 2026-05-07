@@ -751,7 +751,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e) {}
   }
   checkLiveStream();
-  setInterval(checkLiveStream, 30000);
+  setInterval(checkLiveStream, 5000);
 
   // Supabase Realtime — instant director switch
   if (!streamOverride) {
@@ -1032,6 +1032,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
