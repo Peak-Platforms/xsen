@@ -715,19 +715,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadHlsStream(hlsUrl);
     } else if (mode === 'ad') {
       tabLiveVideo.style.display = 'block';
-      if (tabLiveVideo.classList.contains('active')) {
-        brkOvl.style.display = 'none';
-        if (sponsorEl) sponsorEl.textContent = sponsor || 'Our Sponsor';
-        applyBgImage(adOvl, imageUrl);
-        adOvl.style.display = 'flex';
-      }
+      // Force Live tab active so overlay is visible
+      if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
+      brkOvl.style.display = 'none';
+      if (sponsorEl) sponsorEl.textContent = sponsor || 'Our Sponsor';
+      applyBgImage(adOvl, imageUrl);
+      adOvl.style.display = 'flex';
     } else if (mode === 'break') {
       tabLiveVideo.style.display = 'block';
-      if (tabLiveVideo.classList.contains('active')) {
-        adOvl.style.display  = 'none';
-        applyBgImage(brkOvl, imageUrl);
-        brkOvl.style.display = 'flex';
-      }
+      // Force Live tab active so overlay is visible
+      if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
+      adOvl.style.display  = 'none';
+      applyBgImage(brkOvl, imageUrl);
+      brkOvl.style.display = 'flex';
     } else {
       adOvl.style.display  = 'none';
       brkOvl.style.display = 'none';
@@ -1032,6 +1032,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
