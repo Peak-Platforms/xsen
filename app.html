@@ -1,807 +1,911 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Boomer Bot — XSEN Sooners</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    /* ── Design tokens ─────────────────────────────────────────── */
-    :root {
-      --crimson:      #841617;
-      --crimson-deep: #5c0f10;
-      --crimson-glow: rgba(132,22,23,0.45);
-      --gold:         #c9a84c;
-      --gold-dim:     rgba(201,168,76,0.18);
-      --cream:        #FDF9D8;
-      --cream-dim:    rgba(253,249,216,0.6);
-      --ink:          #080808;
-      --surface:      #111111;
-      --surface-2:    #1a1a1a;
-      --surface-3:    #222222;
-      --border:       rgba(201,168,76,0.18);
-      --text:         #f0ece0;
-      --text-muted:   rgba(240,236,224,0.45);
-      --font-display: 'Oswald', sans-serif;
-      --font-body:    'DM Sans', sans-serif;
-      --radius:       12px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    a { text-decoration: none; }
-
-    /* Subtle grain overlay */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      background-size: 180px 180px;
-      opacity: 0.55;
-    }
-
-    body {
-      font-family: var(--font-body);
-      background: var(--ink);
-      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(132,22,23,0.22) 0%, transparent 70%);
-      color: var(--text);
-      min-height: 100vh;
-      position: relative;
-    }
-
-    /* ── Shell ──────────────────────────────────────────────────── */
-    .chat-container {
-      position: relative; z-index: 1;
-      width: 100%;
-      max-width: 480px;
-      margin: 16px auto;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      min-height: calc(100vh - 32px);
-      box-shadow: 0 0 0 1px rgba(132,22,23,0.12), 0 24px 80px rgba(0,0,0,0.7), 0 0 60px var(--crimson-glow);
-      overflow: hidden;
-    }
-
-    /* ── Header ─────────────────────────────────────────────────── */
-    .chat-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: linear-gradient(135deg, #6b0f10 0%, var(--crimson) 50%, #9e1c1d 100%);
-      padding: 0 16px;
-      height: 62px;
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .chat-header::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(0,0,0,0.08) 8px, rgba(0,0,0,0.08) 10px);
-      pointer-events: none;
-    }
-    .chat-header::after {
-      content: '';
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    }
-
-    .header-wordmark {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-      position: relative; z-index: 1;
-    }
-    .header-wordmark .bot-name {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--cream);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    .header-wordmark .bot-sub {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-top: 2px;
-    }
-
-    /* ── Live CTA ───────────────────────────────────────────────── */
-    .live-cta {
-      display: flex;
-      gap: 10px;
-      padding: 12px 14px;
-      background: var(--surface-2);
-      border-bottom: 1px solid var(--border);
-    }
-    .live-cta button {
-      flex: 1;
-      padding: 10px 14px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    #listenLiveBtn { background: var(--crimson); color: var(--cream); box-shadow: 0 4px 16px var(--crimson-glow); }
-    #listenLiveBtn:hover { background: #9a1c1d; box-shadow: 0 6px 24px rgba(132,22,23,0.6); transform: translateY(-1px); }
-    #donateBtn { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
-    #donateBtn:hover { background: rgba(201,168,76,0.26); transform: translateY(-1px); }
-
-    /* ── Audio card ─────────────────────────────────────────────── */
-    #xsen-audio-card {
-      margin: 12px 14px;
-      background: var(--surface-2);
-      border: 1px solid rgba(255,45,45,0.25);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-    }
-    .xsen-audio-header {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: #ff4444;
-      margin-bottom: 8px;
-    }
-    #xsenAudio { width: 100%; height: 36px; }
-    .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; letter-spacing: 0.3px; }
-
-    /* ── Fan message panel ──────────────────────────────────────── */
-    .fan-message-panel {
-      margin: 0 14px 12px;
-      padding: 16px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .fan-message-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .fan-message-panel input,
-    .fan-message-panel textarea {
-      width: 100%;
-      margin: 6px 0;
-      padding: 10px 13px;
-      font-size: 13px;
-      font-family: var(--font-body);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: var(--surface-3);
-      color: var(--text);
-      transition: border-color 0.2s;
-    }
-    .fan-message-panel input::placeholder,
-    .fan-message-panel textarea::placeholder { color: var(--text-muted); }
-    .fan-message-panel input:focus,
-    .fan-message-panel textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,0.12); }
-    #sendFanMessage {
-      width: 100%;
-      margin-top: 10px;
-      padding: 11px;
-      background: var(--crimson);
-      color: var(--cream);
-      border: none;
-      border-radius: 8px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 4px 16px var(--crimson-glow);
-    }
-    #sendFanMessage:hover { background: #9a1c1d; transform: translateY(-1px); }
-    .fan-message-status { text-align: center; font-size: 12px; margin-top: 8px; min-height: 16px; color: var(--text-muted); }
-
-    /* ── Chat messages ──────────────────────────────────────────── */
-    .chat-messages {
-      flex: 1;
-      padding: 16px 14px;
-      overflow-y: auto;
-      background: var(--ink);
-      background-image: radial-gradient(ellipse 70% 40% at 50% 100%, rgba(132,22,23,0.08) 0%, transparent 70%);
-      min-height: 300px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--surface-3) transparent;
-    }
-    .chat-messages::-webkit-scrollbar { width: 4px; }
-    .chat-messages::-webkit-scrollbar-track { background: transparent; }
-    .chat-messages::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
-
-    .message {
-      margin-bottom: 10px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      max-width: 85%;
-      line-height: 1.55;
-      font-size: 14px;
-      animation: msgIn 0.22s ease both;
-    }
-    @keyframes msgIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .message.bot {
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.06);
-      color: var(--text);
-      border-radius: 4px 10px 10px 10px;
-    }
-    .message.user {
-      background: linear-gradient(135deg, var(--crimson), #9e1c1d);
-      color: var(--cream);
-      margin-left: auto;
-      border-radius: 10px 4px 10px 10px;
-      box-shadow: 0 4px 16px var(--crimson-glow);
-    }
-    .message.video { padding: 6px; background: transparent; max-width: 100%; }
-    .message.video iframe { max-width: 100%; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
-
-    /* ── Chat input ─────────────────────────────────────────────── */
-    .chat-input {
-      display: flex;
-      border-top: 1px solid var(--border);
-      background: var(--surface);
-      padding: 6px 8px;
-      gap: 8px;
-      align-items: center;
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 11px 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: var(--font-body);
-      background: var(--surface-2);
-      color: var(--text);
-      transition: border-color 0.2s;
-    }
-    .chat-input input::placeholder { color: var(--text-muted); }
-    .chat-input input:focus { outline: none; border-color: rgba(201,168,76,0.35); }
-    .chat-input button {
-      background: var(--crimson);
-      color: var(--cream);
-      border: none;
-      width: 42px; height: 42px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
-      box-shadow: 0 4px 14px var(--crimson-glow);
-    }
-    .chat-input button:hover { background: #9a1c1d; transform: translateY(-1px); }
-    .chat-input button:active { transform: scale(0.95); }
-
-    /* ── Nav bar ────────────────────────────────────────────────── */
-    .nav-bar {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 8px;
-      border-top: 1px solid var(--border);
-      background: var(--surface-2);
-    }
-    .nav-bar a {
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      transition: color 0.2s;
-      cursor: pointer;
-    }
-    .nav-bar a:hover { color: var(--gold); }
-
-    /* ── Paywall card ───────────────────────────────────────────── */
-    #paywallCard {
-      display: none;
-      margin: 12px 14px;
-      padding: 22px;
-      background: var(--surface-2);
-      border: 1px solid rgba(201,168,76,0.3);
-      border-radius: var(--radius);
-      text-align: center;
-    }
-    #paywallCard h3 {
-      font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: var(--cream);
-      margin-bottom: 8px;
-    }
-    #paywallCard p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6; }
-    .trial-btn {
-      display: block;
-      background: linear-gradient(135deg, var(--crimson), #9e1c1d);
-      color: var(--cream);
-      padding: 13px;
-      border-radius: 8px;
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      box-shadow: 0 6px 24px var(--crimson-glow);
-      transition: all 0.2s;
-    }
-    .trial-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 32px rgba(132,22,23,0.6); }
-    .divider { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
-    #activateForm input {
-      width: 100%;
-      padding: 10px 13px;
-      font-size: 13px;
-      font-family: var(--font-body);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: var(--surface-3);
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    #activateForm input:focus { outline: none; border-color: var(--gold); }
-    #activateForm input::placeholder { color: var(--text-muted); }
-    #activateBtn {
-      width: 100%;
-      padding: 10px;
-      background: var(--surface-3);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    #activateBtn:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); color: var(--gold); }
-    #activateStatus { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
-
-    /* ── NIL prompt (unchanged) ─────────────────────────────────── */
-    #nil-prompt-container { display:none; position:fixed; bottom:0; left:0; right:0; z-index:999; padding:0 16px 16px; pointer-events:none; }
-    .nil-prompt { pointer-events:all; background:#111111; border:1px solid rgba(201,168,76,0.6); border-radius:10px; overflow:hidden; max-width:480px; margin:0 auto; box-shadow:0 0 0 1px rgba(201,168,76,0.15),0 30px 80px rgba(0,0,0,0.8),0 0 60px rgba(132,22,23,0.3); animation:nilSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .nil-prompt-exit { animation:nilSlideDown 0.4s ease forwards !important; }
-    @keyframes nilSlideUp { from{opacity:0;transform:translateY(100%);} to{opacity:1;transform:translateY(0);} }
-    @keyframes nilSlideDown { from{opacity:1;transform:translateY(0);} to{opacity:0;transform:translateY(100%);} }
-    .nil-prompt-accent { height:4px; background:linear-gradient(90deg,#841617,#c9a84c,#841617); background-size:200% 100%; animation:accentShimmer 2s linear infinite; }
-    @keyframes accentShimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
-    .nil-prompt-inner { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 24px; flex-wrap:wrap; }
-    .nil-prompt-tag { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#c9a84c; margin-bottom:8px; }
-    .nil-dot { width:8px; height:8px; background:#ff4444; border-radius:50%; animation:nilPulse 1s infinite; flex-shrink:0; }
-    @keyframes nilPulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.4);} }
-    .nil-prompt-message { font-size:22px; font-weight:700; color:#f5f5f0; margin-bottom:6px; line-height:1.2; }
-    .nil-prompt-sub { font-size:11px; color:rgba(245,245,240,0.35); letter-spacing:0.3px; }
-    .nil-prompt-right { display:flex; align-items:center; gap:14px; flex-shrink:0; }
-    .nil-prompt-btn { background:#841617; color:#f5f5f0; padding:14px 28px; border-radius:5px; text-decoration:none; font-weight:700; font-size:15px; white-space:nowrap; transition:all 0.2s; box-shadow:0 4px 20px rgba(132,22,23,0.5); }
-    .nil-prompt-btn:hover { background:#9a1c1d; transform:translateY(-1px); box-shadow:0 8px 30px rgba(132,22,23,0.7); }
-    .nil-prompt-dismiss { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50%; width:32px; height:32px; color:rgba(245,245,240,0.4); font-size:14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .nil-prompt-dismiss:hover { background:rgba(255,255,255,0.1); color:#f5f5f0; }
-    .nil-prompt-progress { height:4px; background:rgba(255,255,255,0.04); }
-    .nil-prompt-progress-fill { height:100%; width:100%; background:linear-gradient(90deg,#841617,#c9a84c); border-radius:0 2px 2px 0; }
-
-    /* ── Announcement banner ────────────────────────────────────── */
-    #announcement-bar { position:sticky; top:0; z-index:99; }
-    #announcement-bar .xsen-announcement {
-      background: #0d0d0d;
-      border-bottom: 1px solid rgba(201,168,76,0.25);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: var(--font-body);
-      font-size: 12px;
-      color: rgba(240,236,224,0.6);
-      line-height: 1.5;
-    }
-    #announcement-bar .xsen-announcement strong { color: #f0ece0; }
-    #announcement-bar .xsen-announcement .ann-link { background:var(--gold); color:#0a0a0a; border:none; border-radius:4px; padding:5px 12px; font-weight:700; font-size:11px; white-space:nowrap; text-decoration:none; flex-shrink:0; }
-    #announcement-bar .xsen-announcement .ann-link:hover { opacity:0.88; }
-    #announcement-bar .xsen-announcement .ann-dismiss { background:none; border:none; color:rgba(240,236,224,0.3); font-size:11px; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-left:auto; }
-    #announcement-bar .xsen-announcement .ann-dismiss:hover { color:rgba(240,236,224,0.6); }
-
-    /* ── Mobile ─────────────────────────────────────────────────── */
-    @media (max-width: 520px) {
-      .chat-container { margin:0; border-radius:0; border:none; min-height:100vh; box-shadow:none; }
-    }
-
-    /* ── Push opt-in banner ─────────────────────────────────────── */
-    #push-optin-banner {
-      display: none;
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 998;
-      background: #1a1a1a;
-      border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 8px;
-      padding: 14px 20px;
-      gap: 14px;
-      align-items: center;
-      max-width: 480px;
-      width: calc(100% - 40px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .push-optin-text {
-      font-size: 13px;
-      color: rgba(245,245,240,0.65);
-      flex: 1;
-      line-height: 1.5;
-    }
-    .push-optin-text strong { color: #f5f5f0; }
-    #push-optin-yes {
-      background: #c9a84c;
-      color: #0a0a0a;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 16px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    #push-optin-no {
-      background: none;
-      border: none;
-      color: rgba(245,245,240,0.3);
-      font-size: 12px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BroadcastPal — Director Console</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #080909;
+  --bg2:     #0f1011;
+  --bg3:     #181a1b;
+  --bg4:     #202325;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text:    #e8e8e8;
+  --text2:   #7a7e82;
+  --text3:   #3e4245;
+  --accent:  #e8302a;
+  --live:    #22c55e;
+  --ad:      #fb923c;
+  --break:   #60a5fa;
+  --font-head:'Bebas Neue',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-body:'DM Sans',sans-serif;
+  --r: 6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column;}
+header{height:48px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;}
+.logo{font-family:var(--font-head);font-size:22px;letter-spacing:.12em;}
+.logo em{color:var(--accent);font-style:normal;}
+.logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.2em;margin-left:10px;vertical-align:middle;}
+.header-right{display:flex;align-items:center;gap:14px;}
+.conn-pill{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--text2);}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:background .3s;}
+.conn-dot.live{background:var(--live);box-shadow:0 0 6px var(--live);}
+.btn-sm{background:none;border:1px solid var(--border2);color:var(--text2);font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;padding:5px 10px;border-radius:var(--r);cursor:pointer;transition:all .15s;}
+.btn-sm:hover{border-color:var(--text2);color:var(--text);}
+.on-air-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.oab-label{font-family:var(--font-head);font-size:11px;letter-spacing:.18em;color:var(--text3);white-space:nowrap;}
+.oab-status{font-family:var(--font-mono);font-size:13px;color:var(--text2);flex:1;}
+.oab-status.live{color:var(--live);display:flex;align-items:center;gap:8px;}
+.oab-status.ad-out{color:var(--ad);display:flex;align-items:center;gap:8px;}
+.oab-status.break-out{color:var(--break);display:flex;align-items:center;gap:8px;}
+.pulse{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.85)}}
+.btn-stop{display:none;font-family:var(--font-head);font-size:12px;letter-spacing:.08em;padding:6px 14px;background:#3f0d0b;color:#fca5a5;border:1px solid #7f1d1d;border-radius:var(--r);cursor:pointer;}
+.btn-stop:hover{background:#5b1210;}
+.scene-bar{background:var(--bg);border-bottom:2px solid var(--border);padding:10px 20px;display:flex;align-items:stretch;gap:8px;flex-shrink:0;}
+.scene-btn{flex:1;padding:12px 8px;font-family:var(--font-head);font-size:20px;letter-spacing:.14em;border-radius:var(--r);border:2px solid var(--border2);background:var(--bg3);color:var(--text3);cursor:pointer;transition:all .15s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1;}
+.scene-btn .scene-icon{font-size:18px;line-height:1;}
+.scene-btn .scene-sub{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:var(--text3);margin-top:2px;}
+.scene-btn.active-live{background:rgba(34,197,94,.12);border-color:var(--live);color:var(--live);}
+.scene-btn.active-live .scene-sub{color:var(--live);opacity:.7;}
+.scene-btn.active-ad{background:rgba(251,146,60,.12);border-color:var(--ad);color:var(--ad);}
+.scene-btn.active-ad .scene-sub{color:var(--ad);opacity:.7;}
+.scene-btn.active-break{background:rgba(96,165,250,.12);border-color:var(--break);color:var(--break);}
+.scene-btn.active-break .scene-sub{color:var(--break);opacity:.7;}
+.scene-ctx{display:none;background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 20px;flex-shrink:0;}
+.scene-ctx.visible{display:block;}
+/* AD LIBRARY */
+.ad-lib-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.ctx-label{font-family:var(--font-head);font-size:11px;letter-spacing:.16em;white-space:nowrap;}
+.ctx-label.ad{color:var(--ad);}
+.ctx-label.brk{color:var(--break);}
+.ad-add-wrap{position:relative;}
+.ad-add-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;}
+.ad-add-btn{font-family:var(--font-mono);font-size:10px;padding:5px 12px;border:1px solid rgba(251,146,60,.4);border-radius:var(--r);color:var(--ad);background:rgba(251,146,60,.08);cursor:pointer;white-space:nowrap;}
+.ad-add-btn:hover{background:rgba(251,146,60,.15);}
+.ad-count{font-family:var(--font-mono);font-size:10px;color:var(--text3);}
+.ad-library{display:flex;flex-direction:column;gap:4px;max-height:130px;overflow-y:auto;scrollbar-width:thin;}
+.ad-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);transition:all .15s;}
+.ad-item.playing{border-color:var(--ad);background:rgba(251,146,60,.08);}
+.ad-item-name{flex:1;font-family:var(--font-mono);font-size:10px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ad-item.playing .ad-item-name{color:var(--ad);}
+.ad-item-dur{font-family:var(--font-mono);font-size:10px;color:var(--text3);white-space:nowrap;flex-shrink:0;}
+.ad-play-btn{font-family:var(--font-head);font-size:10px;letter-spacing:.08em;padding:4px 10px;border-radius:var(--r);cursor:pointer;white-space:nowrap;flex-shrink:0;background:var(--bg4);color:var(--text2);border:1px solid var(--border2);transition:all .15s;}
+.ad-play-btn:hover{border-color:var(--ad);color:var(--ad);}
+.ad-item.playing .ad-play-btn{background:rgba(251,146,60,.15);border-color:var(--ad);color:var(--ad);}
+.ad-remove-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px 4px;flex-shrink:0;transition:color .15s;}
+.ad-remove-btn:hover{color:#fca5a5;}
+.ad-empty{font-family:var(--font-mono);font-size:10px;color:var(--text3);padding:8px 0;text-align:center;}
+/* BREAK CTX */
+.ctx-slate-row{display:flex;align-items:center;gap:10px;}
+.ctx-slate-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:7px 12px;font-family:var(--font-body);font-size:13px;}
+.ctx-slate-input:focus{outline:none;border-color:var(--break);}
+/* OVERLAYS */
+.overlay-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.ovl-toggle{font-family:var(--font-head);font-size:11px;letter-spacing:.1em;padding:5px 10px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg3);color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.ovl-toggle.on{border-color:var(--accent);color:var(--accent);background:rgba(232,48,42,.1);}
+.ovl-sep{width:1px;height:20px;background:var(--border2);flex-shrink:0;}
+.ovl-group{display:flex;align-items:center;gap:6px;}
+.ovl-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:5px 8px;font-family:var(--font-mono);font-size:11px;width:80px;}
+.ovl-input.team{width:70px;}
+.ovl-input:focus,.period-input:focus,.sponsor-input:focus{outline:none;border-color:rgba(232,48,42,.4);}
+.score-adj{font-family:var(--font-head);font-size:14px;padding:3px 7px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;}
+.score-adj:hover{border-color:var(--text2);color:var(--text);}
+.score-val{font-family:var(--font-head);font-size:18px;color:var(--text);min-width:24px;text-align:center;}
+.period-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:5px 8px;font-family:var(--font-mono);font-size:11px;width:80px;}
+.sponsor-presets{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.sponsor-preset{font-family:var(--font-mono);font-size:10px;padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .15s;min-width:60px;text-align:center;outline:none;}
+.sponsor-preset:hover{border-color:var(--ad);color:var(--ad);}
+.sponsor-preset.active{background:rgba(251,146,60,.15);border-color:var(--ad);color:var(--ad);}
+.sponsor-preset[contenteditable=true]:focus{border-color:rgba(255,255,255,.3);color:var(--text);background:var(--bg4);}
+.sponsor-edit-hint{font-family:var(--font-mono);font-size:9px;color:var(--text3);white-space:nowrap;}
+/* COMMS */
+.comms-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.comms-label{font-family:var(--font-head);font-size:11px;letter-spacing:.14em;color:var(--text3);white-space:nowrap;}
+.comms-select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:6px 8px;font-family:var(--font-mono);font-size:11px;}
+.comms-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:7px 12px;font-family:var(--font-body);font-size:13px;min-width:0;}
+.comms-input:focus{outline:none;border-color:rgba(232,48,42,.4);}
+.comms-input::placeholder{color:var(--text3);}
+.btn-send{font-family:var(--font-head);font-size:12px;letter-spacing:.1em;padding:7px 16px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:var(--r);cursor:pointer;white-space:nowrap;}
+.btn-send:hover{border-color:var(--accent);color:var(--accent);}
+.comms-log{background:var(--bg);border-bottom:1px solid var(--border);padding:0 20px;max-height:52px;overflow-y:auto;flex-shrink:0;}
+.log-item{font-family:var(--font-mono);font-size:10px;color:var(--text3);padding:3px 0;}
+.log-target{color:var(--accent);}
+.log-msg{color:var(--text2);}
+/* MAIN */
+.main{display:flex;flex:1;gap:0;overflow:hidden;}
+.program-monitor{width:340px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.pm-label{font-family:var(--font-head);font-size:10px;letter-spacing:.2em;color:var(--text3);padding:10px 14px 6px;border-bottom:1px solid var(--border);}
+.pm-video-wrap{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;}
+.pm-video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+.pm-offline{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.pm-offline-icon{font-size:28px;opacity:.2;}
+.pm-offline-text{font-family:var(--font-head);font-size:11px;letter-spacing:.2em;color:var(--text3);}
+.pm-badge{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-family:var(--font-head);font-size:9px;letter-spacing:.12em;padding:3px 8px;border-radius:3px;}
+.pm-info{padding:10px 14px;font-family:var(--font-mono);font-size:11px;color:var(--text2);}
+#pm-ad{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:#000;}
+#pm-ad video{width:100%;height:100%;object-fit:contain;}
+#pm-ad-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;}
+#pm-ad-placeholder .ad-icon{font-size:32px;opacity:.2;}
+#pm-ad-placeholder .ad-text{font-family:var(--font-head);font-size:11px;letter-spacing:.2em;color:var(--text3);}
+#pm-slate{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#0a0a0a;background-size:cover;background-position:center;}
+.slate-logo{font-family:var(--font-head);font-size:28px;letter-spacing:.1em;color:var(--text2);opacity:.5;}
+#slateText{font-family:var(--font-head);font-size:16px;letter-spacing:.15em;color:var(--text2);text-align:center;padding:0 20px;}
+.slate-bar{width:60px;height:2px;background:var(--accent);opacity:.4;}
+#pm-scoreboard{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.82);backdrop-filter:blur(4px);padding:6px 10px;border-top:1px solid rgba(255,255,255,.06);}
+.sb-row{display:flex;align-items:center;justify-content:space-between;}
+.sb-teams{display:flex;align-items:center;gap:8px;font-family:var(--font-head);font-size:15px;letter-spacing:.06em;}
+.sb-score{font-size:20px;color:#fff;}
+.sb-vs{font-size:11px;color:var(--text3);}
+.sb-period{font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.12em;}
+#pm-sponsor{display:none;position:absolute;top:8px;right:8px;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:4px 8px;font-family:var(--font-head);font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.7);}
+.feed-panel{flex:1;overflow-y:auto;padding:12px;}
+.feed-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+@media(max-width:1024px){
+  .main{flex-direction:column;overflow-y:auto;}
+  .program-monitor{width:100%;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border);}
+  .feed-panel{flex:none;padding:8px;}
+  .feed-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .cam-body{padding:6px 8px;}
+  .scene-btn{font-size:16px;padding:10px 6px;}
+  .overlay-bar{gap:6px;flex-wrap:wrap;}
+  .comms-bar{flex-wrap:wrap;}
+  .score-adj{padding:5px 10px;}
+  .ovl-input,.period-input{width:65px;}
+  .ovl-input.team{width:60px;}
+}
+.cam-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s;}
+.cam-card:hover{border-color:var(--border2);}
+.cam-card.on-air{border-color:var(--live);box-shadow:0 0 20px rgba(34,197,94,.1);}
+.cam-video-wrap{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;}
+.cam-video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+.cam-badge-onair{position:absolute;top:6px;left:6px;background:var(--live);color:#000;font-family:var(--font-head);font-size:8px;font-weight:700;letter-spacing:.12em;padding:2px 6px;border-radius:3px;}
+.cam-badge-num{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:var(--text2);font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:3px;}
+.cam-body{padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.cam-name{font-family:var(--font-mono);font-size:10px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.btn-cut{font-family:var(--font-head);font-size:11px;letter-spacing:.08em;padding:5px 12px;border-radius:var(--r);border:none;cursor:pointer;transition:all .15s;white-space:nowrap;text-transform:uppercase;flex-shrink:0;}
+.btn-cut.can-cut{background:var(--live);color:#000;}
+.btn-cut.can-cut:hover{opacity:.85;}
+.btn-cut.is-live{background:#166534;color:#86efac;cursor:default;}
+.empty-state{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:10px;}
+.empty-icon{font-size:28px;opacity:.2;}
+.empty-title{font-family:var(--font-head);font-size:13px;letter-spacing:.2em;color:var(--text3);}
+.bottom-bar{background:var(--bg2);border-top:1px solid var(--border);padding:7px 20px;display:flex;align-items:center;gap:20px;flex-shrink:0;flex-wrap:wrap;}
+.bb-stat{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:.06em;}
+.bb-stat span{color:var(--text2);}
+#prebuffer{position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 16px;font-family:var(--font-mono);font-size:12px;color:var(--text);z-index:999;opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+</style>
 </head>
 <body>
 
-  <div id="announcement-bar"></div>
-
-  <div class="chat-container">
-
-    <header class="chat-header">
-      <div class="header-wordmark">
-        <span class="bot-name">Boomer Bot</span>
-        <span class="bot-sub">XSEN Sooners Network</span>
-      </div>
-    </header>
-
-    <div class="live-cta">
-      <button id="listenLiveBtn" type="button">🔴 Listen Live</button>
-      <button id="donateBtn" type="button">❤️ Support NIL</button>
-    </div>
-
-    <div id="xsen-audio-card" style="display:none;">
-      <div class="xsen-audio-header">🔴 Live Fan Cast</div>
-      <audio id="xsenAudio" preload="none" playsinline controls>
-        <source src="" type="audio/mpeg" />
-        Your browser does not support audio.
-      </audio>
-      <div id="audioStatus" class="xsen-audio-status">Tap ▶ to listen live</div>
-    </div>
-
-    <div class="fan-message-panel">
-      <div class="fan-message-header">📣 Message the Broadcaster</div>
-      <input type="text" id="fanName" placeholder="Your name (optional)" />
-      <textarea id="fanMessage" rows="3" placeholder="Send a message to the broadcaster…"></textarea>
-      <button id="sendFanMessage" type="button">Send Message</button>
-      <div id="fanMessageStatus" class="fan-message-status"></div>
-    </div>
-
-    <div id="paywallCard">
-      <h3>🏈 You've used your 5 free messages!</h3>
-      <p>Start your 3-day free trial to keep chatting with Boomer — no charge today.</p>
-      <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01" class="trial-btn">🚀 Start Free Trial</a>
-      <div class="divider">— Already signed up? Activate below —</div>
-      <div id="activateForm">
-        <input type="email" id="activateEmail" placeholder="Enter your email to activate" />
-        <button id="activateBtn" type="button">Activate Access</button>
-        <div id="activateStatus"></div>
-      </div>
-    </div>
-
-    <div id="messages" class="chat-messages">
-      <div class="message bot">
-        👋 Boomer Sooner! Ask me anything about OU sports — history, stats, highlights, schedules, or players.
-      </div>
-    </div>
-
-    <form id="chatForm" class="chat-input">
-      <input type="text" id="userInput" placeholder="Ask Boomer Bot…" autocomplete="off" required />
-      <button type="submit">➤</button>
-    </form>
-
-    <nav class="nav-bar">
-      <a href="https://xsen.fun/sooners">← Home</a>
-      <a href="https://xsen.fun">XSEN</a>
-      <a href="https://buy.stripe.com/eVq7sLegK1gRaL4a1hbjW01">Subscribe</a>
-      <a href="#" id="manageSubLink">⚙️ Account</a>
-    </nav>
-
+<header>
+  <div>
+    <span class="logo">Broadcast<em>Pal</em></span>
+    <span class="logo-sub">Director Console</span>
   </div>
-
-  <div id="nil-prompt-container"></div>
-  <div id="push-optin-banner">
-    <div class="push-optin-text">
-      <strong>Get notified during big moments.</strong> We'll alert you when something worth supporting happens.
+  <div class="header-right">
+    <div class="conn-pill">
+      <div class="conn-dot" id="connDot"></div>
+      <span id="connLabel">Connecting…</span>
     </div>
-    <button class="push-optin-yes" id="push-optin-yes">Sure</button>
-    <button class="push-optin-no" id="push-optin-no">No thanks</button>
+    <button class="btn-sm" onclick="refreshAll()">↻ REFRESH</button>
   </div>
-  <script src="/xsen-nil-notifications.js"></script>
+</header>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    window.supabase = window.supabase.createClient(
-      'https://hvqzrdlbtfezwuveincs.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo'
-    );
-  </script>
-  <script>
-    const ORCHESTRATOR_URL  = 'https://glorious-appreciation-production.up.railway.app';
-    const CHAT_API_URL      = 'https://glorious-appreciation-production.up.railway.app/chat';
-    const AUTH_SERVICE_URL  = 'https://energetic-joy-production.up.railway.app';
-    const FAN_MESSAGE_API   = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
-    const LIVE_STATUS_URL   = 'https://xsen-fan-messages-production.up.railway.app/live-status';
-    const LIVE_AUDIO_STREAM = 'https://stream.xsen.fun/listen/xsen_sooners/radio.mp3';
-    const DONATE_URL        = 'https://thebotosphere.com';
-    const FREE_MESSAGE_LIMIT = 5;
+<div class="on-air-bar">
+  <span class="oab-label">Program Out →</span>
+  <div class="oab-status" id="oabStatus">Offline</div>
+  <button class="btn-stop" id="stopBtn" onclick="stopBroadcast()">⬛ Stop Broadcast</button>
+</div>
 
-    function isAuthenticated() { return !!localStorage.getItem('xsen_auth_token'); }
-    function getMessageCount() { return parseInt(localStorage.getItem('xsen_message_count') || '0'); }
-    function incrementMessageCount() { const c = getMessageCount() + 1; localStorage.setItem('xsen_message_count', c); return c; }
-    function resetMessageCount() { localStorage.setItem('xsen_message_count', '0'); }
+<div class="scene-bar">
+  <button class="scene-btn" id="sceneBtn-live" onclick="switchScene('live')">
+    <span class="scene-icon">🎥</span>LIVE<span class="scene-sub">CAMERA</span>
+  </button>
+  <button class="scene-btn" id="sceneBtn-ad" onclick="switchScene('ad')">
+    <span class="scene-icon">📺</span>AD<span class="scene-sub">SPOT</span>
+  </button>
+  <button class="scene-btn" id="sceneBtn-break" onclick="switchScene('break')">
+    <span class="scene-icon">⏸</span>BREAK<span class="scene-sub">SLATE</span>
+  </button>
+</div>
 
-    async function activateWithEmail(email) {
-      const res = await fetch(`${AUTH_SERVICE_URL}/api/exchange-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase() })
-      });
-      const data = await res.json();
-      if (data.token) {
-        localStorage.setItem('xsen_auth_token', data.token);
-        localStorage.setItem('xsen_user_email', data.email);
-        resetMessageCount();
-        return true;
-      }
-      return false;
-    }
+<!-- AD SCENE CONTEXT -->
+<div class="scene-ctx" id="ctx-ad">
+  <div class="ad-lib-header">
+    <span class="ctx-label ad">📺 AD SPOT</span>
+    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3);">Activate a sponsor preset below — name and image load automatically</span>
+  </div>
+  <input type="hidden" id="adImageUrl">
+</div>
 
-    async function getUserId() {
-      try {
-        const token = localStorage.getItem('xsen_auth_token');
-        if (token) {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          if (payload.email || payload.sub) return payload.email || payload.sub;
-        }
-      } catch (e) {}
-      try {
-        const { data: { session } } = await window.supabase.auth.getSession();
-        if (session?.user) return session.user.email || session.user.id;
-      } catch (e) {}
-      return 'anonymous';
-    }
+<!-- BREAK SLATE -->
+<div class="scene-ctx" id="ctx-break">
+  <div class="ctx-slate-row">
+    <span class="ctx-label brk">⏸ SLATE TEXT</span>
+    <input class="ctx-slate-input" id="slateInput" type="text"
+      value="We'll be right back..."
+      oninput="updateSlate(this.value)"
+      placeholder="Slate message...">
+  </div>
+  <div class="ctx-slate-row" style="margin-top:6px;">
+    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3);white-space:nowrap;">🖼 Image URL</span>
+    <input class="ctx-slate-input" id="breakImageUrl" type="text"
+      placeholder="https://example.com/break-graphic.png"
+      oninput="updateBreakImage(this.value)">
+    <button onclick="clearBreakImage()" style="font-family:var(--font-mono);font-size:10px;padding:5px 8px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--text3);cursor:pointer;white-space:nowrap;flex-shrink:0;">✕ Clear</button>
+  </div>
+</div>
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      const form           = document.getElementById('chatForm');
-      const input          = document.getElementById('userInput');
-      const messages       = document.getElementById('messages');
-      const audioCard      = document.getElementById('xsen-audio-card');
-      const audioEl        = document.getElementById('xsenAudio');
-      const audioStatus    = document.getElementById('audioStatus');
-      const listenLiveBtn  = document.getElementById('listenLiveBtn');
-      const donateBtn      = document.getElementById('donateBtn');
-      const fanNameInput   = document.getElementById('fanName');
-      const fanMsgInput    = document.getElementById('fanMessage');
-      const sendFanMsgBtn  = document.getElementById('sendFanMessage');
-      const fanMsgStatus   = document.getElementById('fanMessageStatus');
-      const manageSubLink  = document.getElementById('manageSubLink');
-      const paywallCard    = document.getElementById('paywallCard');
-      const activateEmail  = document.getElementById('activateEmail');
-      const activateBtn    = document.getElementById('activateBtn');
-      const activateStatus = document.getElementById('activateStatus');
-      let firstVideoPlayed = false;
+<div class="overlay-bar">
+  <button class="ovl-toggle" id="scoreToggle" onclick="toggleScore()">📊 SCORE OFF</button>
+  <div class="ovl-group" id="scoreControls" style="display:none;">
+    <input class="ovl-input team" id="homeTeam" type="text" value="HOME" oninput="updateScoreboard()">
+    <button class="score-adj" onclick="adjustScore('home',-1)">−</button>
+    <span class="score-val" id="homeScoreVal">0</span>
+    <button class="score-adj" onclick="adjustScore('home',1)">+</button>
+    <span style="color:var(--text3);font-family:var(--font-mono);font-size:11px;">vs</span>
+    <input class="ovl-input team" id="awayTeam" type="text" value="AWAY" oninput="updateScoreboard()">
+    <button class="score-adj" onclick="adjustScore('away',-1)">−</button>
+    <span class="score-val" id="awayScoreVal">0</span>
+    <button class="score-adj" onclick="adjustScore('away',1)">+</button>
+    <input class="period-input" id="periodInput" type="text" value="1st Qtr" oninput="updateScoreboard()">
+  </div>
+  <div class="ovl-sep"></div>
+  <button class="ovl-toggle" id="sponsorToggle" onclick="toggleSponsor()">🏷 SPONSORS OFF</button>
+  <div class="ovl-group" id="sponsorControls" style="display:none;">
+    <div class="sponsor-presets" id="sponsorPresets"></div>
+    <span class="sponsor-edit-hint">tap=activate · ✎=rename</span>
+  </div>
+</div>
 
-      function checkPaywall() {
-        if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) {
-          paywallCard.style.display = 'block';
-          form.style.display = 'none';
-        }
-      }
-      checkPaywall();
+<div class="comms-bar">
+  <span class="comms-label">📢 MSG</span>
+  <select class="comms-select" id="commsTarget">
+    <option value="all">All Operators</option>
+    <option value="camera1">CAM 1</option>
+    <option value="camera2">CAM 2</option>
+    <option value="camera3">CAM 3</option>
+    <option value="camera4">CAM 4</option>
+  </select>
+  <input class="comms-input" id="commsInput" type="text"
+    placeholder="Message displays on operator glasses..." maxlength="80"
+    onkeydown="if(event.key==='Enter') sendComms()">
+  <button class="btn-send" onclick="sendComms()">SEND ➤</button>
+</div>
+<div class="comms-log" id="commsLog"></div>
 
-      activateBtn?.addEventListener('click', async () => {
-        const email = activateEmail?.value.trim();
-        if (!email) { activateStatus.textContent = 'Please enter your email.'; return; }
-        activateStatus.textContent = 'Activating…';
-        try {
-          const success = await activateWithEmail(email);
-          if (success) {
-            activateStatus.textContent = '✅ Access activated!';
-            paywallCard.style.display = 'none';
-            form.style.display = 'flex';
-            addMsg('🏈 Welcome back! You now have full access. Boomer Sooner!', 'bot');
-          } else {
-            activateStatus.textContent = '❌ Email not found. Please check or start a free trial.';
-          }
-        } catch (err) {
-          activateStatus.textContent = '❌ Could not activate. Please try again.';
-        }
-      });
-
-      async function openPortal(e) {
-        if (e) e.preventDefault();
-        const token = localStorage.getItem('xsen_auth_token');
-        if (!token) { window.location.href = 'https://xsen.fun/sooners'; return; }
-        try {
-          const res = await fetch(`${ORCHESTRATOR_URL}/api/create-portal-session`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-          });
-          const data = await res.json();
-          if (data.url) window.location.href = data.url;
-        } catch (e) { alert('Could not open account management. Please try again.'); }
-      }
-      manageSubLink?.addEventListener('click', openPortal);
-
-      form?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const text = input.value.trim();
-        if (!text) return;
-        if (!isAuthenticated()) {
-          const count = incrementMessageCount();
-          if (count > FREE_MESSAGE_LIMIT) { checkPaywall(); return; }
-        }
-        addMsg(text, 'user');
-        input.value = '';
-        const thinking = addMsg('🏈 Boomer is thinking…', 'bot');
-        try {
-          const userId = await getUserId();
-          const res = await fetch(CHAT_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: text, school: 'sooners', userId })
-          });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          thinking.remove();
-          if (!data?.response) { addMsg("Boomer Sooner! I didn't catch that — try again.", 'bot'); return; }
-          renderResponse(data.response);
-          if (!isAuthenticated() && getMessageCount() >= FREE_MESSAGE_LIMIT) {
-            setTimeout(() => checkPaywall(), 1000);
-          }
-        } catch (err) {
-          console.error('Chat error:', err);
-          thinking.remove();
-          addMsg("Sorry, Sooner — couldn't reach Boomer right now.", 'bot');
-        }
-      });
-
-      function renderResponse(text) {
-        firstVideoPlayed = false;
-        text.split('\n').forEach(line => {
-          const t = line.trim();
-          if (!t) return;
-          if (/^(play|listen|start).*(radio|audio|broadcast|fan cast)/i.test(t)) { addMsg('🔊 Starting live fan cast…', 'bot'); playAudio(); return; }
-          const m = t.match(/(https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+)/i);
-          if (m) { const title = t.replace(m[1], '').trim(); if (title) addMsg(title, 'bot'); addVideo(m[1]); }
-          else { addMsg(t, 'bot'); }
-        });
-      }
-
-      function addMsg(text, sender) {
-        const div = document.createElement('div');
-        div.className = `message ${sender}`;
-        div.innerHTML = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#c9a84c;text-decoration:underline;">$1</a>');
-        messages.appendChild(div);
-        messages.scrollTop = messages.scrollHeight;
-        return div;
-      }
-
-      function addVideo(url) {
-        const wrap = document.createElement('div');
-        wrap.className = 'message bot video';
-        const iframe = document.createElement('iframe');
-        const src = new URL(url);
-        if (!firstVideoPlayed) { src.searchParams.set('autoplay', '1'); src.searchParams.set('muted', '1'); src.searchParams.set('playsinline', '1'); }
-        iframe.src = src.toString(); iframe.width = '150%'; iframe.height = '300';
-        iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
-        iframe.allowFullscreen = true; iframe.loading = 'lazy';
-        iframe.style.cssText = 'border:none; border-radius:10px;';
-        wrap.appendChild(iframe); messages.appendChild(wrap);
-        messages.scrollTop = messages.scrollHeight;
-        firstVideoPlayed = true;
-      }
-
-      function playAudio() {
-        if (!audioEl || !audioCard) return;
-        audioCard.style.display = 'block';
-        audioEl.src = `${LIVE_AUDIO_STREAM}?ts=${Date.now()}`;
-        audioEl.play().then(() => { if (audioStatus) audioStatus.textContent = '🔊 Live fan cast playing'; }).catch(() => { if (audioStatus) audioStatus.textContent = 'Tap ▶ to start audio'; });
-      }
-
-      listenLiveBtn?.addEventListener('click', () => { addMsg('🔴 Connecting you to the live fan cast…', 'bot'); playAudio(); });
-      donateBtn?.addEventListener('click', () => { addMsg('❤️ Supporting NIL helps keep the fan cast alive. Thank you!', 'bot'); window.open(DONATE_URL, '_blank', 'noopener'); });
-
-      sendFanMsgBtn?.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = fanNameInput?.value.trim();
-        const message = fanMsgInput?.value.trim();
-        if (!message) { fanMsgStatus.textContent = 'Please enter a message.'; return; }
-        fanMsgStatus.textContent = 'Sending…';
-        try {
-          const res = await fetch(FAN_MESSAGE_API, { method: 'POST', body: new URLSearchParams({ name: name || 'Anonymous Fan', message, source: 'Boomer Live' }) });
-          if (!res.ok) throw new Error('Send failed');
-          fanMsgStatus.textContent = '✅ Message sent to the broadcaster!';
-          fanMsgInput.value = '';
-        } catch (err) { fanMsgStatus.textContent = '❌ Could not send message.'; }
-      });
-    });
-  </script>
-
-  <script>
-    window.XSEN_SCHOOL = 'OU';
-    (async function initXSENBanner() {
-      try {
-        const { data } = await window.supabase
-          .from('xsen_announcements')
-          .select('*')
-          .eq('active', true)
-          .or('school.eq.ALL,school.eq.OU')
-          .order('created_at', { ascending: false })
-          .limit(1);
-
-        const bar = document.getElementById('announcement-bar');
-        if (!bar || !data?.length) return;
-
-        const now = new Date();
-        const valid = data.filter(a => !a.expires_at || new Date(a.expires_at) > now);
-        if (!valid.length) return;
-
-        bar.innerHTML = valid.map(a => `
-          <div class="xsen-announcement">
-            <span class="ann-text">${a.message}</span>
-            ${a.link_text && a.link_url
-              ? `<a href="${a.link_url}" target="_blank" class="ann-link">${a.link_text} →</a>`
-              : ''}
-            <button class="ann-dismiss" onclick="this.closest('.xsen-announcement').remove()">✕ dismiss</button>
+<div class="main">
+  <div class="program-monitor">
+    <div class="pm-label">PROGRAM MONITOR</div>
+    <div class="pm-video-wrap" id="pmWrap">
+      <div class="pm-offline" id="pmOffline">
+        <div class="pm-offline-icon">📺</div>
+        <div class="pm-offline-text">No Program Selected</div>
+      </div>
+      <div class="pm-badge" id="pmBadge" style="display:none;">● PROGRAM</div>
+      <div id="pm-ad" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#0a0a0a;background-size:cover;background-position:center;padding:16px;text-align:center;">
+        <div style="width:40px;height:2px;background:var(--accent);opacity:.4;"></div>
+        <div style="font-family:var(--font-head);font-size:9px;letter-spacing:.25em;color:rgba(232,232,232,.5);">PRESENTED BY</div>
+        <div id="pm-ad-sponsor" style="font-family:var(--font-head);font-size:16px;letter-spacing:.1em;color:var(--text);text-shadow:0 1px 4px rgba(0,0,0,.8);">— No sponsor active —</div>
+        <div style="width:40px;height:2px;background:var(--accent);opacity:.4;"></div>
+        <div style="font-family:var(--font-head);font-size:8px;letter-spacing:.2em;color:rgba(232,232,232,.2);margin-top:4px;">FANS SEE THIS SLATE</div>
+      </div>
+      <div id="pm-slate">
+        <div class="slate-bar"></div>
+        <div class="slate-logo">BroadcastPal</div>
+        <div id="slateText">We'll be right back...</div>
+        <div class="slate-bar"></div>
+      </div>
+      <div id="pm-scoreboard">
+        <div class="sb-row">
+          <div class="sb-teams">
+            <span id="sb-home-name">HOME</span>
+            <span class="sb-score" id="sb-home-score">0</span>
+            <span class="sb-vs">—</span>
+            <span class="sb-score" id="sb-away-score">0</span>
+            <span id="sb-away-name">AWAY</span>
           </div>
-        \`).join('');
-      } catch(e) {}
-    })();
-  </script>
+          <div class="sb-period" id="sb-period">1st Qtr</div>
+        </div>
+      </div>
+      <div id="pm-sponsor">SPONSOR NAME</div>
+    </div>
+    <div class="pm-info" id="pmInfo">Select a camera to go to air</div>
+  </div>
 
+  <div class="feed-panel">
+    <div class="feed-grid" id="feedGrid"></div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <span class="bb-stat">SCENE: <span id="sceneIndicator">LIVE</span></span>
+  <span class="bb-stat">ACTIVE: <span id="streamCount">0</span></span>
+  <span class="bb-stat">INGEST: <span>157.245.208.49:1935/live</span></span>
+  <span class="bb-stat" id="lastPoll">POLLED: <span>—</span></span>
+</div>
+
+<div id="prebuffer"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const NGINX_BASE = 'https://live.xsen.fun:8443';
+const API_BASE   = 'https://live.xsen.fun:8443';
+const SUPA       = 'https://hvqzrdlbtfezwuveincs.supabase.co';
+const SKEY       = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+const SCHOOL     = 'OU';
+const POLL_MS    = 6000;
+
+let featuredKey   = null;
+let liveStreams    = new Set();
+let allStreamKeys  = [];
+let hlsPlayers    = {};
+let cardPlayers   = {};
+let currentScene  = 'live';
+
+// OVERLAY
+let scoreVisible   = false;
+let sponsorVisible = false;
+let scoreState     = { home: 0, away: 0 };
+
+// ── SCENE SWITCHER ────────────────────────────────────────────────────────────
+function switchScene(scene) {
+  currentScene = scene;
+  updateSceneBtns();
+  updateSceneCtx();
+  updateSceneMonitor();
+  updateFanOutput();
+  updateOnAirBar(scene === 'live' ? featuredKey : null, scene);
+  document.getElementById('sceneIndicator').textContent = scene.toUpperCase();
+  toast(scene === 'live' ? 'LIVE' : scene === 'ad' ? 'AD SPOT' : 'BREAK SLATE');
+}
+
+function updateSceneBtns() {
+  ['live','ad','break'].forEach(function(s) {
+    document.getElementById('sceneBtn-' + s).className =
+      'scene-btn' + (s === currentScene ? ' active-' + s : '');
+  });
+}
+
+function updateSceneCtx() {
+  document.getElementById('ctx-ad').classList.toggle('visible', currentScene === 'ad');
+  document.getElementById('ctx-break').classList.toggle('visible', currentScene === 'break');
+}
+
+function updateSceneMonitor() {
+  const pmVideo   = document.getElementById('pm-video');
+  const pmAd      = document.getElementById('pm-ad');
+  const pmSlate   = document.getElementById('pm-slate');
+  const pmOffline = document.getElementById('pmOffline');
+  const pmBadge   = document.getElementById('pmBadge');
+
+  if (currentScene === 'live') {
+    pmAd.style.display    = 'none';
+    pmSlate.style.display = 'none';
+    if (featuredKey) {
+      pmOffline.style.display = 'none';
+      pmBadge.style.display   = 'block';
+      if (pmVideo) pmVideo.style.display = 'block';
+    } else {
+      pmOffline.style.display = 'flex';
+      pmBadge.style.display   = 'none';
+    }
+  } else if (currentScene === 'ad') {
+    if (pmVideo) pmVideo.style.display = 'none';
+    pmOffline.style.display = 'none';
+    pmBadge.style.display   = 'none';
+    pmSlate.style.display   = 'none';
+    // Show sponsor name in monitor
+    const sponsorName = getActiveSponsorName();
+    document.getElementById('pm-ad-sponsor').textContent = sponsorName || '— No sponsor active —';
+    pmAd.style.display = 'flex';
+  } else if (currentScene === 'break') {
+    if (pmVideo) pmVideo.style.display = 'none';
+    pmOffline.style.display = 'none';
+    pmBadge.style.display   = 'none';
+    pmAd.style.display      = 'none';
+    pmSlate.style.display   = 'flex';
+  }
+}
+
+function getActiveSponsorName() {
+  if (activeSponsorIdx !== null && sponsorPresets[activeSponsorIdx]) {
+    return sponsorPresets[activeSponsorIdx].name;
+  }
+  return null;
+}
+
+function getScorePayload() {
+  if (!scoreVisible) return null;
+  return {
+    home:   scoreState.home,
+    away:   scoreState.away,
+    homeTeam: document.getElementById('homeTeam').value || 'HOME',
+    awayTeam: document.getElementById('awayTeam').value || 'AWAY',
+    period: document.getElementById('periodInput').value || ''
+  };
+}
+
+function updateFanOutput() {
+  const adImg  = (document.getElementById('adImageUrl')?.value || '').trim() || null;
+  const brkImg = (document.getElementById('breakImageUrl')?.value || '').trim() || null;
+  const score  = getScorePayload();
+  if (currentScene === 'live' && featuredKey) {
+    broadcastMode('live', null, NGINX_BASE + '/hls/' + featuredKey + '/index.m3u8', null, score);
+  } else if (currentScene === 'ad') {
+    broadcastMode('ad', getActiveSponsorName(), null, adImg, score);
+  } else if (currentScene === 'break') {
+    broadcastMode('break', getActiveSponsorName(), null, brkImg, score);
+  } else {
+    broadcastMode('off', null, null, null, null);
+  }
+}
+
+async function broadcastMode(mode, sponsor, hlsUrl, imageUrl, score) {
+  try {
+    await fetch(API_BASE + '/broadcast/mode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ school: SCHOOL, mode, sponsor: sponsor || null, hls_url: hlsUrl || null, image_url: imageUrl || null, score: score || null })
+    });
+  } catch(e) { toast('Broadcast mode error'); }
+}
+
+function updateSlate(text) {
+  document.getElementById('slateText').textContent = text || "We'll be right back...";
+}
+
+function updateAdImage(url) {
+  const el = document.getElementById('pm-ad');
+  if (url && url.trim()) {
+    el.style.backgroundImage = 'linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url(' + url.trim() + ')';
+  } else {
+    el.style.backgroundImage = '';
+  }
+}
+
+function clearAdImage() {
+  document.getElementById('adImageUrl').value = '';
+  document.getElementById('pm-ad').style.backgroundImage = '';
+}
+
+function updateBreakImage(url) {
+  const el = document.getElementById('pm-slate');
+  if (url && url.trim()) {
+    el.style.backgroundImage = 'linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url(' + url.trim() + ')';
+  } else {
+    el.style.backgroundImage = '';
+  }
+}
+
+function clearBreakImage() {
+  document.getElementById('breakImageUrl').value = '';
+  document.getElementById('pm-slate').style.backgroundImage = '';
+}
+
+// ── OVERLAYS ──────────────────────────────────────────────────────────────────
+function toggleScore() {
+  scoreVisible = !scoreVisible;
+  document.getElementById('scoreToggle').textContent  = scoreVisible ? '📊 SCORE ON' : '📊 SCORE OFF';
+  document.getElementById('scoreToggle').className    = scoreVisible ? 'ovl-toggle on' : 'ovl-toggle';
+  document.getElementById('scoreControls').style.display = scoreVisible ? 'flex' : 'none';
+  document.getElementById('pm-scoreboard').style.display = scoreVisible ? 'block' : 'none';
+  document.getElementById('ovlSep').style.display = (scoreVisible || sponsorVisible) ? 'block' : 'none';
+  updateFanOutput();
+}
+
+function adjustScore(team, delta) {
+  scoreState[team] = Math.max(0, (scoreState[team] || 0) + delta);
+  document.getElementById(team + 'ScoreVal').textContent = scoreState[team];
+  updateScoreboard();
+  updateFanOutput();
+}
+
+function updateScoreboard() {
+  document.getElementById('sb-home-name').textContent  = document.getElementById('homeTeam').value || 'HOME';
+  document.getElementById('sb-away-name').textContent  = document.getElementById('awayTeam').value || 'AWAY';
+  document.getElementById('sb-home-score').textContent = scoreState.home;
+  document.getElementById('sb-away-score').textContent = scoreState.away;
+  document.getElementById('sb-period').textContent     = document.getElementById('periodInput').value || '';
+  updateFanOutput();
+}
+
+// ── SPONSOR PRESETS (PROGRAMMABLE) ───────────────────────────────────────────
+const PRESET_STORAGE_KEY = 'bp_sponsor_presets';
+
+const defaultPresets = [
+  { slot: 'Game',     name: 'Sponsor Name', image: '' },
+  { slot: 'Timeout',  name: 'Sponsor Name', image: '' },
+  { slot: 'Halftime', name: 'Sponsor Name', image: '' },
+  { slot: 'Q2',       name: 'Sponsor Name', image: '' },
+  { slot: 'Q3',       name: 'Sponsor Name', image: '' },
+  { slot: 'Q4',       name: 'Sponsor Name', image: '' },
+  { slot: 'Break',    name: 'Sponsor Name', image: '' },
+  { slot: 'Custom',   name: 'Sponsor Name', image: '' }
+];
+
+function loadPresetsFromStorage() {
+  try {
+    const saved = localStorage.getItem(PRESET_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Merge saved names/images into default structure (preserves slot labels)
+      return defaultPresets.map((def, i) => ({
+        slot:  def.slot,
+        name:  parsed[i]?.name  || def.name,
+        image: parsed[i]?.image || def.image
+      }));
+    }
+  } catch(e) {}
+  return defaultPresets.map(p => ({ ...p }));
+}
+
+function savePresetsToStorage() {
+  try { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(sponsorPresets)); } catch(e) {}
+}
+
+let sponsorPresets = loadPresetsFromStorage();
+let activeSponsorIdx = null;
+
+function initSponsorPresets() {
+  const container = document.getElementById('sponsorPresets');
+  container.innerHTML = '';
+  sponsorPresets.forEach(function(preset, i) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;';
+
+    // Slot label
+    const slotLabel = document.createElement('div');
+    slotLabel.style.cssText = 'font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;';
+    slotLabel.textContent = preset.slot;
+
+    // Image indicator dot — green if image is set
+    const imgDot = document.createElement('div');
+    imgDot.style.cssText = 'width:5px;height:5px;border-radius:50%;margin:1px auto 0;background:' + (preset.image ? 'var(--live)' : 'var(--text3)') + ';opacity:' + (preset.image ? '1' : '0.3') + ';';
+    imgDot.title = preset.image ? 'Image set: ' + preset.image : 'No image set';
+
+    // Sponsor name pill
+    const pill = document.createElement('div');
+    pill.className = 'sponsor-preset' + (i === activeSponsorIdx ? ' active' : '');
+    pill.textContent = preset.name;
+    pill.dataset.idx = i;
+    pill.title = preset.image ? 'Image: ' + preset.image : 'No image set — click ✎ to add';
+    pill.addEventListener('click', function() { activateSponsor(i); });
+
+    // Edit button — prompts for name AND image URL
+    const editBtn = document.createElement('button');
+    editBtn.textContent = '✎';
+    editBtn.title = 'Edit sponsor name and image URL';
+    editBtn.style.cssText = 'background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:0 2px;line-height:1;';
+    editBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const newName = prompt('Sponsor name for [' + preset.slot + ']:', preset.name);
+      if (newName === null) return;
+      const newImage = prompt('Image URL for [' + preset.slot + '] (leave blank for none):', preset.image || '');
+      if (newImage === null) return;
+      sponsorPresets[i].name  = newName.trim()  || 'Sponsor Name';
+      sponsorPresets[i].image = newImage.trim();
+      savePresetsToStorage();
+      if (i === activeSponsorIdx) {
+        updateSponsorBug();
+        applyAdImageFromPreset(i);
+      }
+      updateFanOutput();
+      initSponsorPresets();
+    });
+
+    pill.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); pill.blur(); }
+      e.stopPropagation();
+    });
+
+    wrap.appendChild(slotLabel);
+    wrap.appendChild(imgDot);
+    wrap.appendChild(pill);
+    wrap.appendChild(editBtn);
+    container.appendChild(wrap);
+  });
+}
+
+function applyAdImageFromPreset(index) {
+  const imageUrl = sponsorPresets[index]?.image || '';
+  const adInput  = document.getElementById('adImageUrl');
+  if (adInput) adInput.value = imageUrl;
+  updateAdImage(imageUrl);
+}
+
+function activateSponsor(index) {
+  if (activeSponsorIdx === index) {
+    activeSponsorIdx = null;
+    document.getElementById('pm-sponsor').style.display = 'none';
+    // Clear ad image field
+    const adInput = document.getElementById('adImageUrl');
+    if (adInput) adInput.value = '';
+    updateAdImage('');
+  } else {
+    activeSponsorIdx = index;
+    updateSponsorBug();
+    applyAdImageFromPreset(index); // auto-load this sponsor's image
+    if (sponsorVisible) document.getElementById('pm-sponsor').style.display = 'block';
+  }
+  initSponsorPresets();
+  updateFanOutput();
+}
+
+function updateSponsorBug() {
+  if (activeSponsorIdx !== null) {
+    document.getElementById('pm-sponsor').textContent = sponsorPresets[activeSponsorIdx].name;
+  }
+}
+
+function toggleSponsor() {
+  sponsorVisible = !sponsorVisible;
+  document.getElementById('sponsorToggle').textContent  = sponsorVisible ? '🏷 SPONSORS ON' : '🏷 SPONSORS OFF';
+  document.getElementById('sponsorToggle').className    = sponsorVisible ? 'ovl-toggle on' : 'ovl-toggle';
+  document.getElementById('sponsorControls').style.display = sponsorVisible ? 'flex' : 'none';
+  const bug = document.getElementById('pm-sponsor');
+  bug.style.display = (sponsorVisible && activeSponsorIdx !== null) ? 'block' : 'none';
+}
+
+// ── SUPABASE (used by stream-offline detection) ───────────────────────────────
+async function patchSupabase(hlsUrl) {
+  try {
+    const r = await fetch(SUPA + '/rest/v1/xsen_stations?school=eq.' + SCHOOL, {
+      method: 'PATCH',
+      headers: { 'Content-Type':'application/json','apikey':SKEY,'Authorization':'Bearer '+SKEY,'Prefer':'return=minimal' },
+      body: JSON.stringify({ hls_stream_url: hlsUrl, broadcast_mode: hlsUrl ? 'live' : 'off', ad_url: null })
+    });
+    return r.ok;
+  } catch(e) { return false; }
+}
+
+// ── HLS ───────────────────────────────────────────────────────────────────────
+function makeHls(videoEl, key, opts) {
+  opts = opts || {};
+  const url = NGINX_BASE + '/hls/' + key + '/index.m3u8';
+  const hls = new Hls(Object.assign({
+    lowLatencyMode:true, maxBufferLength:10, maxMaxBufferLength:20,
+    liveSyncDurationCount:3, liveMaxLatencyDurationCount:6,
+    manifestLoadingTimeOut:10000, manifestLoadingMaxRetry:8, fragLoadingMaxRetry:8
+  }, opts));
+  hls.loadSource(url);
+  hls.attachMedia(videoEl);
+  hls.on(Hls.Events.MANIFEST_PARSED, function() {
+    videoEl.play().catch(function(){});
+    setTimeout(function() {
+      if (videoEl.videoWidth === 0 || videoEl.readyState < 2) { hls.destroy(); makeHls(videoEl, key, opts); }
+    }, 3000);
+  });
+  hls.on(Hls.Events.ERROR, function(e, d) {
+    if (d.fatal) { if (d.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad(); else hls.destroy(); }
+  });
+  return hls;
+}
+
+function ensurePrebuffered(key) {
+  if (hlsPlayers[key] || !Hls.isSupported()) return;
+  const vid = document.createElement('video');
+  vid.id = 'prebuf-' + key; vid.muted = true; vid.autoplay = true; vid.playsInline = true;
+  document.getElementById('prebuffer').appendChild(vid);
+  hlsPlayers[key] = makeHls(vid, key);
+}
+
+function destroyPrebuffer(key) {
+  if (hlsPlayers[key]) { hlsPlayers[key].destroy(); delete hlsPlayers[key]; }
+  const el = document.getElementById('prebuf-' + key);
+  if (el) el.remove();
+}
+
+function updateProgramMonitor(key) {
+  const wrap    = document.getElementById('pmWrap');
+  const offline = document.getElementById('pmOffline');
+  const badge   = document.getElementById('pmBadge');
+  const info    = document.getElementById('pmInfo');
+  const existing = document.getElementById('pm-video');
+  if (existing) existing.remove();
+  if (cardPlayers['__pm__']) { cardPlayers['__pm__'].destroy(); delete cardPlayers['__pm__']; }
+
+  if (!key) {
+    offline.style.display = currentScene === 'live' ? 'flex' : 'none';
+    badge.style.display = 'none';
+    info.textContent = 'Select a camera to go to air';
+    return;
+  }
+  if (currentScene === 'live') offline.style.display = 'none';
+  badge.style.display = currentScene === 'live' ? 'block' : 'none';
+  info.textContent = key + ' - live.xsen.fun:8443/hls/' + key;
+
+  const vid = document.createElement('video');
+  vid.id = 'pm-video'; vid.muted = true; vid.autoplay = true; vid.playsInline = true;
+  vid.style.cssText = 'width:100%;height:100%;object-fit:cover;display:' + (currentScene === 'live' ? 'block' : 'none') + ';';
+  wrap.insertBefore(vid, wrap.firstChild);
+  if (Hls.isSupported()) { cardPlayers['__pm__'] = makeHls(vid, key); }
+  else if (vid.canPlayType('application/vnd.apple.mpegurl')) { vid.src = NGINX_BASE + '/hls/' + key + '/index.m3u8'; vid.play().catch(function(){}); }
+}
+
+// ── STREAM DETECT ─────────────────────────────────────────────────────────────
+async function detectStreams() {
+  try {
+    const r = await fetch(NGINX_BASE + '/stat', { cache:'no-store', signal:AbortSignal.timeout(5000) });
+    const xml = await r.text();
+    const doc = new DOMParser().parseFromString(xml, 'text/xml');
+    const prev = new Set(allStreamKeys);
+    liveStreams = new Set(); allStreamKeys = [];
+    doc.querySelectorAll('stream').forEach(function(s) {
+      const name = s.querySelector('name')?.textContent?.trim();
+      if (name && s.querySelector('active') && s.querySelector('publishing')) { liveStreams.add(name); allStreamKeys.push(name); }
+    });
+    allStreamKeys.forEach(function(k) { ensurePrebuffered(k); });
+    prev.forEach(function(k) { if (!liveStreams.has(k)) destroyPrebuffer(k); });
+
+    // Rebuild card preview player for streams that reappeared after dropping
+    allStreamKeys.forEach(function(k) {
+      if (!prev.has(k)) return; // new stream, renderGrid will handle it
+      const vid = document.getElementById('card-vid-' + k);
+      if (vid && (!cardPlayers[k] || cardPlayers[k].media?.error)) {
+        if (cardPlayers[k]) { cardPlayers[k].destroy(); delete cardPlayers[k]; }
+        if (Hls.isSupported()) cardPlayers[k] = makeHls(vid, k);
+      }
+    });
+  } catch(e) {
+    document.getElementById('connDot').className = 'conn-dot';
+    document.getElementById('connLabel').textContent = 'Error';
+    return;
+  }
+  document.getElementById('connDot').className = 'conn-dot live';
+  document.getElementById('connLabel').textContent = 'Connected';
+  document.getElementById('streamCount').textContent = liveStreams.size;
+  document.getElementById('lastPoll').innerHTML = 'POLLED: <span>' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + '</span>';
+  if (featuredKey && !liveStreams.has(featuredKey)) {
+    featuredKey = null;
+    updateOnAirBar(null, currentScene);
+    updateProgramMonitor(null);
+    await patchSupabase(null);
+    toast('Featured stream went offline');
+  }
+  renderGrid();
+}
+
+// ── RENDER GRID ───────────────────────────────────────────────────────────────
+function renderGrid() {
+  const grid = document.getElementById('feedGrid');
+  if (!allStreamKeys.length) {
+    Object.keys(cardPlayers).forEach(function(k) { if (k !== '__pm__') { cardPlayers[k].destroy(); delete cardPlayers[k]; } });
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">...</div><div class="empty-title">No Active Streams</div></div>';
+    return;
+  }
+  const existing = new Set([...grid.querySelectorAll('.cam-card')].map(function(c) { return c.dataset.key; }));
+  allStreamKeys.forEach(function(key, i) {
+    if (!existing.has(key)) {
+      const card = document.createElement('div');
+      card.className = 'cam-card' + (key === featuredKey ? ' on-air' : '');
+      card.dataset.key = key;
+      card.innerHTML =
+        '<div class="cam-video-wrap">' +
+          '<video id="card-vid-' + key + '" autoplay muted playsinline></video>' +
+          (key === featuredKey ? '<div class="cam-badge-onair">On Air</div>' : '') +
+          '<div class="cam-badge-num">CAM ' + (i+1) + '</div>' +
+        '</div>' +
+        '<div class="cam-body">' +
+          '<div class="cam-name">' + key + '</div>' +
+          '<button class="btn-cut ' + (key === featuredKey ? 'is-live' : 'can-cut') + '" id="btn-' + key + '" onclick="featureStream(\'' + key + '\')" ' + (key === featuredKey ? 'disabled' : '') + '>' +
+            (key === featuredKey ? 'On Air' : 'CUT') +
+          '</button>' +
+        '</div>';
+      grid.appendChild(card);
+      requestAnimationFrame(function() {
+        const vid = document.getElementById('card-vid-' + key);
+        if (vid && Hls.isSupported()) cardPlayers[key] = makeHls(vid, key);
+      });
+    } else {
+      const card = grid.querySelector('.cam-card[data-key="' + key + '"]');
+      if (card) {
+        card.className = 'cam-card' + (key === featuredKey ? ' on-air' : '');
+        const btn = document.getElementById('btn-' + key);
+        if (btn) {
+          if (key === featuredKey) { btn.className='btn-cut is-live'; btn.disabled=true; btn.textContent='On Air'; }
+          else { btn.className='btn-cut can-cut'; btn.disabled=false; btn.textContent='CUT'; }
+        }
+        const wrap  = card.querySelector('.cam-video-wrap');
+        const badge = card.querySelector('.cam-badge-onair');
+        if (key === featuredKey && !badge) {
+          const b = document.createElement('div'); b.className='cam-badge-onair'; b.textContent='On Air'; wrap.appendChild(b);
+        } else if (key !== featuredKey && badge) { badge.remove(); }
+      }
+    }
+  });
+  existing.forEach(function(key) {
+    if (!liveStreams.has(key)) {
+      const card = grid.querySelector('.cam-card[data-key="' + key + '"]');
+      if (card) card.remove();
+      if (cardPlayers[key]) { cardPlayers[key].destroy(); delete cardPlayers[key]; }
+    }
+  });
+}
+
+// ── FEATURE / STOP ────────────────────────────────────────────────────────────
+async function featureStream(key) {
+  if (currentScene !== 'live') { currentScene = 'live'; updateSceneBtns(); updateSceneCtx(); }
+  const ok = await patchSupabase(NGINX_BASE + '/hls/' + key + '/index.m3u8');
+  if (ok) {
+    featuredKey = key;
+    updateOnAirBar(key, 'live');
+    updateProgramMonitor(key);
+    updateSceneMonitor();
+    renderGrid();
+    document.getElementById('sceneIndicator').textContent = 'LIVE';
+    toast('CUT TO ' + key.toUpperCase());
+  }
+}
+
+async function stopBroadcast() {
+  const ok = await patchSupabase(null);
+  if (ok) {
+    featuredKey = null;
+    updateOnAirBar(null, currentScene);
+    updateProgramMonitor(null);
+    renderGrid();
+    toast('Broadcast stopped');
+  }
+}
+
+function updateOnAirBar(key, scene) {
+  const status = document.getElementById('oabStatus');
+  const btn    = document.getElementById('stopBtn');
+  if (scene === 'ad') {
+    status.className = 'oab-status ad-out';
+    status.innerHTML = '<div class="pulse"></div>AD SPOT - fans on break';
+    btn.style.display = 'inline-block';
+  } else if (scene === 'break') {
+    status.className = 'oab-status break-out';
+    status.innerHTML = '<div class="pulse"></div>BREAK SLATE - fans on break';
+    btn.style.display = 'inline-block';
+  } else if (key) {
+    status.className = 'oab-status live';
+    status.innerHTML = '<div class="pulse"></div>' + key.toUpperCase() + ' - fans receiving stream';
+    btn.style.display = 'inline-block';
+  } else {
+    status.className = 'oab-status';
+    status.textContent = 'Offline';
+    btn.style.display = 'none';
+  }
+}
+
+// ── COMMS ─────────────────────────────────────────────────────────────────────
+function sendComms() {
+  const input = document.getElementById('commsInput');
+  const sel   = document.getElementById('commsTarget');
+  const msg   = input.value.trim(); if (!msg) return;
+  const targetLabel = sel.options[sel.selectedIndex].text;
+  const log  = document.getElementById('commsLog');
+  const item = document.createElement('div'); item.className = 'log-item';
+  const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  item.innerHTML = '<span>' + t + '</span> to <span class="log-target">' + targetLabel + '</span>: <span class="log-msg">' + msg + '</span>';
+  log.appendChild(item); log.scrollTop = log.scrollHeight;
+  input.value = '';
+  toast('Message sent to ' + targetLabel);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2800);
+}
+
+updateSceneBtns();
+initSponsorPresets();
+function refreshAll() { detectStreams(); }
+refreshAll();
+setInterval(refreshAll, POLL_MS);
+</script>
 </body>
 </html>
