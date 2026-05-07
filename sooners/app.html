@@ -268,8 +268,19 @@
         <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:rgba(240,236,224,0.4);text-shadow:0 1px 4px rgba(0,0,0,.8);">WE'LL BE RIGHT BACK</p>
         <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
       </div>
-      <!-- VIEWER CAP MESSAGE -->
-      <div id="capacityMsg" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:rgba(0,0,0,0.85);z-index:20;text-align:center;padding:20px;">
+      <!-- SCOREBOARD overlay for fans -->
+      <div id="fanScoreboard" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:12;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px);padding:6px 12px;border-top:1px solid rgba(255,255,255,.06);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:14px;">
+            <span id="fan-home-name">HOME</span>
+            <span id="fan-home-score" style="font-size:18px;color:#fff;">0</span>
+            <span style="font-size:10px;color:rgba(240,236,224,0.3);">—</span>
+            <span id="fan-away-score" style="font-size:18px;color:#fff;">0</span>
+            <span id="fan-away-name">AWAY</span>
+          </div>
+          <span id="fan-period" style="font-family:var(--font-body);font-size:10px;color:rgba(240,236,224,0.4);letter-spacing:.1em;"></span>
+        </div>
+      </div> style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:rgba(0,0,0,0.85);z-index:20;text-align:center;padding:20px;">
         <p style="font-family:var(--font-display);font-size:15px;color:var(--text-muted);letter-spacing:.05em;">🔴 Stream at capacity</p>
         <small style="font-size:11px;color:var(--text-muted);opacity:0.6;">Maximum 100 viewers reached. Please try again shortly.</small>
       </div>
@@ -686,17 +697,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ── BROADCAST MODE HANDLER ────────────────────────────────────────────────
   function handleBroadcastState(data) {
-    const mode    = data?.broadcast_mode || 'off';
-    const hlsUrl  = data?.hls_stream_url || '';
-    const adOvl   = document.getElementById('adOverlay');
-    const brkOvl  = document.getElementById('breakOverlay');
+    const mode      = data?.broadcast_mode || 'off';
+    const hlsUrl    = data?.hls_stream_url || '';
+    const adOvl     = document.getElementById('adOverlay');
+    const brkOvl    = document.getElementById('breakOverlay');
     const sponsorEl = document.getElementById('adSponsorName');
+    const scoreboard= document.getElementById('fanScoreboard');
 
-    // Parse ad_url — stored as JSON: { sponsor, image }
+    // Parse ad_url JSON
     let meta = {};
     try { meta = JSON.parse(data?.ad_url || '{}'); } catch(e) { meta = {}; }
     const sponsor  = meta.sponsor || '';
     const imageUrl = meta.image   || '';
+    const score    = meta.score   || null;
+
+    // Update fan scoreboard
+    if (score && scoreboard) {
+      document.getElementById('fan-home-name').textContent  = score.homeTeam || 'HOME';
+      document.getElementById('fan-away-name').textContent  = score.awayTeam || 'AWAY';
+      document.getElementById('fan-home-score').textContent = score.home ?? 0;
+      document.getElementById('fan-away-score').textContent = score.away ?? 0;
+      document.getElementById('fan-period').textContent     = score.period || '';
+      scoreboard.style.display = 'block';
+    } else if (scoreboard) {
+      scoreboard.style.display = 'none';
+    }
 
     function applyBgImage(el, url) {
       if (url) {
@@ -715,7 +740,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadHlsStream(hlsUrl);
     } else if (mode === 'ad') {
       tabLiveVideo.style.display = 'block';
-      // Force Live tab active so overlay is visible
       if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
       brkOvl.style.display = 'none';
       if (sponsorEl) sponsorEl.textContent = sponsor || 'Our Sponsor';
@@ -723,7 +747,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       adOvl.style.display = 'flex';
     } else if (mode === 'break') {
       tabLiveVideo.style.display = 'block';
-      // Force Live tab active so overlay is visible
       if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
       adOvl.style.display  = 'none';
       applyBgImage(brkOvl, imageUrl);
@@ -1032,6 +1055,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
