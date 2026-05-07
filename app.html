@@ -1048,7 +1048,8 @@ function getSchoolSlug() {
   return parts[0]||'sooners';
 }
 async function loadConfig(slug) {
-  let {data}=await window.supabase.from('xsen_stations').select('*').eq('slug',slug).single();
+  let {data}=await window.supabase.from('xsen_stations').select('*').ilike('slug',slug).single();
+  if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('fanbase',slug).single();data=r.data;}
   if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('school',slug.toUpperCase()).single();data=r.data;}
   return data;
 }
