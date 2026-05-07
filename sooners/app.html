@@ -126,6 +126,10 @@
     #liveVideoPanel { display: none; background: #000; flex-shrink: 0; }
     #liveVideoPanel .live-video-wrap { position: relative; aspect-ratio: 16/9; background: #111; }
     #liveVideoFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: #000; }
+    /* Capacity message */
+    #capacityMsg { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.85); z-index: 20; text-align: center; padding: 20px; }
+    #capacityMsg p { font-family: var(--font-display); font-size: 15px; color: var(--text-muted); letter-spacing: .05em; }
+    #capacityMsg small { font-size: 11px; color: var(--text-muted); opacity: 0.6; }
     /* Live Chat */
     #liveBrandedChat { display: flex; flex-direction: column; flex: 1; min-height: 200px; background: #0d0d0d; border-top: 1px solid var(--border); }
     #liveChatHeader { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 4px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
@@ -250,6 +254,25 @@
         </div>
         <p style="font-family:var(--font-display);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Tap to Watch Live</p>
       </div>
+      <!-- AD / SPONSOR SLATE overlay -->
+      <div id="adOverlay" style="display:none;position:absolute;inset:0;background:#0a0a0a;z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;">
+        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+        <p style="font-family:var(--font-display);font-size:11px;letter-spacing:.25em;color:rgba(240,236,224,0.35);text-transform:uppercase;">Presented by</p>
+        <p id="adSponsorName" style="font-family:var(--font-display);font-size:22px;letter-spacing:.1em;color:var(--text);"></p>
+        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+        <p style="font-family:var(--font-display);font-size:10px;letter-spacing:.2em;color:rgba(240,236,224,0.2);margin-top:8px;">WE'LL BE RIGHT BACK</p>
+      </div>
+      <!-- BREAK slate -->
+      <div id="breakOverlay" style="display:none;position:absolute;inset:0;background:#0a0a0a;background-size:cover;background-position:center;z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+        <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:rgba(240,236,224,0.4);text-shadow:0 1px 4px rgba(0,0,0,.8);">WE'LL BE RIGHT BACK</p>
+        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+      </div>
+      <!-- VIEWER CAP MESSAGE -->
+      <div id="capacityMsg" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:rgba(0,0,0,0.85);z-index:20;text-align:center;padding:20px;">
+        <p style="font-family:var(--font-display);font-size:15px;color:var(--text-muted);letter-spacing:.05em;">🔴 Stream at capacity</p>
+        <small style="font-size:11px;color:var(--text-muted);opacity:0.6;">Maximum 100 viewers reached. Please try again shortly.</small>
+      </div>
       <button onclick="document.getElementById('liveVideoFrame').requestFullscreen()"
         style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;z-index:10;">
         ⛶ Fullscreen
@@ -337,21 +360,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <script>
-// ── PLATFORM CONFIG (stays constant across all clients) ──────────────────────
+// ── PLATFORM CONFIG ──────────────────────────────────────────────────────────
 const SUPA_URL        = 'https://hvqzrdlbtfezwuveincs.supabase.co';
 const SUPA_KEY        = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
 const ORCHESTRATOR    = 'https://glorious-appreciation-production.up.railway.app';
 const CHAT_API_URL    = 'https://glorious-appreciation-production.up.railway.app/chat';
 const AUTH_SERVICE    = 'https://energetic-joy-production.up.railway.app';
 const FAN_MSG_API     = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
+const VIEWER_API      = 'https://live.xsen.fun:8443/viewer'; // ── VIEWER CAP ──
 const FREE_MSG_LIMIT  = 500;
-let isSP = false; // set after config loads
+let isSP = false;
 
 window.supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ── DERIVE SCHOOL SLUG FROM URL PATH ────────────────────────────────────────
-// URL: /sooners/app  →  slug = 'sooners'
-// Also supports ?school=sooners override
+// ── DERIVE SCHOOL SLUG ───────────────────────────────────────────────────────
 function getSchoolSlug() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('school')) return params.get('school').toLowerCase();
@@ -360,22 +382,18 @@ function getSchoolSlug() {
 }
 
 // ── STREAM URL OVERRIDE ──────────────────────────────────────────────────────
-// ?stream=camera1 bypasses director console
 function getStreamOverride() {
   return new URLSearchParams(window.location.search).get('stream');
 }
 
 // ── LOAD CONFIG FROM SUPABASE ────────────────────────────────────────────────
 async function loadConfig(slug) {
-  // Try matching by fanbase (case-insensitive), fallback to school key
   let { data } = await window.supabase
     .from('xsen_stations')
     .select('*')
     .ilike('fanbase', slug)
     .single();
-
   if (!data) {
-    // Fallback: match by school key (uppercase)
     const res = await window.supabase
       .from('xsen_stations')
       .select('*')
@@ -386,9 +404,8 @@ async function loadConfig(slug) {
   return data;
 }
 
-// ── APPLY CONFIG TO PAGE ──────────────────────────────────────────────────────
+// ── APPLY CONFIG TO PAGE ─────────────────────────────────────────────────────
 function applyConfig(cfg) {
-  // Colors
   if (cfg.color_primary) {
     const hex = cfg.color_primary;
     document.documentElement.style.setProperty('--primary', hex);
@@ -401,8 +418,6 @@ function applyConfig(cfg) {
     document.documentElement.style.setProperty('--secondary', cfg.color_secondary);
     document.documentElement.style.setProperty('--secondary-dim', hexToRgba(cfg.color_secondary, 0.18));
   }
-
-  // Branding
   const botName   = cfg.name || cfg.fanbase || 'Fan Bot';
   const fanbase   = cfg.fanbase || '';
   const school    = cfg.school || '';
@@ -414,27 +429,19 @@ function applyConfig(cfg) {
   document.getElementById('videoPlaceholderText').textContent = `Ask ${botName} for a highlight`;
   document.getElementById('liveChatBrand').textContent   = `⚡ ${fanbase} Live Chat`;
   document.querySelector('.chat-input input').placeholder = `Ask ${botName}…`;
-
-  // Stripe
   if (cfg.stripe_link) {
     document.getElementById('paywallStripeLink').href = cfg.stripe_link;
     document.getElementById('navSubscribe').href      = cfg.stripe_link;
   }
-
-  // Nav home
   document.getElementById('navHome').href = `https://xsen.fun/${school.toLowerCase()}`;
-
-  // Plan - explicitly show or hide both ways
   const plan = cfg.plan || 'broadcastpal';
   isSP = plan === 'streampal';
   document.getElementById('messages').style.display           = isSP ? 'none' : 'block';
   document.getElementById('chatForm').style.display            = isSP ? 'none' : 'flex';
   document.getElementById('donateBtn').style.display           = isSP ? 'none' : 'inline-block';
   document.getElementById('notifyBtn').style.display           = isSP ? 'none' : 'inline-block';
-  document.getElementById('liveBrandedChat').style.display     = 'flex'; // chat available on all plans
+  document.getElementById('liveBrandedChat').style.display     = 'flex';
   document.getElementById('fanToggleBtn').style.display        = isSP ? 'none' : 'flex';
-
-  // Logo (if set)
   if (cfg.logo_url) {
     const logoImg = document.createElement('img');
     logoImg.src = cfg.logo_url;
@@ -491,18 +498,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   applyConfig(config);
   document.getElementById('loadingScreen').style.display = 'none';
 
-  // Derive runtime values from config
-  const SCHOOL         = config.school;           // 'OU'
-  const SCHOOL_LOWER   = slug;                    // 'sooners'
-  const DONATE_URL     = `https://xsen.fun/nil?school=${SCHOOL_LOWER}`;
-  const LIVE_AUDIO     = config.azuracast_station
+  const SCHOOL          = config.school;
+  const SCHOOL_LOWER    = slug;
+  const DONATE_URL      = `https://xsen.fun/nil?school=${SCHOOL_LOWER}`;
+  const LIVE_AUDIO      = config.azuracast_station
     ? `https://stream.xsen.fun/listen/${config.azuracast_station}/radio.mp3`
     : '';
   const NOW_PLAYING_URL = config.azuracast_station
     ? `https://stream.xsen.fun/api/nowplaying/${config.azuracast_station}`
     : '';
 
-  // DOM refs
   const form            = document.getElementById('chatForm');
   const input           = document.getElementById('userInput');
   const messages        = document.getElementById('messages');
@@ -533,10 +538,63 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fanToggleBtn    = document.getElementById('fanToggleBtn');
   const fanPanel        = document.querySelector('.fan-message-panel');
   const manageSubLink   = document.getElementById('manageSubLink');
+  const capacityMsg     = document.getElementById('capacityMsg');
 
   let currentVideos    = [];
   let activeThumbIndex = 0;
   let hlsPlayer        = null;
+
+  // ── VIEWER CAP ────────────────────────────────────────────────────────────
+  let viewerToken    = null;
+  let viewerStream   = null;
+  let heartbeatTimer = null;
+
+  function extractStreamKey(hlsUrl) {
+    try { return hlsUrl.split('/hls/')[1].split('/')[0]; } catch(e) { return null; }
+  }
+
+  async function joinViewerSession(streamKey) {
+    // Already joined this stream — nothing to do
+    if (viewerToken && viewerStream === streamKey) return true;
+    // Leaving a previous stream before joining a new one
+    await leaveViewerSession();
+    try {
+      const res = await fetch(`${VIEWER_API}/join?stream=${encodeURIComponent(streamKey)}`, { method: 'POST' });
+      if (res.status === 403) {
+        capacityMsg.style.display = 'flex';
+        liveVideoFrame.style.display = 'none';
+        document.getElementById('tapToPlay').style.display = 'none';
+        return false;
+      }
+      const data = await res.json();
+      viewerToken  = data.token;
+      viewerStream = streamKey;
+      capacityMsg.style.display = 'none';
+      liveVideoFrame.style.display = 'block';
+      // Heartbeat every 10 seconds to hold the slot
+      clearInterval(heartbeatTimer);
+      heartbeatTimer = setInterval(() => {
+        if (viewerToken && viewerStream) {
+          fetch(`${VIEWER_API}/heartbeat?stream=${encodeURIComponent(viewerStream)}&token=${encodeURIComponent(viewerToken)}`, { method: 'POST' }).catch(()=>{});
+        }
+      }, 10000);
+      return true;
+    } catch(e) {
+      // Network error — fail open so viewers aren't blocked by infra issues
+      return true;
+    }
+  }
+
+  function leaveViewerSession() {
+    if (!viewerToken || !viewerStream) return;
+    clearInterval(heartbeatTimer);
+    navigator.sendBeacon(`${VIEWER_API}/leave?stream=${encodeURIComponent(viewerStream)}&token=${encodeURIComponent(viewerToken)}`);
+    viewerToken  = null;
+    viewerStream = null;
+  }
+
+  window.addEventListener('beforeunload', leaveViewerSession);
+  window.addEventListener('pagehide',     leaveViewerSession);
 
   // ── TABS ──────────────────────────────────────────────────────────────────
   function hideAll() {
@@ -549,10 +607,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     fanToggleBtn.classList.remove('open');
     [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
   }
-  tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'none'; });
-  tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'flex'; });
+  tabVideo.addEventListener('click', () => {
+    hideAll();
+    tabVideo.classList.add('active');
+    videoPanel.style.display = 'block';
+    document.getElementById('liveBrandedChat').style.display = 'none';
+  });
+  tabLiveVideo.addEventListener('click', () => {
+    hideAll();
+    tabLiveVideo.classList.add('active');
+    liveVideoPanel.style.display = 'block';
+    document.getElementById('liveBrandedChat').style.display = 'flex';
+  });
   tabRadio.addEventListener('click', () => {
-    hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block';
+    hideAll();
+    tabRadio.classList.add('active');
+    radioPanel.style.display = 'block';
     document.getElementById('liveBrandedChat').style.display = 'flex';
     if (!isSP) fanToggleBtn.style.display = 'flex';
     if (!audioEl.src || audioEl.src === window.location.href) {
@@ -561,21 +631,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ── HLS LIVE STREAM ───────────────────────────────────────────────────────
-  function loadHlsStream(streamUrl) {
+  async function loadHlsStream(streamUrl) {
     if (!streamUrl) return;
     if (liveVideoFrame.getAttribute('data-stream') === streamUrl) return;
+
+    // ── Check viewer cap before loading ──
+    const streamKey = extractStreamKey(streamUrl);
+    if (streamKey) {
+      const allowed = await joinViewerSession(streamKey);
+      if (!allowed) return; // at capacity — message already shown
+    }
+
     liveVideoFrame.setAttribute('data-stream', streamUrl);
     const tapOverlay = document.getElementById('tapToPlay');
     if (tapOverlay) tapOverlay.style.display = 'flex';
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     if (window.Hls && Hls.isSupported()) {
-      hlsPlayer = new Hls({ 
-  lowLatencyMode: true, 
-  maxBufferLength: 10,
-  maxMaxBufferLength: 20,
-  liveSyncDurationCount: 3,
-  liveMaxLatencyDurationCount: 6
-});
+      hlsPlayer = new Hls({
+        lowLatencyMode: true,
+        maxBufferLength: 10,
+        maxMaxBufferLength: 20,
+        liveSyncDurationCount: 3,
+        liveMaxLatencyDurationCount: 6
+      });
       hlsPlayer.loadSource(streamUrl);
       hlsPlayer.attachMedia(liveVideoFrame);
       hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -594,19 +672,71 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function clearHlsStream() {
+    leaveViewerSession(); // ── release viewer slot ──
     tabLiveVideo.style.display = 'none';
     if (tabLiveVideo.classList.contains('active')) tabVideo.click();
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     liveVideoFrame.removeAttribute('data-stream');
     liveVideoFrame.removeAttribute('src');
+    capacityMsg.style.display = 'none';
   }
 
   // Check for stream override in URL
   const streamOverride = getStreamOverride();
 
+  // ── BROADCAST MODE HANDLER ────────────────────────────────────────────────
+  function handleBroadcastState(data) {
+    const mode    = data?.broadcast_mode || 'off';
+    const hlsUrl  = data?.hls_stream_url || '';
+    const adOvl   = document.getElementById('adOverlay');
+    const brkOvl  = document.getElementById('breakOverlay');
+    const sponsorEl = document.getElementById('adSponsorName');
+
+    // Parse ad_url — stored as JSON: { sponsor, image }
+    let meta = {};
+    try { meta = JSON.parse(data?.ad_url || '{}'); } catch(e) { meta = {}; }
+    const sponsor  = meta.sponsor || '';
+    const imageUrl = meta.image   || '';
+
+    function applyBgImage(el, url) {
+      if (url) {
+        el.style.backgroundImage = 'linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url(' + url + ')';
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+      } else {
+        el.style.backgroundImage = '';
+      }
+    }
+
+    if (mode === 'live' && hlsUrl) {
+      adOvl.style.display  = 'none';
+      brkOvl.style.display = 'none';
+      tabLiveVideo.style.display = 'block';
+      loadHlsStream(hlsUrl);
+    } else if (mode === 'ad') {
+      tabLiveVideo.style.display = 'block';
+      if (tabLiveVideo.classList.contains('active')) {
+        brkOvl.style.display = 'none';
+        if (sponsorEl) sponsorEl.textContent = sponsor || 'Our Sponsor';
+        applyBgImage(adOvl, imageUrl);
+        adOvl.style.display = 'flex';
+      }
+    } else if (mode === 'break') {
+      tabLiveVideo.style.display = 'block';
+      if (tabLiveVideo.classList.contains('active')) {
+        adOvl.style.display  = 'none';
+        applyBgImage(brkOvl, imageUrl);
+        brkOvl.style.display = 'flex';
+      }
+    } else {
+      adOvl.style.display  = 'none';
+      brkOvl.style.display = 'none';
+      clearHlsStream();
+    }
+  }
+
   async function checkLiveStream() {
     if (streamOverride) {
-      // Direct stream — bypass Supabase
       tabLiveVideo.style.display = 'block';
       loadHlsStream(`https://live.xsen.fun:8443/hls/${streamOverride}/index.m3u8`);
       return;
@@ -614,18 +744,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const { data } = await window.supabase
         .from('xsen_stations')
-        .select('hls_stream_url')
+        .select('hls_stream_url, broadcast_mode, ad_url')
         .eq('school', SCHOOL)
         .single();
-      const url = data?.hls_stream_url || '';
-      if (url) { tabLiveVideo.style.display = 'block'; loadHlsStream(url); }
-      else { clearHlsStream(); }
+      handleBroadcastState(data);
     } catch(e) {}
   }
   checkLiveStream();
   setInterval(checkLiveStream, 30000);
 
-  // Supabase Realtime — instant switch from director
+  // Supabase Realtime — instant director switch
   if (!streamOverride) {
     window.supabase
       .channel(`director_switch_${SCHOOL_LOWER}`)
@@ -633,14 +761,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         event: 'UPDATE', schema: 'public', table: 'xsen_stations',
         filter: `school=eq.${SCHOOL}`
       }, payload => {
-        const url = payload.new.hls_stream_url;
-        if (url) { tabLiveVideo.style.display = 'block'; loadHlsStream(url); }
-        else { clearHlsStream(); }
+        handleBroadcastState(payload.new);
       })
       .subscribe();
   }
 
-  // ── VIDEO PANEL ──────────────────────────────────────────────────────────
+  // ── VIDEO PANEL ───────────────────────────────────────────────────────────
   function loadVideoInPanel(videoId, title, thumbIndex) {
     activeThumbIndex = thumbIndex;
     const src = new URL('https://player.xsen.fun');
@@ -690,7 +816,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e) { activateStatus.textContent = '❌ Could not activate. Please try again.'; }
   });
 
-  // ── ACCOUNT PORTAL ───────────────────────────────────────────────────────
+  // ── ACCOUNT PORTAL ────────────────────────────────────────────────────────
   manageSubLink?.addEventListener('click', async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('xsen_auth_token');
@@ -702,7 +828,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e) { alert('Could not open account management.'); }
   });
 
-  // ── BOT CHAT ─────────────────────────────────────────────────────────────
+  // ── BOT CHAT ──────────────────────────────────────────────────────────────
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const text = input.value.trim(); if (!text) return;
@@ -756,7 +882,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     audioEl.play().then(()=>{if(audioStatus)audioStatus.textContent='🔊 Playing…';}).catch(()=>{if(audioStatus)audioStatus.textContent='Tap ▶ to start audio';});
   }
 
-  // ── NIL / DONATE ─────────────────────────────────────────────────────────
+  // ── NIL / DONATE ──────────────────────────────────────────────────────────
   donateBtn?.addEventListener('click', ()=>window.open(DONATE_URL,'_blank','noopener'));
 
   // ── FAN MESSAGE ───────────────────────────────────────────────────────────
@@ -776,7 +902,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e){fanMsgStatus.textContent='❌ Could not send message.';}
   });
 
-  // ── RADIO STATUS ─────────────────────────────────────────────────────────
+  // ── RADIO STATUS ──────────────────────────────────────────────────────────
   async function checkLiveStatus() {
     if (!NOW_PLAYING_URL) return;
     try {
@@ -822,7 +948,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   liveChatMsgInput?.addEventListener('keydown', e=>{if(e.key==='Enter')sendLiveChatMsg();});
   loadLiveChatHistory();
 
-  // ── NIL NOTIFICATIONS (BroadcastPal only) ─────────────────────────────────
+  // ── NIL NOTIFICATIONS (BroadcastPal only) ────────────────────────────────
   if ((config.plan||'broadcastpal') === 'broadcastpal') {
     const nilScript = document.createElement('script');
     nilScript.src = '/xsen-nil-notifications.js';
@@ -832,7 +958,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 }); // end DOMContentLoaded
 
-// ── BANNER + HISTORY (defined globally for onclick) ──────────────────────────
+// ── BANNER + HISTORY ─────────────────────────────────────────────────────────
 const NOTIF_CAT_STYLES = {
   GO_LIVE:       {label:'🔴 Live',       bg:'rgba(204,0,0,0.2)',    color:'#ff6666'},
   BREAKING_NEWS: {label:'🚨 Breaking',   bg:'rgba(204,0,0,0.2)',    color:'#ff6666'},
@@ -885,7 +1011,6 @@ function closeHistoryDrawer() {
   document.getElementById('historyDrawer').classList.remove('open');
 }
 
-// Init banner after config loads
 document.addEventListener('DOMContentLoaded', async () => {
   const slug=getSchoolSlug();
   const cfg=await loadConfig(slug);
