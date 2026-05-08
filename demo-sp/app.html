@@ -252,7 +252,7 @@
       <div id="spOffline" style="display:flex;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--ink);z-index:5;">
         <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;">📡</div>
         <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;">Stream Offline</p>
-        <p style="font-family:var(--font-body);font-size:11px;color:var(--text-muted);opacity:.5;">Live tab will appear when broadcast begins</p>
+        <p style="font-family:var(--font-body);font-size:11px;color:var(--text-muted);opacity:.5;">Broadcast will appear here when live</p>
       </div>
       <div id="tapToPlay" onclick="startLiveVideo()" style="position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,0.6);cursor:pointer;z-index:10;">
         <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;">
@@ -474,8 +474,10 @@ function applyConfig(cfg) {
     // Show offline slate by default until stream starts
     document.getElementById('liveVideoPanel').style.display = 'block';
     document.getElementById('tabLiveVideo').style.display   = 'block';
+    document.getElementById('tabLiveVideo').innerHTML       = '⚫ Live';
     document.getElementById('tabLiveVideo').classList.add('active');
     document.getElementById('tabVideo').classList.remove('active');
+    document.getElementById('liveBrandedChat').style.display = 'flex';
   } else {
     // ── BroadcastPal layout — full fan app ──
     document.getElementById('messages').style.display       = 'block';
@@ -483,7 +485,7 @@ function applyConfig(cfg) {
     document.getElementById('donateBtn').style.display      = 'inline-block';
     document.getElementById('notifyBtn').style.display      = 'inline-block';
     document.getElementById('fanToggleBtn').style.display   = 'flex';
-    document.getElementById('liveBrandedChat').style.display = 'none';
+    document.getElementById('liveBrandedChat').style.display = 'none'; // hidden until Live/Radio tab clicked
   }
   if (cfg.logo_url) {
     const logoImg = document.createElement('img');
@@ -642,7 +644,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── TABS ──────────────────────────────────────────────────────────────────
   function hideAll() {
     videoPanel.style.display     = 'none';
-    liveVideoPanel.style.display = 'none';
+    if (!isSP) liveVideoPanel.style.display = 'none'; // SP keeps live panel always visible
     radioPanel.style.display     = 'none';
     fanToggleBtn.style.display   = 'none';
     document.getElementById('liveBrandedChat').style.display = 'none';
@@ -690,6 +692,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const spOffline = document.getElementById('spOffline');
     if (spOffline) spOffline.style.display = 'none';
     liveVideoFrame.style.display = 'block';
+    // Update Live tab to show red dot
+    tabLiveVideo.innerHTML = '🔴 Live';
     const tapOverlay = document.getElementById('tapToPlay');
     if (tapOverlay) tapOverlay.style.display = 'flex';
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
@@ -720,13 +724,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function clearHlsStream() {
     leaveViewerSession();
+    // Update Live tab to grey dot
+    tabLiveVideo.innerHTML = '⚫ Live';
     if (isSP) {
-      // SP — keep live panel visible, show offline slate
       const spOffline = document.getElementById('spOffline');
       if (spOffline) spOffline.style.display = 'flex';
       liveVideoFrame.style.display = 'none';
     } else {
-      // BP — hide live tab entirely
       tabLiveVideo.style.display = 'none';
       if (tabLiveVideo.classList.contains('active')) tabVideo.click();
     }
@@ -1105,6 +1109,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
