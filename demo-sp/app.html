@@ -131,7 +131,7 @@
     #capacityMsg p { font-family: var(--font-display); font-size: 15px; color: var(--text-muted); letter-spacing: .05em; }
     #capacityMsg small { font-size: 11px; color: var(--text-muted); opacity: 0.6; }
     /* Live Chat */
-    #liveBrandedChat { display: flex; flex-direction: column; flex: 1; min-height: 200px; background: #0d0d0d; border-top: 1px solid var(--border); }
+    #liveBrandedChat { display: flex; flex-direction: column; flex: 1; min-height: 0; background: #0d0d0d; border-top: 1px solid var(--border); }
     #liveChatHeader { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 4px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
     #liveChatHeader .lc-brand { font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); }
     #liveChatHeader .lc-live-dot { width: 6px; height: 6px; background: #ff4444; border-radius: 50%; animation: lcPulse 1s infinite; }
@@ -205,8 +205,14 @@
     .nil-prompt-message { font-size:22px; font-weight:700; color:#f5f5f0; margin-bottom:6px; line-height:1.2; }
     .nil-prompt-btn { background:var(--primary); color:#fff; padding:14px 28px; border-radius:5px; font-weight:700; font-size:15px; white-space:nowrap; }
     .nil-prompt-dismiss { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50%; width:32px; height:32px; color:rgba(245,245,240,0.4); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-    @media (max-width: 520px) {
-      .chat-container { margin:0; border-radius:0; border:none; min-height:100dvh; box-shadow:none; }
+    /* SP integrated layout */
+    .sp-mode #liveVideoPanel { flex-shrink: 0; }
+    .sp-mode #liveVideoPanel .live-video-wrap { aspect-ratio: 16/9; max-height: 38vh; }
+    .sp-mode #liveBrandedChat { flex: 1; min-height: 0; display: flex !important; flex-direction: column; }
+    .sp-mode #liveChatMessages { flex: 1; overflow-y: auto; }
+    .sp-mode .media-tabs { display: flex; }
+    @media (max-height: 600px) {
+      .sp-mode #liveVideoPanel .live-video-wrap { max-height: 30vh; }
     }
   </style>
 </head>
@@ -467,8 +473,9 @@ function applyConfig(cfg) {
     document.getElementById('paywallCard').style.display    = 'none';
     document.getElementById('videoPanel').style.display     = 'none';
     document.getElementById('liveBrandedChat').style.display = 'flex';
-    // Update subtitle to StreamPal
+    // Update subtitle to StreamPal with live status
     document.querySelector('.bot-sub').textContent = 'StreamPal';
+    document.querySelector('.bot-sub').id = 'spStatusBar';
     // Update live chat label
     document.getElementById('liveChatBrand').textContent = `⚡ ${fanbase} Live`;
     // Show offline slate by default until stream starts
@@ -478,6 +485,10 @@ function applyConfig(cfg) {
     document.getElementById('tabLiveVideo').classList.add('active');
     document.getElementById('tabVideo').classList.remove('active');
     document.getElementById('liveBrandedChat').style.display = 'flex';
+    // Add SP layout class
+    document.querySelector('.chat-container').classList.add('sp-mode');
+    // Hide tabs bar for SP — just one view
+    document.querySelector('.media-tabs').style.display = 'none';
   } else {
     // ── BroadcastPal layout — full fan app ──
     document.getElementById('messages').style.display       = 'block';
@@ -692,8 +703,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const spOffline = document.getElementById('spOffline');
     if (spOffline) spOffline.style.display = 'none';
     liveVideoFrame.style.display = 'block';
-    // Update Live tab to show red dot
+    // Update Live tab and SP status
     tabLiveVideo.innerHTML = '🔴 Live';
+    const spStatus = document.getElementById('spStatusBar');
+    if (spStatus) spStatus.innerHTML = 'StreamPal &nbsp;🔴 LIVE';
     const tapOverlay = document.getElementById('tapToPlay');
     if (tapOverlay) tapOverlay.style.display = 'flex';
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
@@ -724,8 +737,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function clearHlsStream() {
     leaveViewerSession();
-    // Update Live tab to grey dot
+    // Update Live tab and SP status
     tabLiveVideo.innerHTML = '⚫ Live';
+    const spStatus = document.getElementById('spStatusBar');
+    if (spStatus && isSP) spStatus.textContent = 'StreamPal';
     if (isSP) {
       const spOffline = document.getElementById('spOffline');
       if (spOffline) spOffline.style.display = 'flex';
@@ -1006,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const {data}=await window.supabase.from('xsen_live_chat').select('name,message').eq('school',SCHOOL_LOWER).order('created_at',{ascending:false}).limit(30);
       if(data?.length){data.reverse().forEach(r=>appendLiveMsg(r.name,r.message));}
-      else{appendLiveMsg(null,'Chat is open — say hey! 🏈',true);}
+      else{appendLiveMsg(null, isSP ? 'Chat is open — say hello! 👋' : 'Chat is open — say hey! 🏈', true);}
     } catch(e){}
   }
   window.supabase.channel(`xsen_live_chat_${SCHOOL_LOWER}`)
@@ -1109,7 +1124,6 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
-
 
 
 
