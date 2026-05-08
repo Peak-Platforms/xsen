@@ -124,12 +124,8 @@
     .video-thumb-title { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); font-size: 9px; color: rgba(240,236,224,0.85); padding: 3px 5px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     /* Live */
     #liveVideoPanel { display: none; background: #000; flex-shrink: 0; }
-    #liveVideoPanel .live-video-wrap { position: relative; aspect-ratio: 16/9; background: #111; overflow: hidden; }
+    #liveVideoPanel .live-video-wrap { position: relative; aspect-ratio: 16/9; background: #111; }
     #liveVideoFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: #000; }
-    /* Capacity message */
-    #capacityMsg { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.85); z-index: 20; text-align: center; padding: 20px; }
-    #capacityMsg p { font-family: var(--font-display); font-size: 15px; color: var(--text-muted); letter-spacing: .05em; }
-    #capacityMsg small { font-size: 11px; color: var(--text-muted); opacity: 0.6; }
     /* Live Chat */
     #liveBrandedChat { display: flex; flex-direction: column; flex: 1; min-height: 200px; background: #0d0d0d; border-top: 1px solid var(--border); }
     #liveChatHeader { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 4px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
@@ -246,49 +242,13 @@
   </div>
 
   <div id="liveVideoPanel">
-    <div class="live-video-wrap" style="overflow:hidden;">
+    <div class="live-video-wrap">
       <video id="liveVideoFrame" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000;"></video>
-      <!-- SP Offline slate -->
-      <div id="spOffline" style="display:flex;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--ink);z-index:5;">
-        <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;">📡</div>
-        <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;">Stream Offline</p>
-        <p style="font-family:var(--font-body);font-size:11px;color:var(--text-muted);opacity:.5;">Live tab will appear when broadcast begins</p>
-      </div>
       <div id="tapToPlay" onclick="startLiveVideo()" style="position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,0.6);cursor:pointer;z-index:10;">
         <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;">
           <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid #fff;margin-left:4px;"></div>
         </div>
         <p style="font-family:var(--font-display);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Tap to Watch Live</p>
-      </div>
-      <!-- AD / SPONSOR SLATE overlay -->
-      <div id="adOverlay" style="display:none;position:absolute;inset:0;background:#0a0a0a;z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;">
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-        <p style="font-family:var(--font-display);font-size:11px;letter-spacing:.25em;color:rgba(240,236,224,0.35);text-transform:uppercase;">Presented by</p>
-        <p id="adSponsorName" style="font-family:var(--font-display);font-size:22px;letter-spacing:.1em;color:var(--text);"></p>
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-        <p style="font-family:var(--font-display);font-size:10px;letter-spacing:.2em;color:rgba(240,236,224,0.2);margin-top:8px;">WE'LL BE RIGHT BACK</p>
-      </div>
-      <!-- BREAK slate -->
-      <div id="breakOverlay" style="display:none;position:absolute;inset:0;background:#0a0a0a;background-size:cover;background-position:center;z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-        <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:rgba(240,236,224,0.4);text-shadow:0 1px 4px rgba(0,0,0,.8);">WE'LL BE RIGHT BACK</p>
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-      </div>
-      <!-- SCOREBOARD overlay for fans -->
-      <div id="fanScoreboard" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:12;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px);padding:6px 12px;border-top:1px solid rgba(255,255,255,.06);">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:14px;">
-            <span id="fan-home-name">HOME</span>
-            <span id="fan-home-score" style="font-size:18px;color:#fff;">0</span>
-            <span style="font-size:10px;color:rgba(240,236,224,0.3);">—</span>
-            <span id="fan-away-score" style="font-size:18px;color:#fff;">0</span>
-            <span id="fan-away-name">AWAY</span>
-          </div>
-          <span id="fan-period" style="font-family:var(--font-body);font-size:10px;color:rgba(240,236,224,0.4);letter-spacing:.1em;"></span>
-        </div>
-      </div> style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:rgba(0,0,0,0.85);z-index:20;text-align:center;padding:20px;">
-        <p style="font-family:var(--font-display);font-size:15px;color:var(--text-muted);letter-spacing:.05em;">🔴 Stream at capacity</p>
-        <small style="font-size:11px;color:var(--text-muted);opacity:0.6;">Maximum 100 viewers reached. Please try again shortly.</small>
       </div>
       <button onclick="document.getElementById('liveVideoFrame').requestFullscreen()"
         style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;z-index:10;">
@@ -377,42 +337,45 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <script>
-// ── PLATFORM CONFIG ──────────────────────────────────────────────────────────
+// ── PLATFORM CONFIG (stays constant across all clients) ──────────────────────
 const SUPA_URL        = 'https://hvqzrdlbtfezwuveincs.supabase.co';
 const SUPA_KEY        = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
 const ORCHESTRATOR    = 'https://glorious-appreciation-production.up.railway.app';
 const CHAT_API_URL    = 'https://glorious-appreciation-production.up.railway.app/chat';
 const AUTH_SERVICE    = 'https://energetic-joy-production.up.railway.app';
 const FAN_MSG_API     = 'https://xsen-fan-messages-production.up.railway.app/fan-message';
-const VIEWER_API      = 'https://live.xsen.fun:8443/viewer'; // ── VIEWER CAP ──
 const FREE_MSG_LIMIT  = 500;
-let isSP = false;
+let isSP = false; // set after config loads
 
 window.supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ── DERIVE SCHOOL SLUG ───────────────────────────────────────────────────────
+// ── DERIVE SCHOOL SLUG FROM URL PATH ────────────────────────────────────────
+// URL: /sooners/app  →  slug = 'sooners'
+// Also supports ?school=sooners override
 function getSchoolSlug() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('school')) return params.get('school').toLowerCase();
   const parts = window.location.pathname.split('/').filter(Boolean);
-  // Ignore file extensions like app.html
-  const slug = parts.find(p => !p.includes('.')) || 'sooners';
-  return slug.toLowerCase();
+  return parts[0] || 'sooners';
 }
 
 // ── STREAM URL OVERRIDE ──────────────────────────────────────────────────────
+// ?stream=camera1 bypasses director console
 function getStreamOverride() {
   return new URLSearchParams(window.location.search).get('stream');
 }
 
 // ── LOAD CONFIG FROM SUPABASE ────────────────────────────────────────────────
 async function loadConfig(slug) {
+  // Try matching by fanbase (case-insensitive), fallback to school key
   let { data } = await window.supabase
     .from('xsen_stations')
     .select('*')
     .ilike('fanbase', slug)
     .single();
+
   if (!data) {
+    // Fallback: match by school key (uppercase)
     const res = await window.supabase
       .from('xsen_stations')
       .select('*')
@@ -423,8 +386,9 @@ async function loadConfig(slug) {
   return data;
 }
 
-// ── APPLY CONFIG TO PAGE ─────────────────────────────────────────────────────
+// ── APPLY CONFIG TO PAGE ──────────────────────────────────────────────────────
 function applyConfig(cfg) {
+  // Colors
   if (cfg.color_primary) {
     const hex = cfg.color_primary;
     document.documentElement.style.setProperty('--primary', hex);
@@ -437,6 +401,8 @@ function applyConfig(cfg) {
     document.documentElement.style.setProperty('--secondary', cfg.color_secondary);
     document.documentElement.style.setProperty('--secondary-dim', hexToRgba(cfg.color_secondary, 0.18));
   }
+
+  // Branding
   const botName   = cfg.name || cfg.fanbase || 'Fan Bot';
   const fanbase   = cfg.fanbase || '';
   const school    = cfg.school || '';
@@ -448,43 +414,27 @@ function applyConfig(cfg) {
   document.getElementById('videoPlaceholderText').textContent = `Ask ${botName} for a highlight`;
   document.getElementById('liveChatBrand').textContent   = `⚡ ${fanbase} Live Chat`;
   document.querySelector('.chat-input input').placeholder = `Ask ${botName}…`;
+
+  // Stripe
   if (cfg.stripe_link) {
     document.getElementById('paywallStripeLink').href = cfg.stripe_link;
     document.getElementById('navSubscribe').href      = cfg.stripe_link;
   }
+
+  // Nav home
   document.getElementById('navHome').href = `https://xsen.fun/${school.toLowerCase()}`;
+
+  // Plan - explicitly show or hide both ways
   const plan = cfg.plan || 'broadcastpal';
   isSP = plan === 'streampal';
+  document.getElementById('messages').style.display           = isSP ? 'none' : 'block';
+  document.getElementById('chatForm').style.display            = isSP ? 'none' : 'flex';
+  document.getElementById('donateBtn').style.display           = isSP ? 'none' : 'inline-block';
+  document.getElementById('notifyBtn').style.display           = isSP ? 'none' : 'inline-block';
+  document.getElementById('liveBrandedChat').style.display     = 'flex'; // chat available on all plans
+  document.getElementById('fanToggleBtn').style.display        = isSP ? 'none' : 'flex';
 
-  if (isSP) {
-    // ── StreamPal layout — stream first, no bot ──
-    document.getElementById('messages').style.display       = 'none';
-    document.getElementById('chatForm').style.display       = 'none';
-    document.getElementById('donateBtn').style.display      = 'none';
-    document.getElementById('notifyBtn').style.display      = 'none';
-    document.getElementById('fanToggleBtn').style.display   = 'none';
-    document.getElementById('tabVideo').style.display       = 'none';
-    document.getElementById('paywallCard').style.display    = 'none';
-    document.getElementById('videoPanel').style.display     = 'none';
-    document.getElementById('liveBrandedChat').style.display = 'flex';
-    // Update subtitle to StreamPal
-    document.querySelector('.bot-sub').textContent = 'StreamPal';
-    // Update live chat label
-    document.getElementById('liveChatBrand').textContent = `⚡ ${fanbase} Live`;
-    // Show offline slate by default until stream starts
-    document.getElementById('liveVideoPanel').style.display = 'block';
-    document.getElementById('tabLiveVideo').style.display   = 'block';
-    document.getElementById('tabLiveVideo').classList.add('active');
-    document.getElementById('tabVideo').classList.remove('active');
-  } else {
-    // ── BroadcastPal layout — full fan app ──
-    document.getElementById('messages').style.display       = 'block';
-    document.getElementById('chatForm').style.display       = 'flex';
-    document.getElementById('donateBtn').style.display      = 'inline-block';
-    document.getElementById('notifyBtn').style.display      = 'inline-block';
-    document.getElementById('fanToggleBtn').style.display   = 'flex';
-    document.getElementById('liveBrandedChat').style.display = 'none';
-  }
+  // Logo (if set)
   if (cfg.logo_url) {
     const logoImg = document.createElement('img');
     logoImg.src = cfg.logo_url;
@@ -541,16 +491,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   applyConfig(config);
   document.getElementById('loadingScreen').style.display = 'none';
 
-  const SCHOOL          = config.school;
-  const SCHOOL_LOWER    = slug;
-  const DONATE_URL      = `https://xsen.fun/nil?school=${SCHOOL_LOWER}`;
-  const LIVE_AUDIO      = config.azuracast_station
+  // Derive runtime values from config
+  const SCHOOL         = config.school;           // 'OU'
+  const SCHOOL_LOWER   = slug;                    // 'sooners'
+  const DONATE_URL     = `https://xsen.fun/nil?school=${SCHOOL_LOWER}`;
+  const LIVE_AUDIO     = config.azuracast_station
     ? `https://stream.xsen.fun/listen/${config.azuracast_station}/radio.mp3`
     : '';
   const NOW_PLAYING_URL = config.azuracast_station
     ? `https://stream.xsen.fun/api/nowplaying/${config.azuracast_station}`
     : '';
 
+  // DOM refs
   const form            = document.getElementById('chatForm');
   const input           = document.getElementById('userInput');
   const messages        = document.getElementById('messages');
@@ -581,63 +533,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fanToggleBtn    = document.getElementById('fanToggleBtn');
   const fanPanel        = document.querySelector('.fan-message-panel');
   const manageSubLink   = document.getElementById('manageSubLink');
-  const capacityMsg     = document.getElementById('capacityMsg');
 
   let currentVideos    = [];
   let activeThumbIndex = 0;
   let hlsPlayer        = null;
-
-  // ── VIEWER CAP ────────────────────────────────────────────────────────────
-  let viewerToken    = null;
-  let viewerStream   = null;
-  let heartbeatTimer = null;
-
-  function extractStreamKey(hlsUrl) {
-    try { return hlsUrl.split('/hls/')[1].split('/')[0]; } catch(e) { return null; }
-  }
-
-  async function joinViewerSession(streamKey) {
-    // Already joined this stream — nothing to do
-    if (viewerToken && viewerStream === streamKey) return true;
-    // Leaving a previous stream before joining a new one
-    await leaveViewerSession();
-    try {
-      const res = await fetch(`${VIEWER_API}/join?stream=${encodeURIComponent(streamKey)}`, { method: 'POST' });
-      if (res.status === 403) {
-        capacityMsg.style.display = 'flex';
-        liveVideoFrame.style.display = 'none';
-        document.getElementById('tapToPlay').style.display = 'none';
-        return false;
-      }
-      const data = await res.json();
-      viewerToken  = data.token;
-      viewerStream = streamKey;
-      capacityMsg.style.display = 'none';
-      liveVideoFrame.style.display = 'block';
-      // Heartbeat every 10 seconds to hold the slot
-      clearInterval(heartbeatTimer);
-      heartbeatTimer = setInterval(() => {
-        if (viewerToken && viewerStream) {
-          fetch(`${VIEWER_API}/heartbeat?stream=${encodeURIComponent(viewerStream)}&token=${encodeURIComponent(viewerToken)}`, { method: 'POST' }).catch(()=>{});
-        }
-      }, 10000);
-      return true;
-    } catch(e) {
-      // Network error — fail open so viewers aren't blocked by infra issues
-      return true;
-    }
-  }
-
-  function leaveViewerSession() {
-    if (!viewerToken || !viewerStream) return;
-    clearInterval(heartbeatTimer);
-    navigator.sendBeacon(`${VIEWER_API}/leave?stream=${encodeURIComponent(viewerStream)}&token=${encodeURIComponent(viewerToken)}`);
-    viewerToken  = null;
-    viewerStream = null;
-  }
-
-  window.addEventListener('beforeunload', leaveViewerSession);
-  window.addEventListener('pagehide',     leaveViewerSession);
 
   // ── TABS ──────────────────────────────────────────────────────────────────
   function hideAll() {
@@ -650,22 +549,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     fanToggleBtn.classList.remove('open');
     [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
   }
-  tabVideo.addEventListener('click', () => {
-    hideAll();
-    tabVideo.classList.add('active');
-    videoPanel.style.display = 'block';
-    document.getElementById('liveBrandedChat').style.display = 'none';
-  });
-  tabLiveVideo.addEventListener('click', () => {
-    hideAll();
-    tabLiveVideo.classList.add('active');
-    liveVideoPanel.style.display = 'block';
-    document.getElementById('liveBrandedChat').style.display = 'flex';
-  });
+  tabVideo.addEventListener('click', () => { hideAll(); tabVideo.classList.add('active'); videoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'none'; });
+  tabLiveVideo.addEventListener('click', () => { hideAll(); tabLiveVideo.classList.add('active'); liveVideoPanel.style.display = 'block'; document.getElementById('liveBrandedChat').style.display = 'flex'; });
   tabRadio.addEventListener('click', () => {
-    hideAll();
-    tabRadio.classList.add('active');
-    radioPanel.style.display = 'block';
+    hideAll(); tabRadio.classList.add('active'); radioPanel.style.display = 'block';
     document.getElementById('liveBrandedChat').style.display = 'flex';
     if (!isSP) fanToggleBtn.style.display = 'flex';
     if (!audioEl.src || audioEl.src === window.location.href) {
@@ -674,33 +561,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ── HLS LIVE STREAM ───────────────────────────────────────────────────────
-  async function loadHlsStream(streamUrl) {
+  function loadHlsStream(streamUrl) {
     if (!streamUrl) return;
     if (liveVideoFrame.getAttribute('data-stream') === streamUrl) return;
-
-    // ── Check viewer cap before loading ──
-    const streamKey = extractStreamKey(streamUrl);
-    if (streamKey) {
-      const allowed = await joinViewerSession(streamKey);
-      if (!allowed) return; // at capacity — message already shown
-    }
-
     liveVideoFrame.setAttribute('data-stream', streamUrl);
-    // Hide SP offline slate
-    const spOffline = document.getElementById('spOffline');
-    if (spOffline) spOffline.style.display = 'none';
-    liveVideoFrame.style.display = 'block';
     const tapOverlay = document.getElementById('tapToPlay');
     if (tapOverlay) tapOverlay.style.display = 'flex';
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     if (window.Hls && Hls.isSupported()) {
-      hlsPlayer = new Hls({
-        lowLatencyMode: true,
-        maxBufferLength: 10,
-        maxMaxBufferLength: 20,
-        liveSyncDurationCount: 3,
-        liveMaxLatencyDurationCount: 6
-      });
+      hlsPlayer = new Hls({ lowLatencyMode: false, maxBufferLength: 30 });
       hlsPlayer.loadSource(streamUrl);
       hlsPlayer.attachMedia(liveVideoFrame);
       hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -719,95 +588,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function clearHlsStream() {
-    leaveViewerSession();
-    if (isSP) {
-      // SP — keep live panel visible, show offline slate
-      const spOffline = document.getElementById('spOffline');
-      if (spOffline) spOffline.style.display = 'flex';
-      liveVideoFrame.style.display = 'none';
-    } else {
-      // BP — hide live tab entirely
-      tabLiveVideo.style.display = 'none';
-      if (tabLiveVideo.classList.contains('active')) tabVideo.click();
-    }
+    tabLiveVideo.style.display = 'none';
+    if (tabLiveVideo.classList.contains('active')) tabVideo.click();
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     liveVideoFrame.removeAttribute('data-stream');
     liveVideoFrame.removeAttribute('src');
-    capacityMsg.style.display = 'none';
   }
 
   // Check for stream override in URL
   const streamOverride = getStreamOverride();
 
-  // ── BROADCAST MODE HANDLER ────────────────────────────────────────────────
-  function handleBroadcastState(data) {
-    const mode      = data?.broadcast_mode || 'off';
-    const hlsUrl    = data?.hls_stream_url || '';
-    const adOvl     = document.getElementById('adOverlay');
-    const brkOvl    = document.getElementById('breakOverlay');
-    const sponsorEl = document.getElementById('adSponsorName');
-    const scoreboard= document.getElementById('fanScoreboard');
-
-    // Parse ad_url JSON
-    let meta = {};
-    try { meta = JSON.parse(data?.ad_url || '{}'); } catch(e) { meta = {}; }
-    const sponsor  = meta.sponsor || '';
-    const imageUrl = meta.image   || '';
-    const score    = meta.score   || null;
-
-    // Update fan scoreboard
-    if (score && scoreboard) {
-      document.getElementById('fan-home-name').textContent  = score.homeTeam || 'HOME';
-      document.getElementById('fan-away-name').textContent  = score.awayTeam || 'AWAY';
-      document.getElementById('fan-home-score').textContent = score.home ?? 0;
-      document.getElementById('fan-away-score').textContent = score.away ?? 0;
-      document.getElementById('fan-period').textContent     = score.period || '';
-      scoreboard.style.display = 'block';
-    } else if (scoreboard) {
-      scoreboard.style.display = 'none';
-    }
-
-    function applyBgImage(el, url) {
-      if (url) {
-        el.style.backgroundImage = 'linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url(' + url + ')';
-        el.style.backgroundSize = 'cover';
-        el.style.backgroundPosition = 'center';
-      } else {
-        el.style.backgroundImage = '';
-      }
-    }
-
-    if (mode === 'live' && hlsUrl) {
-      adOvl.style.display  = 'none';
-      brkOvl.style.display = 'none';
-      const spOffline = document.getElementById('spOffline');
-      if (spOffline) spOffline.style.display = 'none';
-      tabLiveVideo.style.display = 'block';
-      loadHlsStream(hlsUrl);
-    } else if (mode === 'ad') {
-      tabLiveVideo.style.display = 'block';
-      if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
-      brkOvl.style.display = 'none';
-      if (sponsorEl) sponsorEl.textContent = sponsor || 'Our Sponsor';
-      applyBgImage(adOvl, imageUrl);
-      adOvl.style.display = 'flex';
-    } else if (mode === 'break') {
-      tabLiveVideo.style.display = 'block';
-      if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
-      adOvl.style.display  = 'none';
-      applyBgImage(brkOvl, imageUrl);
-      brkOvl.style.display = 'flex';
-    } else {
-      adOvl.style.display  = 'none';
-      brkOvl.style.display = 'none';
-      const spOffline = document.getElementById('spOffline');
-      if (spOffline && isSP) spOffline.style.display = 'flex';
-      clearHlsStream();
-    }
-  }
-
   async function checkLiveStream() {
     if (streamOverride) {
+      // Direct stream — bypass Supabase
       tabLiveVideo.style.display = 'block';
       loadHlsStream(`https://live.xsen.fun:8443/hls/${streamOverride}/index.m3u8`);
       return;
@@ -815,16 +608,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const { data } = await window.supabase
         .from('xsen_stations')
-        .select('hls_stream_url, broadcast_mode, ad_url')
+        .select('hls_stream_url')
         .eq('school', SCHOOL)
         .single();
-      handleBroadcastState(data);
+      const url = data?.hls_stream_url || '';
+      if (url) { tabLiveVideo.style.display = 'block'; loadHlsStream(url); }
+      else { clearHlsStream(); }
     } catch(e) {}
   }
   checkLiveStream();
-  setInterval(checkLiveStream, 5000);
+  setInterval(checkLiveStream, 30000);
 
-  // Supabase Realtime — instant director switch
+  // Supabase Realtime — instant switch from director
   if (!streamOverride) {
     window.supabase
       .channel(`director_switch_${SCHOOL_LOWER}`)
@@ -832,12 +627,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         event: 'UPDATE', schema: 'public', table: 'xsen_stations',
         filter: `school=eq.${SCHOOL}`
       }, payload => {
-        handleBroadcastState(payload.new);
+        const url = payload.new.hls_stream_url;
+        if (url) { tabLiveVideo.style.display = 'block'; loadHlsStream(url); }
+        else { clearHlsStream(); }
       })
       .subscribe();
   }
 
-  // ── VIDEO PANEL ───────────────────────────────────────────────────────────
+  // ── VIDEO PANEL ──────────────────────────────────────────────────────────
   function loadVideoInPanel(videoId, title, thumbIndex) {
     activeThumbIndex = thumbIndex;
     const src = new URL('https://player.xsen.fun');
@@ -887,7 +684,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e) { activateStatus.textContent = '❌ Could not activate. Please try again.'; }
   });
 
-  // ── ACCOUNT PORTAL ────────────────────────────────────────────────────────
+  // ── ACCOUNT PORTAL ───────────────────────────────────────────────────────
   manageSubLink?.addEventListener('click', async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('xsen_auth_token');
@@ -899,7 +696,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e) { alert('Could not open account management.'); }
   });
 
-  // ── BOT CHAT ──────────────────────────────────────────────────────────────
+  // ── BOT CHAT ─────────────────────────────────────────────────────────────
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const text = input.value.trim(); if (!text) return;
@@ -953,7 +750,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     audioEl.play().then(()=>{if(audioStatus)audioStatus.textContent='🔊 Playing…';}).catch(()=>{if(audioStatus)audioStatus.textContent='Tap ▶ to start audio';});
   }
 
-  // ── NIL / DONATE ──────────────────────────────────────────────────────────
+  // ── NIL / DONATE ─────────────────────────────────────────────────────────
   donateBtn?.addEventListener('click', ()=>window.open(DONATE_URL,'_blank','noopener'));
 
   // ── FAN MESSAGE ───────────────────────────────────────────────────────────
@@ -973,7 +770,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e){fanMsgStatus.textContent='❌ Could not send message.';}
   });
 
-  // ── RADIO STATUS ──────────────────────────────────────────────────────────
+  // ── RADIO STATUS ─────────────────────────────────────────────────────────
   async function checkLiveStatus() {
     if (!NOW_PLAYING_URL) return;
     try {
@@ -1019,7 +816,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   liveChatMsgInput?.addEventListener('keydown', e=>{if(e.key==='Enter')sendLiveChatMsg();});
   loadLiveChatHistory();
 
-  // ── NIL NOTIFICATIONS (BroadcastPal only) ────────────────────────────────
+  // ── NIL NOTIFICATIONS (BroadcastPal only) ─────────────────────────────────
   if ((config.plan||'broadcastpal') === 'broadcastpal') {
     const nilScript = document.createElement('script');
     nilScript.src = '/xsen-nil-notifications.js';
@@ -1029,7 +826,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 }); // end DOMContentLoaded
 
-// ── BANNER + HISTORY ─────────────────────────────────────────────────────────
+// ── BANNER + HISTORY (defined globally for onclick) ──────────────────────────
 const NOTIF_CAT_STYLES = {
   GO_LIVE:       {label:'🔴 Live',       bg:'rgba(204,0,0,0.2)',    color:'#ff6666'},
   BREAKING_NEWS: {label:'🚨 Breaking',   bg:'rgba(204,0,0,0.2)',    color:'#ff6666'},
@@ -1082,6 +879,7 @@ function closeHistoryDrawer() {
   document.getElementById('historyDrawer').classList.remove('open');
 }
 
+// Init banner after config loads
 document.addEventListener('DOMContentLoaded', async () => {
   const slug=getSchoolSlug();
   const cfg=await loadConfig(slug);
@@ -1093,12 +891,10 @@ function getSchoolSlug() {
   const params=new URLSearchParams(window.location.search);
   if(params.get('school')) return params.get('school').toLowerCase();
   const parts=window.location.pathname.split('/').filter(Boolean);
-  const slug=parts.find(p=>!p.includes('.'))||'sooners';
-  return slug.toLowerCase();
+  return parts[0]||'sooners';
 }
 async function loadConfig(slug) {
-  let {data}=await window.supabase.from('xsen_stations').select('*').ilike('slug',slug).single();
-  if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('fanbase',slug).single();data=r.data;}
+  let {data}=await window.supabase.from('xsen_stations').select('*').eq('slug',slug).single();
   if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('school',slug.toUpperCase()).single();data=r.data;}
   return data;
 }
