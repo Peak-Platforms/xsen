@@ -208,11 +208,11 @@
     /* SP integrated layout */
     .sp-mode .chat-container { display: flex; flex-direction: column; }
     .sp-mode #liveVideoPanel { flex-shrink: 0; background: #000; }
-    .sp-mode #liveVideoPanel .live-video-wrap { position: relative; width: 100%; padding-top: 56.25%; height: 0; overflow: hidden; max-height: 38vh; }
-    .sp-mode #liveVideoPanel .live-video-wrap > * { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .sp-mode #liveVideoPanel .live-video-wrap { position: relative; aspect-ratio: 16/9; max-height: 38vh; overflow: hidden; }
+    .sp-mode #liveVideoFrame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .sp-mode #liveVideoPanel .live-video-wrap > button { position: absolute; top: auto; left: auto; bottom: 8px; right: 8px; width: auto; height: auto; z-index: 30; }
     .sp-mode #liveBrandedChat { flex: 1; min-height: 0; display: flex !important; flex-direction: column; overflow: hidden; }
     .sp-mode #liveChatMessages { flex: 1; overflow-y: auto; }
-    .sp-mode #liveVideoPanel .live-video-wrap > button { position: absolute; bottom: 8px; right: 8px; z-index: 30; }
     @media (max-height: 600px) {
       .sp-mode #liveVideoPanel .live-video-wrap { max-height: 28vh; }
     }
@@ -655,6 +655,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('beforeunload', leaveViewerSession);
   window.addEventListener('pagehide',     leaveViewerSession);
 
+  // ── RESUME PLAYBACK ON TAB FOCUS ─────────────────────────────────────────
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // Resume video if it was playing
+      if (liveVideoFrame && liveVideoFrame.getAttribute('data-stream') && liveVideoFrame.paused) {
+        liveVideoFrame.play().catch(() => {});
+      }
+      // If HLS player exists, make sure it's loading
+      if (hlsPlayer) {
+        hlsPlayer.startLoad();
+      }
+    }
+  });
+
   // ── TABS ──────────────────────────────────────────────────────────────────
   function hideAll() {
     videoPanel.style.display     = 'none';
@@ -829,6 +843,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function checkLiveStream() {
+    if (document.visibilityState === 'hidden') return; // don't poll while tab is hidden
     if (streamOverride) {
       tabLiveVideo.style.display = 'block';
       loadHlsStream(`https://live.xsen.fun:8443/hls/${streamOverride}/index.m3u8`);
@@ -1127,6 +1142,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
