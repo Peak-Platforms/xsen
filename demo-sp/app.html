@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -206,13 +206,14 @@
     .nil-prompt-btn { background:var(--primary); color:#fff; padding:14px 28px; border-radius:5px; font-weight:700; font-size:15px; white-space:nowrap; }
     .nil-prompt-dismiss { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50%; width:32px; height:32px; color:rgba(245,245,240,0.4); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
     /* SP integrated layout */
-    .sp-mode #liveVideoPanel { flex-shrink: 0; }
-    .sp-mode #liveVideoPanel .live-video-wrap { aspect-ratio: 16/9; max-height: 38vh; }
-    .sp-mode #liveBrandedChat { flex: 1; min-height: 0; display: flex !important; flex-direction: column; }
+    .sp-mode .chat-container { display: flex; flex-direction: column; }
+    .sp-mode #liveVideoPanel { flex-shrink: 0; background: #000; }
+    .sp-mode #liveVideoPanel .live-video-wrap { position: relative; width: 100%; padding-top: 56.25%; height: 0; overflow: hidden; max-height: 38vh; }
+    .sp-mode #liveVideoPanel .live-video-wrap > * { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .sp-mode #liveBrandedChat { flex: 1; min-height: 0; display: flex !important; flex-direction: column; overflow: hidden; }
     .sp-mode #liveChatMessages { flex: 1; overflow-y: auto; }
-    .sp-mode .media-tabs { display: flex; }
     @media (max-height: 600px) {
-      .sp-mode #liveVideoPanel .live-video-wrap { max-height: 30vh; }
+      .sp-mode #liveVideoPanel .live-video-wrap { max-height: 28vh; }
     }
   </style>
 </head>
@@ -1124,6 +1125,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
