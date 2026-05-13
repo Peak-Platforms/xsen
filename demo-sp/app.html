@@ -575,8 +575,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       hlsPlayer.loadSource(streamUrl);
       hlsPlayer.attachMedia(liveVideoFrame);
       hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => {
-        liveVideoFrame.play().then(()=>{
-      });
+        liveVideoFrame.play().catch(()=>{});
     } else if (liveVideoFrame.canPlayType('application/vnd.apple.mpegurl')) {
       liveVideoFrame.src = streamUrl; liveVideoFrame.play().catch(()=>{});
     }
@@ -897,6 +896,7 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
 
 
 
