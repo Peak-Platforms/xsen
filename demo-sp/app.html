@@ -603,6 +603,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentVideos    = [];
   let activeThumbIndex = 0;
   let hlsPlayer        = null;
+  let currentHlsUrl    = '';  // ── FIX: track active HLS URL to prevent redundant reloads ──
 
   // ── VIEWER CAP ────────────────────────────────────────────────────────────
   let viewerToken    = null;
@@ -748,6 +749,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!allowed) return; // at capacity — message already shown
     }
 
+    currentHlsUrl = streamUrl;  // ── FIX: record active URL before loading ──
     liveVideoFrame.setAttribute('data-stream', streamUrl);
     // Hide SP offline slate
     const spOffline = document.getElementById('spOffline');
@@ -799,6 +801,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function clearHlsStream() {
+    currentHlsUrl = '';  // ── FIX: clear tracked URL on stream teardown ──
     leaveViewerSession();
     // Update Live tab and SP status
     tabLiveVideo.innerHTML = '⚫ Live';
@@ -865,10 +868,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const spOffline = document.getElementById('spOffline');
       if (spOffline) spOffline.style.display = 'none';
       tabLiveVideo.style.display = 'block';
-      // Show loading indicator while stream starts
-      const loadingMsg = document.getElementById('spLoading');
-      if (loadingMsg) loadingMsg.style.display = 'flex';
-     if (hlsUrl !== currentHlsUrl) loadHlsStream(hlsUrl);
+      // ── FIX: only show loading spinner and reload player when URL has changed ──
+      if (hlsUrl !== currentHlsUrl) {
+        const loadingMsg = document.getElementById('spLoading');
+        if (loadingMsg) loadingMsg.style.display = 'flex';
+        loadHlsStream(hlsUrl);
+      }
     } else if (mode === 'ad') {
       tabLiveVideo.style.display = 'block';
       if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
@@ -1191,3 +1196,4 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
