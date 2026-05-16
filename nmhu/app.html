@@ -45,7 +45,7 @@
     .chat-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent); }
     .header-wordmark { display: flex; flex-direction: column; line-height: 1; position: relative; z-index: 1; }
     .header-wordmark .bot-name { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--secondary); letter-spacing: 1.5px; text-transform: uppercase; }
-    .header-wordmark .bot-sub { font-size: 12px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(201,168,76,0.85); margin-top: 6px; }
+    .header-wordmark .bot-sub { font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(201,168,76,0.85); margin-top: 2px; }
     .header-actions { margin-left: auto; display: flex; align-items: center; gap: 6px; position: relative; z-index: 1; }
     #notifyBtn { background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; }
     #donateBtn { background: var(--secondary-dim); border: 1px solid rgba(201,168,76,0.45); color: var(--secondary); padding: 5px 10px; border-radius: 6px; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
@@ -159,8 +159,8 @@
 <div class="chat-container">
   <header class="chat-header">
     <div class="header-wordmark">
-      <span class="bot-name">NMHU Cowboys</span>
-      <span class="bot-sub">XSEN</span>
+      <span class="bot-name">Cowboys Bot</span>
+      <span class="bot-sub">NMHU · The Fans' Network</span>
     </div>
     <div class="header-actions">
       <button id="notifyBtn" type="button" title="Get Notifications">&#x1F514;</button>
@@ -217,6 +217,16 @@
       <input type="text" id="liveChatMsg" placeholder="Say something..." maxlength="200" autocomplete="off" />
       <button id="liveChatSend" type="button">&#x27A4;</button>
     </div>
+  </div>
+
+  <button id="fanToggleBtn" type="button" style="display:none;">
+    &#x1F4E3; Message the Broadcaster <i class="fan-toggle-arrow">&#x25BE;</i>
+  </button>
+  <div class="fan-message-panel">
+    <input type="text" id="fanName" placeholder="Your name (optional)" />
+    <textarea id="fanMessage" rows="2" placeholder="Send a message to the broadcaster..."></textarea>
+    <button id="sendFanMessage" type="button">Send Message</button>
+    <div id="fanMessageStatus" class="fan-message-status"></div>
   </div>
 
   <div id="paywallCard">
@@ -790,6 +800,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
 
 
 
