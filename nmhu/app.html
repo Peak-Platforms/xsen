@@ -45,7 +45,7 @@
     .chat-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent); }
     .header-wordmark { display: flex; flex-direction: column; line-height: 1; position: relative; z-index: 1; }
     .header-wordmark .bot-name { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--secondary); letter-spacing: 1.5px; text-transform: uppercase; }
-    .header-wordmark .bot-sub { font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(201,168,76,0.85); margin-top: 2px; }
+    .header-wordmark .bot-sub { font-size: 12px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(201,168,76,0.85); margin-top: 6px; }
     .header-actions { margin-left: auto; display: flex; align-items: center; gap: 6px; position: relative; z-index: 1; }
     #notifyBtn { background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; }
     #donateBtn { background: var(--secondary-dim); border: 1px solid rgba(201,168,76,0.45); color: var(--secondary); padding: 5px 10px; border-radius: 6px; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
@@ -507,14 +507,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var input        = document.getElementById('userInput');
   var messages     = document.getElementById('messages');
 
-  function hideAll() {
-    videoPanel.style.display = 'none';
-    livePanel.style.display  = 'none';
-    radioPanel.style.display = 'none';
-    chatPanel.style.display  = 'none';
-    fanToggle.style.display  = 'none';
+function hideAll() {
+    if (videoPanel) videoPanel.style.display = 'none';
+    if (livePanel)  livePanel.style.display  = 'none';
+    if (radioPanel) radioPanel.style.display = 'none';
+    if (chatPanel)  chatPanel.style.display  = 'none';
+    if (fanToggle)  fanToggle.style.display  = 'none';
     if (fanPanel) fanPanel.classList.remove('open');
-    fanToggle.classList.remove('open');
+    if (fanToggle) fanToggle.classList.remove('open');
     tabVideo.classList.remove('active');
     tabLiveVideo.classList.remove('active');
     tabRadio.classList.remove('active');
