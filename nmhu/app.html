@@ -14,16 +14,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary:      #003366;
-      --primary-deep: #002244;
-      --primary-glow: rgba(0,51,102,0.45);
-      --secondary:    #C9A84C;
-      --secondary-dim:rgba(201,168,76,0.18);
-      --ink:          #080808;
-      --surface:      #111111;
-      --surface-2:    #1a1a1a;
-      --surface-3:    #222222;
-      --border:       rgba(0,51,102,0.28);
+     --primary:      #4B2E83;
+--primary-deep: #321d5c;
+--primary-glow: rgba(75,46,131,0.45);
+--secondary:    #C9A84C;
+--secondary-dim:rgba(201,168,76,0.18);
+--border:       rgba(75,46,131,0.28);
       --text:         #f0ece0;
       --text-muted:   rgba(240,236,224,0.45);
       --font-display: 'Oswald', sans-serif;
@@ -40,7 +36,7 @@
     body { font-family: var(--font-body); background: var(--ink); background-image: radial-gradient(ellipse 80% 50% at 50% -10%, var(--primary-glow) 0%, transparent 70%); color: var(--text); min-height: 100dvh; position: relative; }
     #loadingScreen { position: fixed; inset: 0; background: var(--ink); z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 14px; letter-spacing: .2em; color: var(--text-muted); text-transform: uppercase; }
     .chat-container { position: relative; z-index: 1; width: 100%; max-width: 480px; margin: 0 auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); display: flex; flex-direction: column; height: 100dvh; max-height: 100dvh; box-shadow: 0 0 0 1px rgba(0,0,0,0.12), 0 24px 80px rgba(0,0,0,0.7), 0 0 60px var(--primary-glow); overflow: hidden; }
-    .chat-header { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 62px; position: relative; overflow: hidden; flex-shrink: 0; background: linear-gradient(135deg, #002244 0%, #003366 50%, #004488 100%); }
+    .chat-header { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 62px; position: relative; overflow: hidden; flex-shrink: 0; background: linear-gradient(135deg, #321d5c 0%, #4B2E83 50%, #6040a0 100%);
     .chat-header::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(0,0,0,0.08) 8px, rgba(0,0,0,0.08) 10px); pointer-events: none; }
     .chat-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent); }
     .header-wordmark { display: flex; flex-direction: column; line-height: 1; position: relative; z-index: 1; }
@@ -104,14 +100,14 @@
     #liveChatInputRow { display: flex; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
     #liveChatName { width: 90px; flex-shrink: 0; padding: 8px 10px; font-size: 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; background: var(--surface-2); color: var(--text); font-family: var(--font-body); }
     #liveChatMsg { flex: 1; padding: 8px 10px; font-size: 13px; border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; background: var(--surface-2); color: var(--text); font-family: var(--font-body); }
-    #liveChatMsg:focus, #liveChatName:focus { outline: none; border-color: rgba(0,51,102,0.5); }
+    #liveChatMsg:focus, #liveChatName:focus { outline: none; border-color: rgba(75,46,131,0.5);
     #liveChatMsg::placeholder, #liveChatName::placeholder { color: var(--text-muted); }
     #liveChatSend { background: var(--primary); color: var(--secondary); border: none; width: 36px; height: 36px; border-radius: 7px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     #radioPanel { display: none; background: #111; padding: 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .radio-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .radio-label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--secondary); }
     #appLiveBadge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: #2a2a2a; color: #9ca3af; border: 1px solid #3a3a3a; transition: all 0.3s; white-space: nowrap; }
-    #appLiveBadge.live { background: rgba(0,51,102,0.25); color: #6699cc; border: 1px solid rgba(0,51,102,0.5); }
+    #appLiveBadge.live { background: rgba(75,46,131,0.25); color: #a78bfa; border: 1px solid rgba(75,46,131,0.5); }
     #appStreamerName { display: none; font-size: 11px; font-weight: 600; text-align: center; margin-bottom: 6px; }
     #xsenAudio { width: 100%; height: 36px; }
     .xsen-audio-status { color: var(--text-muted); font-size: 11px; margin-top: 6px; text-align: center; }
