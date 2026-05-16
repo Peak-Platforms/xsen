@@ -430,40 +430,7 @@ function renderThumbs(videos) {
   var vt = document.getElementById('videoThumbs');
   vt.innerHTML = '';
   if (!videos || !videos.length) { vt.style.display = 'none'; return; }
-  vt.style.display = 'flex';
-  for (var i = 0; i < videos.length; i++) {
-    (function(v, idx) {
-      var vid = getVideoId(v.url);
-      var thumb = document.createElement('div');
-      thumb.className = 'video-thumb' + (idx === 0 ? ' active' : '');
-      var img = document.createElement('img');
-      img.src = 'https://img.youtube.com/vi/' + vid + '/mqdefault.jpg';
-      img.alt = v.title; img.loading = 'lazy';
-      var tDiv = document.createElement('div');
-      tDiv.className = 'video-thumb-title'; tDiv.textContent = v.title;
-      thumb.appendChild(img); thumb.appendChild(tDiv);
-      thumb.addEventListener('click', function() { loadVideoInPanel(vid, v.title, idx); });
-      vt.appendChild(thumb);
-    })(videos[i], i);
-  }
-  loadVideoInPanel(getVideoId(videos[0].url), videos[0].title, 0);
-}
-
-function loadHls(url) {
-  var vid = document.getElementById('liveVideoFrame');
-  var btn = document.getElementById('unmuteBtn');
-  if (!url || vid.getAttribute('data-stream') === url) return;
-  vid.setAttribute('data-stream', url);
-  vid.muted = true; if (btn) btn.style.display = 'inline-block';
-  if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
-  if (window.Hls && Hls.isSupported()) {
-    hlsPlayer = new Hls({lowLatencyMode: false, maxBufferLength: 30});
-    hlsPlayer.loadSource(url); hlsPlayer.attachMedia(vid);
-    hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function() { vid.play().catch(function() {}); });
-  } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
-    vid.src = url; vid.play().catch(function() {});
-  }
-}
+ loadVideoInPanel(getVideoId(videos[0].url), videos[0].title, 0);
 
 function clearHls() {
   var tl = document.getElementById('tabLiveVideo');
