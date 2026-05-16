@@ -713,7 +713,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function sendLC() {
     var name = lcName ? lcName.value.trim().slice(0,32) : '';
     var msg  = lcMsg  ? lcMsg.value.trim().slice(0,200) : '';
-    if (!msg) return; if (lcMsg) lcMsg.value = '';
+    if (!msg) return;
+    if (lcMsg) lcMsg.value = '';
+    appendLC(name || 'Fan', msg, false);
     window.supabase.from('xsen_live_chat').insert([{school: SCHOOL_SLUG, name: name || 'Fan', message: msg}])
       .catch(function() { appendLC(null, 'Could not send — try again.', true); });
   }
@@ -752,9 +754,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function setBtn(state) {
     if (!nb) return;
-    if (state === 'subscribed') { nb.textContent = '&#x1F514;'; nb.style.opacity = '1'; nb.style.borderColor = '#C9A84C'; nb.title = 'Notifications ON'; }
-    else if (state === 'blocked') { nb.innerHTML = '&#x1F515;'; nb.style.opacity = '0.4'; nb.title = 'Blocked'; }
-    else { nb.textContent = '&#x1F514;'; nb.style.opacity = '0.7'; nb.title = 'Get Cowboys Alerts'; }
+    if (state === 'subscribed') { nb.innerHTML = '&#x1F514;'; nb.style.opacity = '1'; nb.style.borderColor = '#C9A84C'; nb.title = 'Notifications ON'; }
+else if (state === 'blocked') { nb.innerHTML = '&#x1F515;'; nb.style.opacity = '0.4'; nb.title = 'Blocked'; }
+else { nb.innerHTML = '&#x1F514;'; nb.style.opacity = '0.7'; nb.title = 'Get Cowboys Alerts'; }
   }
 
   function subscribe() {
