@@ -606,11 +606,12 @@ function hideAll() {
       });
       renderThumbs(vobjs);
     }
-    clean.split('\n').forEach(function(line) {
-      var t = line.trim(); if (!t) return;
-      if (/^https:\/\/player\.xsen\.fun\?v=[A-Za-z0-9_-]+$/.test(t)) return;
-      addMsg(t, 'bot');
-    });
+    if (!vurls.length) {
+      clean.split('\n').forEach(function(line) {
+        var t = line.trim(); if (!t) return;
+        addMsg(t, 'bot');
+      });
+    }
     if (sugs.length) {
       var sd = document.createElement('div'); sd.className = 'suggestions';
       sugs.forEach(function(q) {
