@@ -235,8 +235,8 @@
 
   <div class="media-tabs">
     <div class="media-tab active" id="tabVideo">🎬 Video</div>
+    <div class="media-tab" id="tabLiveVideo" style="display:none;">🔴 Live</div>
     <div class="media-tab" id="tabRadio">📻 Radio</div>
-    <div class="media-tab" id="tabChat">💬 Live Chat</div>
   </div>
 
   <!-- VIDEO PANEL -->
@@ -250,6 +250,17 @@
       <div class="video-now-playing" id="nowPlayingLabel"></div>
     </div>
     <div id="videoThumbs" style="display:none;"></div>
+  </div>
+
+  <!-- LIVE VIDEO PANEL -->
+  <div id="liveVideoPanel" style="display:none;">
+    <div style="position:relative;aspect-ratio:16/9;background:#000;">
+      <video id="liveVideoFrame" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000;"></video>
+      <div style="position:absolute;bottom:8px;right:8px;display:flex;gap:6px;z-index:10;">
+        <button id="unmuteBtn" onclick="unmuteVideo()" style="background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;">🔇 Unmute</button>
+        <button onclick="document.getElementById('liveVideoFrame').requestFullscreen()" style="background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;">⛶</button>
+      </div>
+    </div>
   </div>
 
   <!-- RADIO PANEL -->
@@ -311,7 +322,16 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <script>
+
+// ── UNMUTE ────────────────────────────────────────────────────────────────────
+function unmuteVideo() {
+  const vid = document.getElementById('liveVideoFrame');
+  const btn = document.getElementById('unmuteBtn');
+  vid.muted = false; vid.volume = 1;
+  if (btn) btn.style.display = 'none';
+}
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const SUPA_URL      = 'https://hvqzrdlbtfezwuveincs.supabase.co';
@@ -409,49 +429,49 @@ function applyConfig(cfg) {
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
 function initTabs(audioSrc, nowPlayingUrl, schoolLower) {
-  const tabVideo  = document.getElementById('tabVideo');
-  const tabRadio  = document.getElementById('tabRadio');
-  const tabChat   = document.getElementById('tabChat');
-  const videoPanel = document.getElementById('videoPanel');
-  const radioPanel = document.getElementById('radioPanel');
-  const liveChat   = document.getElementById('liveBrandedChat');
-  const messages   = document.getElementById('messages');
-  const demoCard   = document.getElementById('demoLimitCard');
-  const counter    = document.getElementById('msgCounter');
-  const chatForm   = document.getElementById('chatForm');
-  const audioEl    = document.getElementById('xsenAudio');
+  const tabVideo       = document.getElementById('tabVideo');
+  const tabLiveVideo   = document.getElementById('tabLiveVideo');
+  const tabRadio       = document.getElementById('tabRadio');
+  const videoPanel     = document.getElementById('videoPanel');
+  const liveVideoPanel = document.getElementById('liveVideoPanel');
+  const radioPanel     = document.getElementById('radioPanel');
+  const liveChat       = document.getElementById('liveBrandedChat');
+  const messages       = document.getElementById('messages');
+  const demoCard       = document.getElementById('demoLimitCard');
+  const counter        = document.getElementById('msgCounter');
+  const chatForm       = document.getElementById('chatForm');
+  const audioEl        = document.getElementById('xsenAudio');
 
   function hideAll() {
-    videoPanel.style.display = 'none';
-    radioPanel.style.display = 'none';
-    liveChat.style.display   = 'none';
-    messages.style.display   = 'none';
-    demoCard.style.display   = 'none';
-    counter.style.display    = 'none';
-    chatForm.style.display   = 'none';
-    [tabVideo, tabRadio, tabChat].forEach(t => t.classList.remove('active'));
+    videoPanel.style.display     = 'none';
+    liveVideoPanel.style.display = 'none';
+    radioPanel.style.display     = 'none';
+    liveChat.style.display       = 'none';
+    messages.style.display       = 'none';
+    demoCard.style.display       = 'none';
+    counter.style.display        = 'none';
+    chatForm.style.display       = 'none';
+    [tabVideo, tabLiveVideo, tabRadio].forEach(t => t.classList.remove('active'));
   }
 
-  function showChat() {
-    hideAll();
-    tabChat.classList.add('active');
-    liveChat.style.display = 'flex';
-  }
-
-  function showVideo() {
+  tabVideo.addEventListener('click', () => {
     hideAll();
     tabVideo.classList.add('active');
     videoPanel.style.display = 'block';
     messages.style.display   = 'block';
     counter.style.display    = getMsgCount() < DEMO_LIMIT ? 'flex' : 'none';
-    if (getMsgCount() >= DEMO_LIMIT) {
-      demoCard.style.display = 'block';
-    } else {
-      chatForm.style.display = 'flex';
-    }
-  }
+    if (getMsgCount() >= DEMO_LIMIT) demoCard.style.display = 'block';
+    else chatForm.style.display = 'flex';
+  });
 
-  function showRadio() {
+  tabLiveVideo.addEventListener('click', () => {
+    hideAll();
+    tabLiveVideo.classList.add('active');
+    liveVideoPanel.style.display = 'block';
+    liveChat.style.display       = 'flex';
+  });
+
+  tabRadio.addEventListener('click', () => {
     hideAll();
     tabRadio.classList.add('active');
     radioPanel.style.display = 'block';
@@ -460,14 +480,10 @@ function initTabs(audioSrc, nowPlayingUrl, schoolLower) {
       audioEl.src = `${audioSrc}?ts=${Date.now()}`; audioEl.load();
     }
     if (nowPlayingUrl) checkRadioStatus(nowPlayingUrl);
-  }
-
-  tabVideo.addEventListener('click', showVideo);
-  tabRadio.addEventListener('click', showRadio);
-  tabChat.addEventListener('click',  showChat);
+  });
 
   // Default view
-  showVideo();
+  tabVideo.click();
 }
 
 // ── RADIO STATUS ──────────────────────────────────────────────────────────────
@@ -634,6 +650,59 @@ document.addEventListener('DOMContentLoaded', async () => {
   initLiveChat(schoolLower);
   initBanner(schoolLower);
 
+  // ── HLS LIVE STREAM ────────────────────────────────────────────────────
+  let hlsPlayer = null;
+
+  function loadHlsStream(streamUrl) {
+    const vid = document.getElementById('liveVideoFrame');
+    if (!streamUrl || vid.getAttribute('data-stream') === streamUrl) return;
+    vid.setAttribute('data-stream', streamUrl);
+    const btn = document.getElementById('unmuteBtn');
+    if (btn) { vid.muted = true; btn.style.display = 'inline-block'; }
+    if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+    if (window.Hls && Hls.isSupported()) {
+      hlsPlayer = new Hls({ lowLatencyMode: false, maxBufferLength: 30 });
+      hlsPlayer.loadSource(streamUrl);
+      hlsPlayer.attachMedia(vid);
+      hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => vid.play().catch(() => {}));
+    } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
+      vid.src = streamUrl; vid.play().catch(() => {});
+    }
+  }
+
+  function clearHlsStream() {
+    const tabLV = document.getElementById('tabLiveVideo');
+    tabLV.style.display = 'none';
+    if (tabLV.classList.contains('active')) document.getElementById('tabVideo').click();
+    if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+    const vid = document.getElementById('liveVideoFrame');
+    vid.removeAttribute('data-stream'); vid.removeAttribute('src');
+  }
+
+  async function checkLiveStream() {
+    try {
+      const { data } = await sb.from('xsen_stations').select('hls_stream_url').eq('school', cfg.school).single();
+      const url = data?.hls_stream_url || '';
+      const tabLV = document.getElementById('tabLiveVideo');
+      if (url) { tabLV.style.display = 'block'; loadHlsStream(url); }
+      else { clearHlsStream(); }
+    } catch(e) {}
+  }
+
+  checkLiveStream();
+  setInterval(checkLiveStream, 30000);
+
+  // Realtime stream updates
+  sb.channel(`demo_director_${schoolLower}`)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'xsen_stations', filter: `school=eq.${cfg.school}` },
+      payload => {
+        const url = payload.new.hls_stream_url;
+        const tabLV = document.getElementById('tabLiveVideo');
+        if (url) { tabLV.style.display = 'block'; loadHlsStream(url); }
+        else { clearHlsStream(); }
+      })
+    .subscribe();
+
   if (audioSrc) {
     setInterval(() => checkRadioStatus(nowPlayingUrl), 15000);
   }
@@ -731,5 +800,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 </script>
 </body>
 </html>
+
 
 
