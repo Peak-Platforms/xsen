@@ -332,7 +332,9 @@
     .footer-copy { color: rgba(245,245,240,0.22); font-size: 12px; width: 100%; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
     /* RESPONSIVE */
-    @media (max-width: 1024px) {
+    @media (max-width:1024px) {
+      /* 5-col production grid collapses to 2-col */
+      .prod-grid { grid-template-columns: repeat(2,1fr) !important; }
       .steps { grid-template-columns: repeat(2, 1fr); }
       .step { border-right: none; border-bottom: 1px solid var(--border); }
       .what-grid { grid-template-columns: 1fr; }
@@ -389,23 +391,30 @@
     <div class="hero-content">
       <div class="hero-eyebrow">Purpose-Built for Athletic Departments &amp; Organizations</div>
       <h1>Your School.<br>Your <em>Network.</em></h1>
-      <p class="hero-sub">XSEN gives schools a complete media infrastructure — AI fan companion, live audio broadcasting, video archive, and real-time stats — deployed under your brand in weeks, not months.</p>
+      <p class="hero-sub">Not just streaming video. POV AI glasses. Drones. Multi-cam director's console. AI fan companion. Live radio. Push notifications. One subscription — live under your brand in days or weeks — not months.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+        <span style="font-size:12px;color:var(--muted-hi);background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:5px 14px;border-radius:999px;display:flex;align-items:center;gap:6px;">🥽 AI Glasses</span>
+        <span style="font-size:12px;color:var(--muted-hi);background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:5px 14px;border-radius:999px;display:flex;align-items:center;gap:6px;">🚁 Drones</span>
+        <span style="font-size:12px;color:var(--muted-hi);background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:5px 14px;border-radius:999px;display:flex;align-items:center;gap:6px;">🎬 Director's Console</span>
+        <span style="font-size:12px;color:var(--muted-hi);background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:5px 14px;border-radius:999px;display:flex;align-items:center;gap:6px;">📱 Any Phone or Tablet</span>
+        <span style="font-size:12px;color:var(--muted-hi);background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:5px 14px;border-radius:999px;display:flex;align-items:center;gap:6px;">📡 Any RTMP Device</span>
+      </div>
       <div class="hero-ctas">
-        <a href="mailto:partner@xsen.fun" class="btn-primary">Get a Demo →</a>
+        <a href="/pricing.html" class="btn-primary">See What's Included →</a>
         <button class="btn-listen" id="listenBtn">
           <span class="status-dot" id="statusDot"></span>
           <span id="listenLabel">XSEN Radio</span>
         </button>
         <a href="#demos" class="btn-outline">See It Live →</a>
       </div>
-      <p style="margin-top:20px;font-size:13px;color:var(--muted);letter-spacing:0.5px;">As low as <strong style="color:var(--gold);">$499/mo</strong> · Month-to-month · <span style="color:var(--gold);font-weight:600;">Founding rate available — ask us</span></p>
+      <p style="margin-top:20px;font-size:13px;color:var(--muted);letter-spacing:0.5px;"><strong style="color:var(--gold);">$499/mo</strong> · Month-to-month · <span style="color:var(--gold);font-weight:600;">Founding client rate available — ask us</span></p>
     </div>
     <div class="hero-trust">
-      <span>Fan Engagement Platform</span>
+      <span>POV AI Glasses</span>
       <div class="trust-sep"></div>
-      <span>Live Broadcasting</span>
+      <span>Drone Ready</span>
       <div class="trust-sep"></div>
-      <span>White-Label Ready</span>
+      <span>Web-Based Director's Console</span>
       <div class="trust-sep"></div>
       <span>Any Division. Any Size.</span>
     </div>
@@ -427,6 +436,66 @@
       <button class="player-close" id="playerClose" title="Close">✕</button>
     </div>
   </div>
+
+  <!-- PRODUCTION TEASE -->
+  <section style="background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 48px;">
+    <div style="max-width:1280px;margin:0 auto;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:48px;">
+        <div>
+          <span class="label">BroadcastPal Production Suite</span>
+          <h2 class="section-title">Your own TV production.<br>No crew. No hardware. <em style="font-style:normal;color:var(--gold);">No limits.</em></h2>
+          <p style="color:var(--muted);font-size:16px;line-height:1.75;margin-top:14px;max-width:560px;">Most schools stream a single phone propped on a tripod. XSEN gives you a professional multi-camera broadcast operation — POV AI glasses on the sideline, drones in the air, director switching feeds live from a browser — for less than the cost of one game-day crew.</p>
+        </div>
+        <a href="/pricing.html#whats-included" class="btn-primary" style="white-space:nowrap;flex-shrink:0;">See the Full Suite →</a>
+      </div>
+
+      <!-- Tool cards -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;">
+
+        <div style="background:var(--mid);padding:28px 22px;border-right:1px solid var(--border);position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:999px;border:1px solid var(--border-gold);">Working Today</div>
+          <div style="font-size:32px;margin-bottom:14px;">🥽</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">POV AI Glasses</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Mentra Live glasses stream first-person footage hands-free — from coaches, staff, or field level.</div>
+        </div>
+
+        <div style="background:var(--mid);padding:28px 22px;border-right:1px solid var(--border);position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:999px;border:1px solid var(--border-gold);">Working Today</div>
+          <div style="font-size:32px;margin-bottom:14px;">📱</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Phones &amp; Tablets</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">StreamPal and BroadcastPal apps turn any Android phone or Fire tablet into a live broadcast camera.</div>
+        </div>
+
+        <div style="background:var(--mid);padding:28px 22px;border-right:1px solid var(--border);position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:999px;border:1px solid var(--border-gold);">RTMP / WebRTC</div>
+          <div style="font-size:32px;margin-bottom:14px;">🚁</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Drones</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Any drone with RTMP output feeds directly into your broadcast. Aerial angles, no extra infrastructure.</div>
+        </div>
+
+        <div style="background:var(--mid);padding:28px 22px;border-right:1px solid var(--border);position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:999px;border:1px solid var(--border-gold);">Web-Based</div>
+          <div style="font-size:32px;margin-bottom:14px;">🎬</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Director's Console</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Switch between all feeds live from any browser. Cut, fade, drop ad spots — no hardware switcher, no install.</div>
+        </div>
+
+        <div style="background:var(--mid);padding:28px 22px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:999px;border:1px solid var(--border-gold);">Included</div>
+          <div style="font-size:32px;margin-bottom:14px;">📺</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Live Ad Spots</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Drop sponsor messages and local ads into your broadcast live from the console. A revenue stream most small programs never had.</div>
+        </div>
+
+      </div>
+
+      <!-- Bottom callout -->
+      <div style="margin-top:2px;background:var(--mid);border:1px solid var(--border-gold);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div style="font-size:14px;color:var(--muted-hi);">All of this is included in your XSEN subscription. No add-ons. No per-feature fees. <strong style="color:var(--white);">Everything ships on day one.</strong></div>
+        <a href="/pricing.html" style="font-size:13px;font-weight:700;color:var(--gold);text-decoration:none;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:gap 0.2s;" onmouseover="this.style.gap='10px'" onmouseout="this.style.gap='6px'">Full feature breakdown → pricing.html</a>
+      </div>
+    </div>
+  </section>
 
   <!-- WHAT WE DO -->
   <section class="what-band" id="what-we-do">
@@ -529,7 +598,7 @@
           <li>Any division — FBS to NAIA</li>
           <li>High schools &amp; community orgs welcome</li>
           <li>No dev team needed on your end</li>
-          <li>Live in weeks, not months</li>
+          <li>Live in days or weeks — not months</li>
         </ul>
       </a>
     </div>
@@ -562,7 +631,7 @@
           <div class="stat-box"><div class="stat-num">11K+</div><div class="stat-label">Video highlights across active channels</div></div>
           <div class="stat-box"><div class="stat-num">45+</div><div class="stat-label">Years of sports history covered</div></div>
           <div class="stat-box"><div class="stat-num">24/7</div><div class="stat-label">Live radio streaming infrastructure</div></div>
-          <div class="stat-box"><div class="stat-num">Wks</div><div class="stat-label">Typical deployment timeline, not months</div></div>
+          <div class="stat-box"><div class="stat-num" style="font-size:32px;">Days</div><div class="stat-label">to weeks — not months. Built for short timelines.</div></div>
         </div>
       </div>
       <div class="platform-right">
@@ -623,7 +692,7 @@
         <div class="step-num">02</div>
         <div class="step-title">We Configure Your Channel</div>
         <div class="step-desc">Your school colors, mascot, AI personality, video archive, and radio stream are set up and branded to your program.</div>
-        <div class="step-detail">Typical config: 1–2 weeks</div>
+        <div class="step-detail">Fast-track available for upcoming events</div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
@@ -754,3 +823,4 @@
 
 </body>
 </html>
+
