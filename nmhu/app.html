@@ -622,17 +622,7 @@ function hideAll() {
       messages.appendChild(sd); messages.scrollTop = messages.scrollHeight;
     }
   }
-    if (sugs.length) {
-      var sd = document.createElement('div'); sd.className = 'suggestions';
-      sugs.forEach(function(q) {
-        var b = document.createElement('button'); b.className = 'suggestion-btn'; b.textContent = q;
-        b.onclick = function() { input.value = q; form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true})); };
-        sd.appendChild(b);
-      });
-      messages.appendChild(sd); messages.scrollTop = messages.scrollHeight;
-    }
-  }
-
+   
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     var text = input.value.trim(); if (!text) return;
