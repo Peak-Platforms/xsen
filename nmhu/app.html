@@ -597,7 +597,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     return url.split('?v=').pop();
   }
 
-  function renderResponse(text) {
+ function renderResponse(text) {
+    text = text.replace(/\*\*/g, '');
     const sugMatch = text.match(/SUGGESTED:\n([\s\S]*?)$/m);
     let clean = text; const sugs = [];
     if (sugMatch) { clean = text.replace(sugMatch[0],'').trim(); sugMatch[1].split('\n').map(l=>l.replace(/^[-•]\s*/,'').trim()).filter(Boolean).forEach(s=>sugs.push(s)); }
