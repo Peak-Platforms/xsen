@@ -640,7 +640,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   applyConfig(cfg);
 
-  const schoolLower    = slug;
+  // ── FEATURED VIDEOS ────────────────────────────────────────────────────
+  // Load 3 curated videos from xsen_stations.featured_videos JSON column
+  // Format: [{"url":"https://youtu.be/ABC123","title":"Great Moment"}]
+  const featuredVideos = cfg.featured_videos || [];
+  if (featuredVideos.length > 0) {
+    renderThumbs(featuredVideos.slice(0, 3));
+  }
   const SCHOOL         = cfg.school;
   const audioSrc       = cfg.azuracast_station ? `https://stream.xsen.fun/listen/${cfg.azuracast_station}/radio.mp3` : '';
   const nowPlayingUrl  = cfg.azuracast_station ? `https://stream.xsen.fun/api/nowplaying/${cfg.azuracast_station}` : '';
@@ -800,6 +806,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 </script>
 </body>
 </html>
+
 
 
 
