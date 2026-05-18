@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -358,12 +358,19 @@
       .player-label { display: none; }
       .player-bar { padding: 10px 14px; gap: 10px; }
       .demos-header { flex-direction: column; align-items: flex-start; }
+      /* Production 5-col grid → 2-col on tablet, 1-col on mobile */
+      .prod-grid-wrap { padding: 70px 20px !important; }
+      .prod-grid { grid-template-columns: repeat(2,1fr) !important; }
+      /* See All Channels band → stack vertically */
+      .channels-cta-band { flex-direction: column !important; align-items: flex-start !important; padding: 24px 20px !important; }
+      .channels-cta-band .mini-cards-wrap { flex-wrap: wrap !important; }
     }
     @media (max-width: 480px) {
       .hero-ctas { flex-direction: column; align-items: center; }
       .btn-primary, .btn-outline, .btn-listen { width: 100%; text-align: center; justify-content: center; }
       .platform-stats { grid-template-columns: 1fr; }
       .steps { grid-template-columns: 1fr; }
+      .prod-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -438,7 +445,7 @@
   </div>
 
   <!-- PRODUCTION TEASE -->
-  <section style="background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 48px;">
+  <section class="prod-grid-wrap" style="background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 48px;">
     <div style="max-width:1280px;margin:0 auto;">
       <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:48px;">
         <div>
@@ -450,7 +457,7 @@
       </div>
 
       <!-- Tool cards -->
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;">
+      <div class="prod-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;">
 
         <div style="background:var(--mid);padding:28px 22px;border-right:1px solid var(--border);position:relative;overflow:hidden;">
           <div style="position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:999px;border:1px solid var(--border-gold);">Working Today</div>
@@ -603,17 +610,16 @@
       </a>
     </div>
     <!-- See All Channels CTA -->
-    <div style="margin-top:48px; display:flex; align-items:center; gap:32px; flex-wrap:wrap; background:var(--mid); border:1px solid var(--border); border-radius:8px; padding:32px 36px;">
-      <!-- Sample mini-cards -->
-      <div style="display:flex; gap:10px; flex-wrap:wrap; flex:1; min-width:220px;">
-        <div style="background:var(--dark); border:1px solid var(--border); border-radius:6px; padding:12px 16px; font-size:12px; color:var(--muted-hi); display:flex; align-items:center; gap:8px; white-space:nowrap;">🏈 <span>Big 12</span></div>
-        <div style="background:var(--dark); border:1px solid var(--border); border-radius:6px; padding:12px 16px; font-size:12px; color:var(--muted-hi); display:flex; align-items:center; gap:8px; white-space:nowrap;">🏀 <span>SEC</span></div>
-        <div style="background:var(--dark); border:1px solid var(--border); border-radius:6px; padding:12px 16px; font-size:12px; color:var(--muted-hi); display:flex; align-items:center; gap:8px; white-space:nowrap;">🏟️ <span>High Schools</span></div>
-        <div style="background:var(--dark); border:1px solid var(--border); border-radius:6px; padding:12px 16px; font-size:12px; color:var(--muted-hi); display:flex; align-items:center; gap:8px; white-space:nowrap;">🎓 <span>D1 · D2 · D3</span></div>
-        <div style="background:var(--dark); border:1px solid var(--border); border-radius:6px; padding:12px 16px; font-size:12px; color:var(--muted-hi); display:flex; align-items:center; gap:8px; white-space:nowrap;">🏆 <span>NAIA</span></div>
+    <div class="channels-cta-band" style="margin-top:48px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;background:var(--mid);border:1px solid var(--border);border-radius:8px;padding:28px 32px;">
+      <div class="mini-cards-wrap" style="display:flex;gap:8px;flex-wrap:wrap;flex:1;min-width:0;">
+        <div style="background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--muted-hi);display:flex;align-items:center;gap:6px;white-space:nowrap;">🏈 <span>Big 12</span></div>
+        <div style="background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--muted-hi);display:flex;align-items:center;gap:6px;white-space:nowrap;">🏀 <span>SEC</span></div>
+        <div style="background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--muted-hi);display:flex;align-items:center;gap:6px;white-space:nowrap;">🏟️ <span>High Schools</span></div>
+        <div style="background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--muted-hi);display:flex;align-items:center;gap:6px;white-space:nowrap;">🎓 <span>D1 · D2 · D3</span></div>
+        <div style="background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--muted-hi);display:flex;align-items:center;gap:6px;white-space:nowrap;">🏆 <span>NAIA</span></div>
       </div>
-      <div style="flex-shrink:0; text-align:right;">
-        <div style="font-size:13px; color:var(--muted); margin-bottom:12px;">Live channels, demos &amp; coming-soon schools</div>
+      <div style="flex-shrink:0;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Live channels, demos &amp; coming-soon schools</div>
         <a href="/channels.html" class="btn-primary" style="white-space:nowrap;">See All Channels →</a>
       </div>
     </div>
@@ -823,5 +829,3 @@
 
 </body>
 </html>
-
-
