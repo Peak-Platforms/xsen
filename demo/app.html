@@ -624,13 +624,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Load school config
+  // Load school config — try slug first, then school column, then fanbase
   let cfg = null;
   try {
-    let res = await sb.from('xsen_stations').select('*').eq('slug', slug).single();
-    if (!res.data) res = await sb.from('xsen_stations').select('*').ilike('school', slug.toUpperCase()).single();
-    cfg = res.data;
-  } catch(e) {}
+    // Try slug column
+    const r1 = await sb.from('xsen_stations').select('*').eq('slug', slug).maybeSingle();
+    if (r1.data) { cfg = r1.data; }
+    else {
+      // Try school column (uppercase)
+      const r2 = await sb.from('xsen_stations').select('*').ilike('school', slug).maybeSingle();
+      if (r2.data) { cfg = r2.data; }
+      else {
+        // Try fanbase column
+        const r3 = await sb.from('xsen_stations').select('*').ilike('fanbase', slug).maybeSingle();
+        cfg = r3.data;
+      }
+    }
+  } catch(e) { console.error('Config load error:', e); }
 
   if (!cfg) {
     document.getElementById('loadingScreen').style.display = 'none';
@@ -640,16 +650,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   applyConfig(cfg);
 
-  // ── FEATURED VIDEOS ────────────────────────────────────────────────────
-  // Load 3 curated videos from xsen_stations.featured_videos JSON column
-  // Format: [{"url":"https://youtu.be/ABC123","title":"Great Moment"}]
+  const schoolLower   = slug;
+  const SCHOOL        = cfg.school;
+  const audioSrc      = cfg.azuracast_station ? `https://stream.xsen.fun/listen/${cfg.azuracast_station}/radio.mp3` : '';
+  const nowPlayingUrl = cfg.azuracast_station ? `https://stream.xsen.fun/api/nowplaying/${cfg.azuracast_station}` : '';
+
+  // ── FEATURED VIDEOS ───────────────────────────────────────────────────
   const featuredVideos = cfg.featured_videos || [];
-  if (featuredVideos.length > 0) {
-    renderThumbs(featuredVideos.slice(0, 3));
-  }
-  const SCHOOL         = cfg.school;
-  const audioSrc       = cfg.azuracast_station ? `https://stream.xsen.fun/listen/${cfg.azuracast_station}/radio.mp3` : '';
-  const nowPlayingUrl  = cfg.azuracast_station ? `https://stream.xsen.fun/api/nowplaying/${cfg.azuracast_station}` : '';
+  if (featuredVideos.length > 0) renderThumbs(featuredVideos.slice(0, 3));
 
   updateCounter(getMsgCount());
   initTabs(audioSrc, nowPlayingUrl, schoolLower);
@@ -806,7 +814,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 </script>
 </body>
 </html>
-
-
-
-
