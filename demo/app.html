@@ -512,15 +512,15 @@ function loadVideoInPanel(videoId, title, thumbIndex) {
   const frame       = document.getElementById('mainVideoFrame');
   const placeholder = document.getElementById('videoPlaceholder');
   const label       = document.getElementById('nowPlayingLabel');
-  const src = new URL('https://www.youtube.com/embed/' + videoId);
-  src.searchParams.set('autoplay','1'); src.searchParams.set('muted','1');
+  const src = new URL('https://player.xsen.fun');
+  src.searchParams.set('v', videoId);
+  src.searchParams.set('autoplay','1');
   frame.src = src.toString(); frame.style.display = 'block';
   placeholder.style.display = 'none';
   label.textContent = title || 'Now playing'; label.style.display = 'block';
   document.querySelectorAll('.video-thumb').forEach((t,i) => t.classList.toggle('active', i === thumbIndex));
   document.getElementById('tabVideo').click();
 }
-
 function renderThumbs(videos) {
   const wrap = document.getElementById('videoThumbs');
   if (!videos?.length) { wrap.style.display = 'none'; return; }
