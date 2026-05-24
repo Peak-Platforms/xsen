@@ -346,8 +346,9 @@ function getSchoolSlug() {
   const p = new URLSearchParams(window.location.search);
   if (p.get('school')) return p.get('school').toLowerCase();
   const parts = window.location.pathname.split('/').filter(Boolean);
-  // Handle /demo/app or /sooners/demo etc.const slug = parts.find(s => s !== 'app' && s !== 'app.html');
-  return slug || '';
+  // Handle /demo/app or /sooners/demo etc.
+  const match = parts.find(s => s !== 'app' && s !== 'app.html');
+  return match || '';
 }
 
 function hexToRgba(hex, alpha) {
