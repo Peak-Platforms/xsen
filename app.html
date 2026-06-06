@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -370,6 +370,7 @@ const FAN_MSG_API     = 'https://xsen-fan-messages-production.up.railway.app/fan
 const VIEWER_API      = 'https://live.xsen.fun:8443/viewer'; // ── VIEWER CAP ──
 const FREE_MSG_LIMIT  = 500;
 let isSP = false;
+let isRP = false;
 
 window.supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
@@ -436,12 +437,33 @@ function applyConfig(cfg) {
   document.getElementById('navHome').href = `https://xsen.fun/${school.toLowerCase()}`;
   const plan = cfg.plan || 'broadcastpal';
   isSP = plan === 'streampal';
+  isRP = plan === 'radiopal';
   document.getElementById('messages').style.display           = isSP ? 'none' : 'block';
   document.getElementById('chatForm').style.display            = isSP ? 'none' : 'flex';
   document.getElementById('donateBtn').style.display           = isSP ? 'none' : 'inline-block';
   document.getElementById('notifyBtn').style.display           = isSP ? 'none' : 'inline-block';
   document.getElementById('liveBrandedChat').style.display     = 'flex';
   document.getElementById('fanToggleBtn').style.display        = isSP ? 'none' : 'flex';
+
+  // ── RadioPal layout — radio only ──
+  if (isRP) {
+    document.getElementById('messages').style.display       = 'none';
+    document.getElementById('chatForm').style.display       = 'none';
+    document.getElementById('donateBtn').style.display      = 'none';
+    document.getElementById('notifyBtn').style.display      = 'none';
+    document.getElementById('fanToggleBtn').style.display   = 'none';
+    document.getElementById('tabVideo').style.display       = 'none';
+    document.getElementById('tabLiveVideo').style.display   = 'none';
+    document.getElementById('videoPanel').style.display     = 'none';
+    document.getElementById('liveVideoPanel').style.display = 'none';
+    document.getElementById('paywallCard').style.display    = 'none';
+    document.getElementById('liveBrandedChat').style.display = 'flex';
+    // Radio tab active by default
+    document.getElementById('tabRadio').classList.add('active');
+    document.getElementById('tabVideo').classList.remove('active');
+    document.getElementById('radioPanel').style.display     = 'block';
+    document.querySelector('.bot-sub').textContent = 'RadioPal';
+  }
   if (cfg.logo_url) {
     const logoImg = document.createElement('img');
     logoImg.src = cfg.logo_url;
@@ -1032,5 +1054,8 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
+
+
 
 
