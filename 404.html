@@ -2,8 +2,15 @@
 <html>
 <head>
   <script>
-    const path = window.location.pathname;
-    window.location.replace(path + '/index.html');
+    var path = window.location.pathname;
+    // Guard: only redirect if this path doesn't already point at index.html.
+    // Without this check, if the target ever 404s again, this script
+    // re-fires and keeps appending /index.html forever.
+    if (!/\/index\.html\/?$/.test(path)) {
+      var target = (path.endsWith('/') ? path : path + '/') + 'index.html';
+      // Preserve the query string and hash so links like ?network=Agora survive.
+      window.location.replace(target + window.location.search + window.location.hash);
+    }
   </script>
 </head>
 <body></body>
