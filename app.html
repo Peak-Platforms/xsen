@@ -597,8 +597,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       clearInterval(heartbeatTimer);
       heartbeatTimer = setInterval(() => {
         if (viewerToken && viewerStream) {
-          fetch(`${VIEWER_API}/heartbeat?stream=${encodeURIComponent(viewerStream)}&token=${encodeURIComponent(viewerToken)}`, { method: 'POST' }).catch(()=>{});
+        fetch(`${VIEWER_API}/heartbeat?stream=${encodeURIComponent(viewerStream)}&token=${encodeURIComponent(viewerToken)}`, { method: 'POST' })
+  .then(res => {
+    if (res.status === 404) {
+      // Session expired server-side (e.g. service restarted) — rejoin to get a fresh token.
+      const staleStream = viewerStream;
+      viewerToken = null;
+      viewerStream = null;
+      joinViewerSession(staleStream).then(allowed => {
+        if (allowed && liveVideoFrame.getAttribute('data-stream')) {
+          // Already playing — just needed a fresh token, no need to reload the player.
         }
+      });
+    }
+  })
+  .catch(()=>{});
       }, 10000);
       return true;
     } catch(e) {
