@@ -445,6 +445,23 @@
           </div>
         </div>
       </div>
+
+      <div class="panel" style="margin-top:1.5rem;">
+        <div class="panel-header"><span class="panel-title">X (Twitter) Simulcast</span><span class="panel-count" id="x-relay-status-badge">NOT CONFIGURED</span></div>
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+          <p class="queries-note">Enter your X stream destination once. When this station is featured live, the director console will automatically simulcast to X. Get these from studio.x.com &rarr; Media Studio &rarr; Producer &rarr; Sources.</p>
+        </div>
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+          <label class="field-label">X RTMP URL</label>
+          <input class="query-input" id="x-rtmp-url" type="text" placeholder="rtmps://or.pscp.tv:443/x" style="width:100%;margin-bottom:1rem;">
+          <label class="field-label">X Stream Key</label>
+          <div style="display:flex;gap:0.75rem;">
+            <input class="query-input" id="x-stream-key" type="password" placeholder="stream key" style="flex:1;">
+            <button class="btn-add" onclick="saveXRelayConfig()">SAVE</button>
+            <button class="btn-reject" onclick="clearXRelayConfig()" style="padding:0.6rem 1rem;">CLEAR</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -586,7 +603,7 @@ function switchTab(tab, el) {
   if (tab === 'announcements') loadAnnouncements();
   if (tab === 'notifications') loadNotifLog();
   if (tab === 'social')        loadSocialPosts();
-  if (tab === 'livestream')    loadLiveStream();
+  if (tab === 'livestream')    { loadLiveStream(); loadXRelayConfig(); }
   if (tab === 'livechat')      loadLiveChatTab();
 }
 
@@ -967,6 +984,39 @@ async function clearLiveStream() {
   const badge=document.getElementById('live-status-badge'); badge.textContent='OFFLINE'; badge.style.color='var(--muted)';
   showToast('Stream ended — Live tab hidden from fans','');
 }
+
+// ── X (TWITTER) RELAY CONFIG ───────────────────────────────────────────────────
+async function loadXRelayConfig() {
+  const { data } = await sb.from('xsen_stations').select('x_rtmp_url,x_stream_key').eq('school',currentStation.school).single();
+  document.getElementById('x-rtmp-url').value = data?.x_rtmp_url || '';
+  document.getElementById('x-stream-key').value = data?.x_stream_key || '';
+  const badge = document.getElementById('x-relay-status-badge');
+  const configured = !!(data?.x_rtmp_url && data?.x_stream_key);
+  badge.textContent = configured ? 'CONFIGURED' : 'NOT CONFIGURED';
+  badge.style.color = configured ? 'var(--red)' : 'var(--muted)';
+}
+async function saveXRelayConfig() {
+  const x_rtmp_url = document.getElementById('x-rtmp-url').value.trim();
+  const x_stream_key = document.getElementById('x-stream-key').value.trim();
+  if (!x_rtmp_url || !x_stream_key) { showToast('Enter both the RTMP URL and stream key','error'); return; }
+  const { error } = await sb.from('xsen_stations').update({ x_rtmp_url, x_stream_key, updated_at: new Date().toISOString() }).eq('school',currentStation.school);
+  if (error) { showToast('Failed to save X relay config','error'); return; }
+  currentStation.x_rtmp_url = x_rtmp_url; currentStation.x_stream_key = x_stream_key;
+  sessionStorage.setItem('xsen_station',JSON.stringify(currentStation));
+  const badge = document.getElementById('x-relay-status-badge');
+  badge.textContent = 'CONFIGURED'; badge.style.color = 'var(--red)';
+  showToast('X relay destination saved','success');
+}
+async function clearXRelayConfig() {
+  const { error } = await sb.from('xsen_stations').update({ x_rtmp_url: null, x_stream_key: null, updated_at: new Date().toISOString() }).eq('school',currentStation.school);
+  if (error) { showToast('Failed to clear X relay config','error'); return; }
+  currentStation.x_rtmp_url = null; currentStation.x_stream_key = null;
+  sessionStorage.setItem('xsen_station',JSON.stringify(currentStation));
+  document.getElementById('x-rtmp-url').value=''; document.getElementById('x-stream-key').value='';
+  const badge = document.getElementById('x-relay-status-badge');
+  badge.textContent = 'NOT CONFIGURED'; badge.style.color = 'var(--muted)';
+  showToast('X relay disabled for this station','');
+}
 function updateLivePreview(id) {
   const preview=document.getElementById('yt-preview'); if (!preview) return;
   preview.innerHTML = id ? `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=0" frameborder="0" allow="encrypted-media" allowfullscreen style="border:none;aspect-ratio:16/9;"></iframe>`
@@ -1097,6 +1147,7 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
 
