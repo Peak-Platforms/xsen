@@ -400,37 +400,9 @@ let isSP = false;
 
 window.supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ── DERIVE SCHOOL SLUG ───────────────────────────────────────────────────────
-function getSchoolSlug() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('school')) return params.get('school').toLowerCase();
-  const parts = window.location.pathname.split('/').filter(Boolean);
-  // Ignore file extensions like app.html
-  const slug = parts.find(p => !p.includes('.')) || 'sooners';
-  return slug.toLowerCase();
-}
-
 // ── STREAM URL OVERRIDE ──────────────────────────────────────────────────────
 function getStreamOverride() {
   return new URLSearchParams(window.location.search).get('stream');
-}
-
-// ── LOAD CONFIG FROM SUPABASE ────────────────────────────────────────────────
-async function loadConfig(slug) {
-  let { data } = await window.supabase
-    .from('xsen_stations')
-    .select('*')
-    .ilike('fanbase', slug)
-    .single();
-  if (!data) {
-    const res = await window.supabase
-      .from('xsen_stations')
-      .select('*')
-      .ilike('school', slug)
-      .single();
-    data = res.data;
-  }
-  return data;
 }
 
 // ── APPLY CONFIG TO PAGE ─────────────────────────────────────────────────────
@@ -1191,11 +1163,14 @@ async function loadConfig(slug) {
   let {data}=await window.supabase.from('xsen_stations').select('*').ilike('slug',slug).single();
   if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('fanbase',slug).single();data=r.data;}
   if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('school',slug.toUpperCase()).single();data=r.data;}
+  if(!data){const r=await window.supabase.from('xsen_stations').select('*').ilike('stream_key',slug).single();data=r.data;}
   return data;
 }
 </script>
 </body>
 </html>
+
+
 
 
 
