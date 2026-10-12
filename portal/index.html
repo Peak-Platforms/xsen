@@ -578,16 +578,17 @@ async function login() {
   const password = document.getElementById('login-password').value.trim();
   const errEl = document.getElementById('login-error');
   errEl.style.display = 'none';
-  const { data, error } = await sb.from('xsen_stations').select('*').eq('school', school).eq('operator_password', password).single();
+  const { data, error } = await sb.rpc('portal_login', { p_school: school, p_password: password });
   if (error || !data) { errEl.textContent = 'Invalid school code or password.'; errEl.style.display = 'block'; return; }
   currentStation = data;
   sessionStorage.setItem('xsen_station', JSON.stringify(data));
+  sessionStorage.setItem('xsen_op_pw', password);
   showDashboard();
 }
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login(); });
 
 function logout() {
-  currentStation = null; sessionStorage.removeItem('xsen_station'); unsubscribeChat();
+  currentStation = null; sessionStorage.removeItem('xsen_station'); sessionStorage.removeItem('xsen_op_pw'); unsubscribeChat();
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-password').value = '';
@@ -987,7 +988,7 @@ async function clearLiveStream() {
 
 // ── X (TWITTER) RELAY CONFIG ───────────────────────────────────────────────────
 async function loadXRelayConfig() {
-  const { data } = await sb.from('xsen_stations').select('x_rtmp_url,x_stream_key').eq('school',currentStation.school).single();
+  const { data } = await sb.rpc('portal_get_x', { p_school: currentStation.school, p_password: sessionStorage.getItem('xsen_op_pw') || '' });
   document.getElementById('x-rtmp-url').value = data?.x_rtmp_url || '';
   document.getElementById('x-stream-key').value = data?.x_stream_key || '';
   const badge = document.getElementById('x-relay-status-badge');
@@ -999,19 +1000,15 @@ async function saveXRelayConfig() {
   const x_rtmp_url = document.getElementById('x-rtmp-url').value.trim();
   const x_stream_key = document.getElementById('x-stream-key').value.trim();
   if (!x_rtmp_url || !x_stream_key) { showToast('Enter both the RTMP URL and stream key','error'); return; }
-  const { error } = await sb.from('xsen_stations').update({ x_rtmp_url, x_stream_key, updated_at: new Date().toISOString() }).eq('school',currentStation.school);
-  if (error) { showToast('Failed to save X relay config','error'); return; }
-  currentStation.x_rtmp_url = x_rtmp_url; currentStation.x_stream_key = x_stream_key;
-  sessionStorage.setItem('xsen_station',JSON.stringify(currentStation));
+  const { data: saved, error } = await sb.rpc('portal_set_x', { p_school: currentStation.school, p_password: sessionStorage.getItem('xsen_op_pw') || '', p_url: x_rtmp_url, p_key: x_stream_key });
+  if (error || !saved) { showToast('Failed to save X relay config','error'); return; }
   const badge = document.getElementById('x-relay-status-badge');
   badge.textContent = 'CONFIGURED'; badge.style.color = 'var(--red)';
   showToast('X relay destination saved','success');
 }
 async function clearXRelayConfig() {
-  const { error } = await sb.from('xsen_stations').update({ x_rtmp_url: null, x_stream_key: null, updated_at: new Date().toISOString() }).eq('school',currentStation.school);
-  if (error) { showToast('Failed to clear X relay config','error'); return; }
-  currentStation.x_rtmp_url = null; currentStation.x_stream_key = null;
-  sessionStorage.setItem('xsen_station',JSON.stringify(currentStation));
+  const { data: cleared, error } = await sb.rpc('portal_set_x', { p_school: currentStation.school, p_password: sessionStorage.getItem('xsen_op_pw') || '', p_url: null, p_key: null });
+  if (error || !cleared) { showToast('Failed to clear X relay config','error'); return; }
   document.getElementById('x-rtmp-url').value=''; document.getElementById('x-stream-key').value='';
   const badge = document.getElementById('x-relay-status-badge');
   badge.textContent = 'NOT CONFIGURED'; badge.style.color = 'var(--muted)';
@@ -1143,10 +1140,12 @@ function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 const saved=sessionStorage.getItem('xsen_station');
-if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
+if (saved && sessionStorage.getItem('xsen_op_pw')) { currentStation=JSON.parse(saved); showDashboard(); }
+else { sessionStorage.removeItem('xsen_station'); }
 </script>
 </body>
 </html>
+
 
 
 
